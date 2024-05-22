@@ -2,7 +2,7 @@ import { IChatHistoryData } from '../../types/interface';
 
 export const chatHistoryData: IChatHistoryData = {
   room_id: 1,
-  goods_id: 1,
+  goods_id: 3,
   goods_seller: '판매자',
   goods_name: '유니폼',
   goods_image:

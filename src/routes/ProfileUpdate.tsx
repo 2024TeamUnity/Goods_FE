@@ -15,10 +15,10 @@ export default function ProfileUpdate() {
   const imageRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (data?.profile_image) {
-      setCurImg(data.profile_image);
+    if (data?.profileImage) {
+      setCurImg(data.profileImage);
     }
-  }, [data?.profile_image]);
+  }, [data?.profileImage]);
 
   const {
     register,
@@ -31,7 +31,7 @@ export default function ProfileUpdate() {
       /* 새로 추가한 사진 삭제하는 경우 */
       setSelectedFile(null);
       URL.revokeObjectURL(curImg);
-      setCurImg(data!.profile_image);
+      setCurImg(data!.profileImage ?? '');
     } else {
       /* 기존 사진 삭제하는 경우 */
       setCurImg('');
@@ -44,8 +44,8 @@ export default function ProfileUpdate() {
     const formData = new FormData();
     if (selectedFile) {
       formData.append('profile_image_file', selectedFile);
-    } else {
-      formData.append('profile_image_url', curImg ?? '');
+    } else if (curImg !== '') {
+      formData.append('profile_image_url', curImg);
     }
     formData.append('nick_name', form.nick_name);
     formData.append('phone_number', String(form.phone_number));
@@ -135,7 +135,10 @@ export default function ProfileUpdate() {
             <button type='button' onClick={onUploadBtnClick} className='mb-10 btn btn-neutral'>
               이미지 업로드
             </button>
-            <form className='flex flex-col items-start justify-center w-full max-w-lg px-5 mb-4 gap-y-4'>
+            <form
+              id='userInfo'
+              className='flex flex-col items-start justify-center w-full max-w-lg px-5 mb-4 gap-y-4'
+            >
               <label
                 htmlFor='nickname'
                 className='flex items-center w-full max-w-lg gap-2 font-bold input input-bordered'
@@ -152,7 +155,7 @@ export default function ProfileUpdate() {
                   id='nickname'
                   type='text'
                   placeholder='닉네임'
-                  defaultValue={data!.nick_name}
+                  defaultValue={data!.nickName}
                   className='font-normal text-right grow'
                 />
               </label>
@@ -174,7 +177,7 @@ export default function ProfileUpdate() {
                   id='phone_number'
                   type='text'
                   placeholder='000-0000-0000'
-                  defaultValue={data!.phone_number}
+                  defaultValue={data!.phoneNumber}
                   className='font-normal text-right max-w-40'
                 />
               </label>
@@ -191,7 +194,11 @@ export default function ProfileUpdate() {
                 <span>간편결제 비밀번호</span>
                 <PasswordModal title='간편결제 비밀번호' />
               </div>
-              <button onClick={onSubmit} className='w-full max-w-lg btn btn-primary'>
+              <button
+                onClick={onSubmit}
+                form='updateUser'
+                className='w-full max-w-lg btn btn-primary'
+              >
                 수정 완료
               </button>
             </div>

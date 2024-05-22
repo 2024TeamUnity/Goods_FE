@@ -29,6 +29,8 @@ export default function PostDetail() {
     return commaPrice;
   };
 
+  const handleToChat = () => {};
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -117,7 +119,9 @@ export default function PostDetail() {
                 <PostDeleteBtn goodsId={goodsId!} />
               </>
             ) : (
-              <button className='mr-2 btn btn-primary'>채팅하기</button>
+              <button onClick={handleToChat} className='mr-2 btn btn-primary'>
+                채팅하기
+              </button>
             )}
           </div>
         </div>

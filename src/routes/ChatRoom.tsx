@@ -35,6 +35,7 @@ export default function ChatRoom() {
         </div>
         <GoodsInfo
           info={{
+            id: data!.goods_id,
             image: data!.goods_image,
             name: data!.goods_seller,
             title: data!.goods_name,

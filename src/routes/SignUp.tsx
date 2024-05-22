@@ -151,8 +151,9 @@ export default function SignUp() {
               {...register('password', {
                 required: { message: '필수항목입니다.', value: true },
                 pattern: {
-                  value: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d~!@#$%^&*()+|=]{8,20}$/,
-                  message: '숫자, 문자만 포함 (8자 이상, 최대 20자)',
+                  value:
+                    /^(?=.*[A-Za-z])(?=.*\d)(?=.*[~!@#$%^&*()+|=])[A-Za-z\d~!@#$%^&*()+|=]{8,20}$/,
+                  message: '영문,숫자,특수문자 포함 (8자 이상, 20자 이하)',
                 },
               })}
               type='password'

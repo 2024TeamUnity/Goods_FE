@@ -1,15 +1,16 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import client from '../../util/authAxios';
+import { IChargePoint } from '../../types/interface';
 
-export const useDeletePostMutation = () => {
+export const useChargeMutation = () => {
   const navigate = useNavigate();
   const { mutate } = useMutation({
-    mutationFn: async (goodsId: string) => (await client.delete(`/api/goods/${goodsId}`)).data,
+    mutationFn: async (data: IChargePoint) => (await client.post('/api/point/charge', data)).data,
     onSuccess: () => {
-      navigate(-1);
+      navigate('/mypage');
     },
   });
 
-  return mutate;
+  return { mutate };
 };

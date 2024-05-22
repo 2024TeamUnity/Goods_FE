@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
-import { IWishHistoryData } from '../../types/interface';
+import { IWishHistoryResponse } from '../../types/interface';
+import client from '../../util/authAxios';
 
 export const useWishHistoryQuery = () => {
-  const { isLoading, data } = useQuery<IWishHistoryData[]>({
+  const { isLoading, data } = useQuery<IWishHistoryResponse>({
     queryKey: ['wishHistory'],
-    queryFn: async () => (await axios.get('/api/goods/likes')).data,
+    queryFn: async () => (await client.get('/api/goods/likes')).data,
   });
   return { data, isLoading };
 };

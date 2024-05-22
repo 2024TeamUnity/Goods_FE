@@ -1,28 +1,20 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { IProfileData } from '../../types/interface';
-
-const token = localStorage.getItem('accessToken');
+import { IMyInfo } from '../../types/interface';
+import client from '../../util/authAxios';
 
 export const useProfileQuery = () => {
-  const { isLoading, data } = useQuery<IProfileData>({
+  const { isLoading, data } = useQuery<IMyInfo>({
     queryKey: ['profile'],
-    queryFn: async () =>
-      (
-        await axios.get('/api/api/member/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-      ).data,
+    queryFn: async () => (await client.get('/api/member/profile')).data,
   });
 
   return { isLoading, data };
 };
 
 export const useSellerProfileQuery = (sellerId: string) => {
-  const { isLoading, data } = useQuery<IProfileData>({
+  const { isLoading, data } = useQuery<IMyInfo>({
     queryKey: ['seller'],
     queryFn: async () => (await axios.get(`/api/api/member/${sellerId}/profile`)).data,
   });
@@ -35,15 +27,16 @@ export const useUpdateProfileMutation = () => {
   const { mutate } = useMutation({
     mutationFn: async (profile: FormData) =>
       (
-        await axios.put('/api/api/member/profile', profile, {
+        await client.put('/api/member/profile', profile, {
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           },
         })
       ).data,
-    onSuccess: () => {
-      navigate('/mypage');
+    onSuccess: (req) => {
+      if (req.nickName) {
+        navigate('/mypage');
+      }
     },
   });
 
@@ -54,13 +47,7 @@ export const useResignMutation = () => {
   const navigate = useNavigate();
   const { mutate, isError } = useMutation({
     mutationFn: async (password: { password: string }) =>
-      (
-        await axios.put('/api/api/member/resign', password, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-      ).data,
+      (await client.put('/api/member/resign', password)).data,
     onSuccess: () => {
       navigate('/');
     },

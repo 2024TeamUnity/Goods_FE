@@ -1,23 +1,25 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
-const token = localStorage.getItem('accessToken');
+import client from '../../util/authAxios';
 
 export const useCreatePostMutation = () => {
   const navigate = useNavigate();
   const { mutate } = useMutation({
     mutationFn: async (post: FormData) =>
       (
-        await axios.post('/api/api/goods/new', post, {
+        await client.post('/api/goods/new', post, {
           headers: {
-            Authorization: `Bearer ${token}`,
             'Content-Type': 'multipart/form-data',
           },
         })
       ).data,
     onSuccess: (res) => {
       navigate(`/posts/${res.id}`);
+    },
+    onError: (res) => {
+      // eslint-disable-next-line no-alert
+      alert(res.message);
+      navigate('/');
     },
   });
 

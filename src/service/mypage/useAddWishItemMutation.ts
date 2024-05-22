@@ -1,22 +1,10 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-
-const token = localStorage.getItem('accessToken');
+import client from '../../util/authAxios';
 
 export const useAddWishItemMutation = () => {
   const { mutate } = useMutation({
     mutationFn: async (goodsId: number) =>
-      (
-        await axios.post(
-          `/api/api/goods/likes`,
-          { goods_id: goodsId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        )
-      ).data,
+      (await client.post(`/api/goods/likes`, { goods_id: goodsId })).data,
   });
 
   return mutate;

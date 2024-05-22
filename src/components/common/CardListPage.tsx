@@ -1,19 +1,23 @@
 import { Link } from 'react-router-dom';
-import { IPurchaseHistoryData, ISalesHistoryData, IWishHistoryData } from '../../types/interface';
+import {
+  IPurchaseHistoryResponse,
+  ISalesHistoryResponse,
+  IWishHistoryResponse,
+} from '../../types/interface';
 import CardListItem from './CardListItem';
 
 export default function CardListPage({
   data,
   title,
 }: {
-  data: IPurchaseHistoryData[] | IWishHistoryData[] | ISalesHistoryData[];
+  data: IPurchaseHistoryResponse | IWishHistoryResponse | ISalesHistoryResponse;
   title: string;
 }) {
   return (
     <div className='max-w-md px-5 mx-auto md:max-w-5xl'>
       <ul className='flex flex-col items-center justify-center w-full mx-auto md:max-w-xl gap-y-3'>
         <h1 className='my-12 text-2xl font-bold text-center md:text-3xl'>{title}</h1>
-        {data.length === 0 ? (
+        {data.content.length === 0 ? (
           <div className='flex flex-col items-center justify-center w-full h-96 gap-y-5'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
@@ -35,7 +39,8 @@ export default function CardListPage({
             </Link>
           </div>
         ) : (
-          data.map((item) => {
+          Array.isArray(data.content) &&
+          data.content.map((item) => {
             return (
               <CardListItem
                 key={item.goods_id}

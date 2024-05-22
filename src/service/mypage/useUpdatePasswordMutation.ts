@@ -1,7 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import axios from 'axios';
-
-const token = localStorage.getItem('accessToken');
+import client from '../../util/authAxios';
 
 export const useUpdatePasswordMutation = (type: string) => {
   const { mutate, isError } = useMutation({
@@ -13,18 +11,10 @@ export const useUpdatePasswordMutation = (type: string) => {
       newPassword: string;
     }) =>
       (
-        await axios.put(
-          `/api/api/member/${type}`,
-          {
-            cur_password: curPassword,
-            new_password: newPassword,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        )
+        await client.put(`/api/member/${type}`, {
+          cur_password: curPassword,
+          new_password: newPassword,
+        })
       ).data,
   });
 

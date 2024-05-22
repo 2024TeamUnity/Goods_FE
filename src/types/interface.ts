@@ -7,16 +7,6 @@ export type FormValueTypes = {
   paymentPassword: number;
 };
 
-/* profile mock interface */
-export interface IProfileData {
-  member_id: number;
-  nick_name: string;
-  phone_number: string;
-  profile_image: string;
-  star: number;
-  badge_list: string[];
-}
-
 /* profile update mock interface */
 export interface IProfileUpdate {
   nick_name: string;
@@ -41,6 +31,8 @@ export interface IPointCalc {
   bank?: string;
   account?: number;
   password?: number;
+  price?: number;
+  goodsId?: number;
 }
 
 export interface ISalesHistoryData {
@@ -155,6 +147,65 @@ export interface IMyInfo {
   profileImage: string | null;
   star: number;
   badgeList: string[];
+}
+
+export interface IChargePoint {
+  price: string;
+  payment_id: number;
+  imp_uid: string;
+}
+
+export interface IWithdrawPoint {
+  point: string;
+  bank_name: string;
+  account_number: string;
+}
+
+export interface ITradePoint {
+  seller_id: number;
+  goods_id: number;
+  price: string;
+  trade_password: string;
+}
+
+interface Sort {
+  empty: boolean;
+  sorted: boolean;
+  unsorted: boolean;
+}
+
+interface Pageable {
+  pageNumber: number;
+  pageSize: number;
+  sort: Sort;
+  offset: number;
+  paged: boolean;
+  unpaged: boolean;
+}
+
+interface IPageResponse {
+  pageable: Pageable;
+  last: boolean;
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  sort: Sort;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}
+
+export interface ISalesHistoryResponse extends IPageResponse {
+  content: ISalesHistoryData[];
+}
+
+export interface IPurchaseHistoryResponse extends IPageResponse {
+  content: IPurchaseHistoryData[];
+}
+
+export interface IWishHistoryResponse extends IPageResponse {
+  content: IWishHistoryData[];
 }
 
 export interface IGoodsList {

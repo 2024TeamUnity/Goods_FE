@@ -1,10 +1,15 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { IPointCalc } from '../../types/interface';
+import { usePointQuery } from '../../service/point/usePointQuery';
+import { useChargeMutation } from '../../service/point/useChargeMutation';
+import { useWithdrawMutation } from '../../service/point/useWithdrawMutation';
+import { useTradePointMutation } from '../../service/point/useTradePointMutation';
 
-export default function PointCalc({ type, bank, account, password }: IPointCalc) {
+export default function PointCalc({ type, bank, account, password, price, goodsId }: IPointCalc) {
   const [point, setPoint] = useState('');
   const [isNegative, setIsNegative] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
+  const [curPoint, setCurPoint] = useState<number>(0);
 
   const typeDescription: { [key: string]: string } = {
     charge: '충전',
@@ -14,8 +19,7 @@ export default function PointCalc({ type, bank, account, password }: IPointCalc)
 
   const typeStr = typeDescription[type];
 
-  /* 추후 잔액 조회 api 구현 예정 */
-  const curPoint = 1000;
+  const { data, isLoading } = usePointQuery();
 
   const addComma = (point: string): string => {
     const commaPoint = point.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -31,7 +35,8 @@ export default function PointCalc({ type, bank, account, password }: IPointCalc)
   };
 
   const handleAddPoint = () => {
-    const afterPointNum = type === 'charge' ? curPoint + Number(point) : curPoint - Number(point);
+    const afterPointNum =
+      type === 'charge' ? +curPoint + +Number(point) : +curPoint - +Number(point);
     if (afterPointNum < 0) {
       setIsNegative(true);
       return;
@@ -42,35 +47,53 @@ export default function PointCalc({ type, bank, account, password }: IPointCalc)
   };
 
   useEffect(() => {
+    if (!data) return;
+    setCurPoint(data.price);
+
+    if (price && data.price < price) {
+      setIsNegative(true);
+    }
+
     if (
-      (type === 'transfer' && bank && account && point) ||
+      (type === 'transfer' && bank && account && point && !isNegative) ||
       (type === 'charge' && point) ||
       (type === 'payment' && password && point)
     ) {
       return setIsValid(true);
     }
     return setIsValid(false);
-  }, [bank, account, point, type, password]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bank, account, point, type, password, curPoint]);
 
+  const { mutate: charge } = useChargeMutation();
+  const { mutate: withdraw } = useWithdrawMutation();
+  const { mutate: trade } = useTradePointMutation();
   const handleSubmit = () => {
     if (type === 'transfer') {
-      console.log({
-        point: Number(point),
-        bank,
-        account,
+      withdraw({
+        point,
+        bank_name: bank!,
+        account_number: String(account),
       });
     } else if (type === 'payment') {
-      console.log({
-        point: Number(point),
-        password,
+      /* 임시 */
+      trade({
+        seller_id: 1,
+        goods_id: goodsId!,
+        price: String(price),
+        trade_password: String(password),
       });
     } else {
-      console.log({
-        point,
+      /* 임시 */
+      charge({
+        price: point,
+        payment_id: 1,
+        imp_uid: '1',
       });
     }
   };
 
+  if (isLoading) return <p>Loading...</p>;
   return (
     <>
       <div className='w-full max-w-lg mt-6'>
@@ -80,14 +103,24 @@ export default function PointCalc({ type, bank, account, password }: IPointCalc)
           className='flex flex-row-reverse items-center w-full max-w-lg gap-2 font-bold input input-bordered md:max-w-5xl'
         >
           원
-          <input
-            id='pointInput'
-            type='text'
-            value={addComma(point) || ''}
-            onChange={handlePoint}
-            onBlur={handleAddPoint}
-            className='text-right grow'
-          />
+          {type !== 'payment' ? (
+            <input
+              id='pointInput'
+              type='text'
+              value={addComma(point) || ''}
+              onChange={handlePoint}
+              onBlur={handleAddPoint}
+              className='text-right grow'
+            />
+          ) : (
+            <input
+              id='pointInput'
+              type='text'
+              value={addComma(String(price))}
+              className='text-right grow'
+              readOnly
+            />
+          )}
         </label>
         {isNegative && (
           <p className='mt-2 text-sm font-normal text-right text-red-700'>
@@ -98,7 +131,6 @@ export default function PointCalc({ type, bank, account, password }: IPointCalc)
       <div className='flex flex-col justify-center w-full h-40 max-w-lg px-5 py-5 my-10 border rounded-xl border-neutral md:px-10'>
         <div className='flex items-center justify-between flex-auto w-full'>
           <p className='text-lg font-bold md:text-xl'>현재 포인트</p>
-          {/* 사용자 포인트 받아오기 */}
           <p className='text-lg font-bold md:text-xl'>{`${addComma(String(curPoint))}P`}</p>
         </div>
         <div className='flex items-center justify-between flex-auto w-full'>

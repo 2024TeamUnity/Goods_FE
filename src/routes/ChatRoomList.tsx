@@ -12,6 +12,7 @@ export default function ChatRoomList() {
         {data!.length === 0 ? (
           <h3 className='text-xl font-bold'>결과가 없습니다.</h3>
         ) : (
+          Array.isArray(data) &&
           data!.map((item) => {
             return (
               <li key={item.room_id} className='w-full border-b h-36'>

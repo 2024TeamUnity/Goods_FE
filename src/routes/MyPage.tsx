@@ -3,6 +3,7 @@ import Profile from '../components/profile/Profile';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.webp';
 import { useProfileQuery, useResignMutation } from '../service/mypage/useUserQueries';
+import { usePointQuery } from '../service/point/usePointQuery';
 
 export default function MyPage() {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -12,7 +13,8 @@ export default function MyPage() {
     dialogRef.current?.showModal();
   };
 
-  const { data: profile, isLoading } = useProfileQuery();
+  const { data: profile, isLoading: profileLoading } = useProfileQuery();
+  const { data: point, isLoading: pointLoading } = usePointQuery();
   const { mutate, isError } = useResignMutation();
 
   const handleResign = () => {
@@ -31,12 +33,12 @@ export default function MyPage() {
       <div className='w-full px-5 md:mx-auto md:max-w-5xl'>
         <h1 className='my-12 text-2xl font-bold text-center md:text-3xl'>마이페이지</h1>
         <div className='flex flex-col md:flex-row md:items-end'>
-          {!isLoading && (
+          {!profileLoading && (
             <Profile
-              nick_name={profile!.nick_name}
-              profile_image={profile!.profile_image}
+              nickName={profile!.nickName}
+              profileImage={profile!.profileImage}
               star={profile!.star}
-              badge_list={profile!.badge_list}
+              badgeList={profile!.badgeList}
             />
           )}
           <Link
@@ -48,11 +50,12 @@ export default function MyPage() {
         </div>
         <div className='w-full max-w-md mx-auto mt-8 border-t-2 md:max-w-5xl md:flex md:flex-row-reverse'>
           <div className='flex flex-col h-40 px-10 py-5 my-8 border rounded-xl border-neutral md:max-w-80 md:mr-0'>
-            <div className='flex items-center justify-between flex-auto mb-10'>
-              <p className='text-xl font-bold'>포인트</p>
-              {/* 사용자 포인트 받아오기 */}
-              <p className='text-xl font-bold'>500P</p>
-            </div>
+            {!pointLoading && (
+              <div className='flex items-center justify-between flex-auto mb-10'>
+                <p className='text-xl font-bold'>포인트</p>
+                <p className='text-xl font-bold'>{point.price}</p>
+              </div>
+            )}
             <div className='flex justify-between flex-none'>
               <Link
                 to='/mypage/charge'

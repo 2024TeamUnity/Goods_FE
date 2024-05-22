@@ -18,13 +18,13 @@ export default function Payment() {
       </div>
       <div className='flex flex-col items-center w-full max-w-lg px-5 mx-auto'>
         <h1 className='my-12 text-2xl font-bold text-center md:text-3xl'>결제하기</h1>
-        <div className='flex justify-start w-full max-w-lg'>
-          <img className='object-cover w-24 h-24 mr-4 rounded-xl' src={state.image} alt='img' />
-          <div className='flex flex-col justify-around w-full'>
+        <Link to={`/posts/${state.id}`} className='flex justify-start w-full max-w-lg'>
+          <img className='object-cover w-20 h-20 mr-4 rounded-xl' src={state.image} alt='img' />
+          <div className='flex flex-col justify-around flex-1 w-full'>
             <p>{state.title}</p>
             <p className='text-xl font-bold'>{state.price}원</p>
           </div>
-        </div>
+        </Link>
         <div className='w-full max-w-lg mt-6'>
           <h2 className='my-4 text-lg'>* 간편결제 비밀번호를 입력해주세요</h2>
           <label
@@ -41,7 +41,7 @@ export default function Payment() {
             />
           </label>
         </div>
-        <PointCalc type='payment' password={password} />
+        <PointCalc type='payment' password={password} price={state.price} goodsId={state.id} />
       </div>
     </>
   );
