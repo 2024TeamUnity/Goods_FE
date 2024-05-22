@@ -7,6 +7,7 @@ import { searchData } from './data/searchData';
 import { goodsData } from './data/goodsDetailData';
 import { chatRoomList } from './data/chatRoomListData';
 import { chatHistoryData } from './data/chatHistoryData';
+import { goodsListData } from './data/goodsListData';
 
 /* profile mock data */
 export const profileData: IProfileData = {
@@ -160,5 +161,16 @@ export const handlers = [
   }),
   http.get('/api/chat/room', () => {
     return HttpResponse.json(chatRoomList);
+  }),
+  http.get('api/goods', ({ request }) => {
+    const url = new URL(request.url);
+
+    const lat = url.searchParams.get('lat');
+    const lng = url.searchParams.get('lng');
+    if (!lat && !lng) {
+      return new HttpResponse(null, { status: 404 });
+    }
+
+    return HttpResponse.json(goodsListData);
   }),
 ];

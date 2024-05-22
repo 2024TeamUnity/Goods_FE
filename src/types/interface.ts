@@ -156,3 +156,15 @@ export interface IMyInfo {
   star: number;
   badgeList: string[];
 }
+
+export interface IGoodsList {
+  goods_id: number;
+  seller_id: string;
+  goods_name: string;
+  price: string;
+  trade_spot: string;
+  thumbnail_url: string;
+  lat: number;
+  lng: number;
+  uploaded_before: number;
+}
