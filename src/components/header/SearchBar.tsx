@@ -39,7 +39,7 @@ export default function SearchBar() {
   useEffect(() => {
     const debounce = setTimeout(() => {
       if (keyword) updateSearch();
-    }, 1000);
+    }, 200);
     return () => {
       clearTimeout(debounce);
     };

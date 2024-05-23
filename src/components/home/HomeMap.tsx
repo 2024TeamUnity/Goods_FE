@@ -3,24 +3,44 @@ import { Map, ZoomControl } from 'react-kakao-maps-sdk';
 import MyLocationMarker from './MyLocationMarker';
 import { IMyLocation } from '../../types/interface';
 import ProductMarkers from './ProductMarkers';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { homeListState, isAuthState, searchAddrState, searchResultState } from '../../store/atom';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import {
+  goodsListState,
+  homeListState,
+  isAuthState,
+  searchAddrState,
+  searchResultState,
+} from '../../store/atom';
 import { Link } from 'react-router-dom';
+import { useNearbyGoods } from '../../service/map/useNearbyGoods';
+import axios from 'axios';
 
 export default function HomeMap() {
   const setSearchList = useSetRecoilState(searchResultState);
   const setHomeList = useSetRecoilState(homeListState);
+  const [goodsList, setGoodsList] = useRecoilState(goodsListState);
   const isAuth = useRecoilValue(isAuthState);
   const keyword = useRecoilValue(searchAddrState);
 
   const [state, setState] = useState<IMyLocation>({
     center: {
-      lat: 33.450701,
-      lng: 126.570667,
+      lat: 0,
+      lng: 0,
     },
     errMsg: null,
     isLoading: true,
   });
+  const { refetch } = useNearbyGoods(state.center);
+
+  useEffect(() => {
+    (async () => {
+      if (Object.values(state.center).every((item) => item !== 0)) {
+        const res = (await refetch()).data;
+        setGoodsList(res!);
+        setHomeList(res!);
+      }
+    })();
+  }, [setGoodsList, refetch, state.center, setHomeList]);
 
   useEffect(() => {
     const geocoder = new kakao.maps.services.Geocoder();
@@ -46,18 +66,28 @@ export default function HomeMap() {
     setHomeList([]);
   };
 
+  const handleMapDrag = async (map: kakao.maps.Map) => {
+    const latlng = map.getCenter();
+
+    const res = (
+      await axios.get('/api/goods', { params: { lat: latlng.getLat(), lng: latlng.getLng() } })
+    ).data;
+    setHomeList(res);
+    setGoodsList(res);
+  };
+
   return (
     <>
       <Map // 지도를 표시할 Container
         center={state.center}
         className='relative w-full h-full'
         level={3} // 지도의 확대 레벨
-        // ref={mapRef as LegacyRef<kakao.maps.Map>}
+        onDrag={handleMapDrag}
       >
         {/* 현재 내 위치  */}
         <MyLocationMarker state={state} setState={setState} />
         {/* 모든 상품 위치 */}
-        <ProductMarkers />
+        <ProductMarkers goodsList={goodsList} />
         <ZoomControl position='RIGHT' />
       </Map>
       <button
