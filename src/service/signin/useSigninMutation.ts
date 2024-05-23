@@ -10,8 +10,8 @@ export const useSigninMutation = () => {
   const { mutate } = useMutation({
     mutationFn: async (payload: { email: string; password: string }) => {
       const res = (await axios.post('/api/api/member/login', payload)).data;
-      if (res.accessToken) {
-        localStorage.setItem('accessToken', res.accessToken);
+      if (res.access_token) {
+        localStorage.setItem('access_token', res.access_token);
         setIsAuth(true);
       }
       switch (res.status) {

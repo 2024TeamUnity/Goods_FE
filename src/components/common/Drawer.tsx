@@ -17,8 +17,8 @@ export default function Drawer() {
           {/* 프로필 이미지 */}
           <div className='avatar'>
             <div className='w-6 rounded-full cursor-pointer md:w-8 ring ring-primary ring-offset-base-100 ring-offset-2'>
-              {info?.profileImage ? (
-                <img src={info?.profileImage} alt='profile_image' />
+              {info?.profile_image ? (
+                <img src={info?.profile_image} alt='profile_image' />
               ) : (
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
@@ -38,11 +38,11 @@ export default function Drawer() {
         <label htmlFor='my-drawer-4' aria-label='close sidebar' className='drawer-overlay' />
         <ul className='w-2/3 min-h-full p-4 font-semibold menu md:w-80 bg-base-200 text-base-content '>
           <div className='flex items-center justify-between mx-4'>
-            <h1 className='my-5 text-xl font-bold md:text-3xl'>{info?.nickName}</h1>
+            <h1 className='my-5 text-xl font-bold md:text-3xl'>{info?.nick_name}</h1>
             <div className='avatar'>
               <div className='w-6 rounded-full cursor-pointer md:w-8 ring ring-primary ring-offset-base-100 ring-offset-2'>
-                {info?.profileImage ? (
-                  <img src={info?.profileImage} alt='profile_image' />
+                {info?.profile_image ? (
+                  <img src={info?.profile_image} alt='profile_image' />
                 ) : (
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
