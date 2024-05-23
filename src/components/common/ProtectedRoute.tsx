@@ -1,7 +1,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
 export default function ProtectedRoute() {
-  const isAuth = localStorage.getItem('accessToken');
+  const isAuth = localStorage.getItem('access_token');
 
   const protect = () => {
     // eslint-disable-next-line no-alert

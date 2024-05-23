@@ -10,7 +10,7 @@ export default function ChatRoomList() {
       <h2 className='my-12 text-2xl font-bold text-center md:text-3xl'>채팅 목록</h2>
       <ul className='flex flex-col items-center justify-center w-full mx-auto mb-20 md:max-w-xl'>
         {data!.length === 0 ? (
-          <h3 className='text-xl font-bold'>결과가 없습니다.</h3>
+          <h3 className='text-lg'>결과가 없습니다.</h3>
         ) : (
           Array.isArray(data) &&
           data!.map((item) => {

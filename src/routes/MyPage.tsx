@@ -35,10 +35,10 @@ export default function MyPage() {
         <div className='flex flex-col md:flex-row md:items-end'>
           {!profileLoading && (
             <Profile
-              nickName={profile!.nickName}
-              profileImage={profile!.profileImage}
+              nick_name={profile!.nick_name}
+              profile_image={profile!.profile_image}
               star={profile!.star}
-              badgeList={profile!.badgeList}
+              badge_list={profile!.badge_list}
             />
           )}
           <Link
