@@ -1,29 +1,26 @@
 import { MapMarker, MarkerClusterer } from 'react-kakao-maps-sdk';
-import { useLocationDataQuery } from '../../service/map/useLocationDataQuery';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { homeListState, searchResultState } from '../../store/atom';
-import { IMapLocation } from '../../types/interface';
+import { IGoodsList } from '../../types/interface';
 
-export default function ProductMarkers() {
-  const { data, isLoading } = useLocationDataQuery();
+export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] }) {
   const setListState = useSetRecoilState(homeListState);
   const searchList = useRecoilValue(searchResultState);
 
   const handleClusterClick = (_: kakao.maps.MarkerClusterer, cluster: kakao.maps.Cluster) => {
     const markerList = cluster.getMarkers().map((item) => item.getPosition().getLat().toFixed(10));
 
-    const res = data?.filter((item) => {
+    const res = goodsList?.filter((item) => {
       const pos = new kakao.maps.LatLng(item.lat, item.lng).getLat().toFixed(10);
       return markerList.findIndex((item) => item === pos) !== -1;
     });
     setListState(res!);
   };
 
-  const handleMarkerClick = (pos: IMapLocation) => {
+  const handleMarkerClick = (pos: IGoodsList) => {
     setListState([pos]);
   };
 
-  if (isLoading) return <h1>loading...</h1>;
   return (
     <MarkerClusterer
       averageCenter
@@ -36,17 +33,18 @@ export default function ProductMarkers() {
       {Array.isArray(searchList) && searchList.length > 0
         ? searchList.map((item) => (
             <MapMarker
-              key={`${item.lat}-${item.lng}`}
+              // eslint-disable-next-line react/no-array-index-key
+              key={`${item.goods_id}`}
               position={{
                 lat: item.lat,
                 lng: item.lng,
               }}
-              onClick={() => handleMarkerClick({ lat: item.lat, lng: item.lng })}
+              onClick={() => handleMarkerClick(item)}
             />
           ))
-        : data?.map((pos) => (
+        : goodsList?.map((pos) => (
             <MapMarker
-              key={`${pos.lat}-${pos.lng}`}
+              key={`${pos.goods_id}_${pos.thumbnail_url}_${pos.trade_spot}`}
               position={{
                 lat: pos.lat,
                 lng: pos.lng,

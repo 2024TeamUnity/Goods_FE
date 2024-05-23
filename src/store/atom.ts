@@ -1,6 +1,5 @@
 import { atom } from 'recoil';
-import { IMapLocation } from '../types/interface';
-import { ISearchData } from '../mocks/data/searchData';
+import { IGoodsList } from '../types/interface';
 
 export const isAuthState = atom({
   // 임시 로그인 상태
@@ -8,7 +7,7 @@ export const isAuthState = atom({
   default: false,
 });
 
-export const homeListState = atom<IMapLocation[]>({
+export const homeListState = atom<IGoodsList[]>({
   key: 'homeList',
   default: [],
 });
@@ -28,7 +27,7 @@ export const imgUrlsToDeleteState = atom<string[]>({
   default: [],
 });
 
-export const searchResultState = atom<ISearchData[]>({
+export const searchResultState = atom<IGoodsList[]>({
   key: 'searchlist',
   default: [],
 });
@@ -49,4 +48,9 @@ export const clickedLocationState = atom({
       lng: 126.976502,
     },
   },
+});
+
+export const goodsListState = atom<IGoodsList[]>({
+  key: 'goodsList',
+  default: [],
 });
