@@ -1,16 +1,22 @@
 import { useRecoilValue } from 'recoil';
 import { homeListState } from '../../store/atom';
+import { Link } from 'react-router-dom';
 
 export default function HomeList() {
   const products = useRecoilValue(homeListState);
   return (
-    <ul className='overflow-y-auto border h-96 md:h-full md:w-48 lg:w-60 bg-rgba(255,255,255,.7)'>
+    <ul className='overflow-y-auto border h-96 md:h-full md:w-96 bg-rgba(255,255,255,.7)'>
       {Array.isArray(products) &&
         products.map((product) => (
-          <li className='p-3 text-sm border' key={`_${product.lng + product.lat}`}>
-            lat: {product.lat}
-            <br /> lng : {product.lng}
-          </li>
+          <Link to={`posts/${product.goods_id}`} key={`_${product.goods_id}`}>
+            <li className='flex items-start justify-start p-3 border gap-x-5'>
+              <img src={product.thumbnail_url} alt='thumbnail' className='w-24 h-24 rounded-xl' />
+              <div className='font-bold'>
+                <h3 className='mb-3 text-xl'>{product.goods_name}</h3>
+                <p className='text-lg md:text-base'>{product.price}원</p>
+              </div>
+            </li>
+          </Link>
         ))}
     </ul>
   );

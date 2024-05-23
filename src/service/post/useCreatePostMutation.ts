@@ -14,7 +14,7 @@ export const useCreatePostMutation = () => {
         })
       ).data,
     onSuccess: (res) => {
-      navigate(`/posts/${res.id}`);
+      navigate(`/posts/${res.goods_id}`);
     },
     onError: (res) => {
       // eslint-disable-next-line no-alert
