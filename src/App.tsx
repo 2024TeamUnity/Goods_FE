@@ -7,7 +7,7 @@ import { isAuthState } from './store/atom';
 export default function App() {
   const setIsAuth = useSetRecoilState(isAuthState);
   useEffect(() => {
-    if (localStorage.getItem('accessToken')) {
+    if (localStorage.getItem('access_token')) {
       setIsAuth(true);
       return;
     }

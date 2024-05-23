@@ -3,14 +3,14 @@ import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { homeListState, searchResultState } from '../../store/atom';
 import { Dispatch, SetStateAction } from 'react';
-import { ISearchData } from '../../mocks/data/searchData';
+import { IGoodsList } from '../../types/interface';
 
 export const useSearchMutation = (callback: Dispatch<SetStateAction<string>>) => {
   const setHomeList = useSetRecoilState(homeListState);
   const setSearchList = useSetRecoilState(searchResultState);
   const { mutate } = useMutation({
     mutationFn: async (keyword: string) => (await axios.post('api/goods/search', { keyword })).data,
-    onSuccess: (data: ISearchData[]) => {
+    onSuccess: (data: IGoodsList[]) => {
       setHomeList(data);
       setSearchList(data);
       callback('');
@@ -25,7 +25,7 @@ export const useSearchAddrMutation = () => {
   const { mutate } = useMutation({
     mutationFn: async (word: string) =>
       (await axios.post('/api/api/goods/search', { keyword: word })).data,
-    onSuccess: (data: ISearchData[]) => {
+    onSuccess: (data: IGoodsList[]) => {
       setHomeList(data);
       setSearchList(data);
     },
@@ -34,7 +34,7 @@ export const useSearchAddrMutation = () => {
 };
 
 export const useUpdateSearchMutation = (
-  callback: Dispatch<SetStateAction<ISearchData[]>>,
+  callback: Dispatch<SetStateAction<IGoodsList[]>>,
   keyword: string,
 ) => {
   const { mutate } = useMutation({

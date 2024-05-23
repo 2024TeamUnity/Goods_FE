@@ -6,7 +6,7 @@ export default function KakaoRedirection() {
   useEffect(() => {
     const accessToken = new URL(window.location.toString()).searchParams.get('access');
     if (accessToken) {
-      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('access_token', accessToken);
       navigate('/');
     }
   }, [navigate]);
