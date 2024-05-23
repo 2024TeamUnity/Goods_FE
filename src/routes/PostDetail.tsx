@@ -92,7 +92,7 @@ export default function PostDetail() {
               </div>
             </div>
           </div>
-          <div className='fixed bottom-0 left-0 z-50 flex items-center w-full h-20 px-3 py-3 bg-white border-t md:relative md:border-0 md:p-0'>
+          <div className='fixed bottom-0 left-0 z-40 flex items-center w-full h-20 px-3 py-3 bg-white border-t md:relative md:border-0 md:p-0'>
             <div className='flex items-center ml-2 mr-4 md:ml-0'>
               <AddWishListButton goodsId={Number(goodsId)} wish={data!.liked} />
             </div>
