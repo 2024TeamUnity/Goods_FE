@@ -145,9 +145,15 @@ export interface IMyInfo {
   nick_name: string;
   phone_number: string;
   profile_image: string | null;
+<<<<<<< HEAD
   trade_password_exists: boolean;
   star: number;
   badge_list: string[];
+=======
+  star: number;
+  badge_list: string[];
+  trade_password_exists: boolean;
+>>>>>>> develop
 }
 
 export interface IChargePoint {
@@ -206,4 +212,16 @@ export interface IPurchaseHistoryResponse extends IPageResponse {
 
 export interface IWishHistoryResponse extends IPageResponse {
   content: IWishHistoryData[];
+}
+
+export interface IGoodsList {
+  goods_id: number;
+  seller_id: string;
+  goods_name: string;
+  price: string;
+  trade_spot: string;
+  thumbnail_url: string;
+  lat: number;
+  lng: number;
+  uploaded_before: number;
 }
