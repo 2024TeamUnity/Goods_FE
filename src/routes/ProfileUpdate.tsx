@@ -15,10 +15,10 @@ export default function ProfileUpdate() {
   const imageRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    if (data?.profileImage) {
-      setCurImg(data.profileImage);
+    if (data?.profile_image) {
+      setCurImg(data.profile_image);
     }
-  }, [data?.profileImage]);
+  }, [data?.profile_image]);
 
   const {
     register,
@@ -31,7 +31,7 @@ export default function ProfileUpdate() {
       /* 새로 추가한 사진 삭제하는 경우 */
       setSelectedFile(null);
       URL.revokeObjectURL(curImg);
-      setCurImg(data!.profileImage ?? '');
+      setCurImg(data!.profile_image ?? '');
     } else {
       /* 기존 사진 삭제하는 경우 */
       setCurImg('');
@@ -140,7 +140,7 @@ export default function ProfileUpdate() {
               className='flex flex-col items-start justify-center w-full max-w-lg px-5 mb-4 gap-y-4'
             >
               <label
-                htmlFor='nickname'
+                htmlFor='nick_name'
                 className='flex items-center w-full max-w-lg gap-2 font-bold input input-bordered'
               >
                 닉네임
@@ -152,10 +152,10 @@ export default function ProfileUpdate() {
                       message: '한글, 영문, 숫자만 가능하며 2-10자리로 설정',
                     },
                   })}
-                  id='nickname'
+                  id='nick_name'
                   type='text'
                   placeholder='닉네임'
-                  defaultValue={data!.nickName}
+                  defaultValue={data!.nick_name}
                   className='font-normal text-right grow'
                 />
               </label>
@@ -177,7 +177,7 @@ export default function ProfileUpdate() {
                   id='phone_number'
                   type='text'
                   placeholder='000-0000-0000'
-                  defaultValue={data!.phoneNumber}
+                  defaultValue={data!.phone_number}
                   className='font-normal text-right max-w-40'
                 />
               </label>

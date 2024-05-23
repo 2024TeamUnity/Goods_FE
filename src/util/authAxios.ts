@@ -5,7 +5,7 @@ const client = axios.create({ baseURL: '/api', withCredentials: true });
 
 client.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = localStorage.getItem('access_token');
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }
@@ -39,7 +39,7 @@ client.interceptors.response.use(
           )
         ).data;
         if (accessToken) {
-          localStorage.setItem('accessToken', accessToken);
+          localStorage.setItem('access_token', accessToken);
           return client(err.config);
         }
       }

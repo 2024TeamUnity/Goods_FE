@@ -5,15 +5,14 @@ import { Link, useParams } from 'react-router-dom';
 import { useUpdateStateMutation } from '../service/post/useUpdateStateMutation';
 import AddWishListButton from '../components/common/AddWishListButton';
 import PostDeleteBtn from '../components/postDelete/PostDeleteBtn';
+import { useProfileQuery } from '../service/mypage/useUserQueries';
 
 export default function PostDetail() {
   const { id: goodsId } = useParams();
   const { data, isLoading } = useReadPostQuery(goodsId!);
+  const { data: profile } = useProfileQuery();
 
-  // const token = localStorage.getItem('accessToken');
-  /* 추후 디코딩 로직 추가 */
-  const decoded = 1;
-  const isAutor = decoded === data?.seller_id;
+  const isAutor = profile?.member_id === data?.seller_id;
 
   const mutate = useUpdateStateMutation();
 
@@ -46,10 +45,23 @@ export default function PostDetail() {
             >
               <div className='avatar'>
                 <div className='w-16 mr-4 rounded-xl md:w-20 md:mr-6'>
-                  <img src={data!.seller_profile_image} alt='profile_image' />
+                  {data!.seller_profile_image ? (
+                    <img src={data!.seller_profile_image} alt='profile_image' />
+                  ) : (
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      width='16'
+                      height='16'
+                      fill='fill-neutral'
+                      className='w-full h-full bi bi-person-fill bg-neutral-200'
+                      viewBox='0 0 16 16'
+                    >
+                      <path d='M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6' />
+                    </svg>
+                  )}
                 </div>
               </div>
-              <div className='flex flex-col items-start justify-around w-full'>
+              <div className='flex flex-col items-start justify-center w-full'>
                 <p className='mb-2 card-title'>{data!.seller_name}</p>
                 <div className='justify-end card-actions'>
                   {data!.badge_list.includes('판매왕') && (
@@ -80,7 +92,7 @@ export default function PostDetail() {
                 {isAutor && (
                   <select
                     name='goods-state'
-                    defaultValue={data.status}
+                    defaultValue={data!.status}
                     onChange={(e) => handleState(e.target.value)}
                     className='w-32 md:w-40 select select-bordered'
                   >

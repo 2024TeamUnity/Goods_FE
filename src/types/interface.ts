@@ -141,12 +141,13 @@ export interface IChatHistoryData {
 }
 
 export interface IMyInfo {
-  memberId: number;
-  nickName: string;
-  phoneNumber: string;
-  profileImage: string | null;
+  member_id: number;
+  nick_name: string;
+  phone_number: string;
+  profile_image: string | null;
   star: number;
-  badgeList: string[];
+  badge_list: string[];
+  trade_password_exists: boolean;
 }
 
 export interface IChargePoint {
