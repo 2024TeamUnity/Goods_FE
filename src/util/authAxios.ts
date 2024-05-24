@@ -26,7 +26,7 @@ client.interceptors.response.use(
   async (err) => {
     if (err instanceof AxiosError && err.config) {
       if (err.response?.status === 401) {
-        const { access_token: accessToken } = (
+        const { access_token: accessToken, refresh_token: refreshToken } = (
           await axios.post(
             '/api/api/member/reissue',
             {},
@@ -38,8 +38,9 @@ client.interceptors.response.use(
             },
           )
         ).data;
-        if (accessToken) {
+        if (accessToken && refreshToken) {
           localStorage.setItem('access_token', accessToken);
+          localStorage.setItem('refresh_token', refreshToken);
           return client(err.config);
         }
       }
