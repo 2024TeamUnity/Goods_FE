@@ -18,12 +18,12 @@ export default function EmailAuthModal({
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      confirmEmailAuth({ email, code: code as number });
+      confirmEmailAuth({ email, verification_number: code as number });
     }
   };
   const handleSubmit = () => {
     if (typeof code === 'string') return;
-    confirmEmailAuth({ email, code: code! });
+    confirmEmailAuth({ email, verification_number: code! });
   };
   return (
     <div className='fixed top-0 left-0 z-50 flex items-center justify-center w-full h-screen bg-[rgba(0,0,0,.7)]'>
