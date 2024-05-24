@@ -51,14 +51,16 @@ export default function PostCreate({
     formData.append('goods_name', form.goods_name);
     formData.append('price', String(form.price));
     formData.append('description', form.description);
-    formData.append(
-      'lat',
-      String(clickedLocation.lat !== 0 ? clickedLocation.lat : clickedLocation.center.lat),
-    );
-    formData.append(
-      'lng',
-      String(clickedLocation.lng !== 0 ? clickedLocation.lng : clickedLocation.center.lng),
-    );
+    if (clickedLocation.lat === 0) {
+      formData.append('lat', String(lat) ?? String(clickedLocation.center.lat));
+    } else {
+      formData.append('lat', String(clickedLocation.lat));
+    }
+    if (clickedLocation.lng === 0) {
+      formData.append('lng', String(lng) ?? String(clickedLocation.center.lng));
+    } else {
+      formData.append('lng', String(clickedLocation.lng));
+    }
     formData.append('user_defined_location', form.user_defined_location);
     formData.append('address', clickedLocation.address || '서울 종로구 세종로 1-80');
     if (newPostMatch) {

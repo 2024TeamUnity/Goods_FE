@@ -7,7 +7,7 @@ export const useDeletePostMutation = () => {
   const { mutate } = useMutation({
     mutationFn: async (goodsId: string) => (await client.delete(`/api/goods/${goodsId}`)).data,
     onSuccess: () => {
-      navigate(-1);
+      navigate('/');
     },
   });
 

@@ -19,7 +19,7 @@ export default function PostDetail() {
   const handleState = (state: string) => {
     mutate({
       goods_id: goodsId!,
-      state,
+      goods_status: state,
     });
   };
 

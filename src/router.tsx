@@ -20,6 +20,7 @@ import NotFoundPage from './components/common/NotFoundPage';
 import ChatRoomList from './routes/ChatRoomList';
 import ChatRoom from './routes/ChatRoom';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import PayRedirect from './routes/PayRedirect';
 // protected route : home,signin,signup,kakaoRedirection,shop 제외 모든 페이지
 export default function Router() {
   return (
@@ -45,6 +46,7 @@ export default function Router() {
         <Route path='/payment' element={<Payment />} />
         <Route path='/chatroom/:roomId' element={<ChatRoom />} />
         <Route path='/chatroom' element={<ChatRoomList />} />
+        <Route path='/payment/redirect' element={<PayRedirect />} />
       </Route>
       <Route path='/auth/kakao' element={<KakaoRedirection />} />
       <Route path='/shop/:id' element={<Shop />} />

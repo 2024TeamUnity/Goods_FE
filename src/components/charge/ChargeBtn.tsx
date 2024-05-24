@@ -10,7 +10,7 @@ export default function ChargeBtn({ point, isValid }: { point: string; isValid: 
     const response = await PortOne.requestPayment({
       storeId: 'store-c25657c2-20cd-46be-a4b7-7251c9edaac6',
       channelKey: 'channel-key-7befbae7-69b4-4a6e-8ff6-744de647707a',
-      paymentId: `payment${crypto.randomUUID()}`,
+      paymentId: crypto.randomUUID(),
       orderName: '포인트 충전',
       totalAmount: Number(point),
       currency: 'CURRENCY_KRW',
@@ -20,18 +20,19 @@ export default function ChargeBtn({ point, isValid }: { point: string; isValid: 
         phoneNumber: data!.phone_number,
         email: 'test@portone.io',
       },
-      redirectUrl: `http://localhost:5173/payment/redirect`,
+      appScheme: 'portone://',
+      redirectUrl: `http://localhost:5173/payment/redirect?point=${point}`,
     });
 
-    if (!response || response?.code !== null) {
+    if (response!.code != null) {
       // eslint-disable-next-line no-alert
-      return alert(response?.message);
+      return alert(response!.message);
     }
 
-    if (response) {
+    if (response!.paymentId) {
       charge({
         price: point,
-        payment_id: response.paymentId!,
+        payment_id: response!.paymentId,
       });
     }
   }

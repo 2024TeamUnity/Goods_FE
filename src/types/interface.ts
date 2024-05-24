@@ -145,15 +145,9 @@ export interface IMyInfo {
   nick_name: string;
   phone_number: string;
   profile_image: string | null;
-<<<<<<< HEAD
   trade_password_exists: boolean;
   star: number;
   badge_list: string[];
-=======
-  star: number;
-  badge_list: string[];
-  trade_password_exists: boolean;
->>>>>>> develop
 }
 
 export interface IChargePoint {

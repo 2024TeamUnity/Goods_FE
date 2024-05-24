@@ -55,7 +55,12 @@ export default function PointCalc({ type, bank, account, password, price, goodsI
     }
 
     if (
-      (type === 'transfer' && bank && account && point && !isNegative) ||
+      (type === 'transfer' &&
+        bank &&
+        account &&
+        Number(point) <= curPoint &&
+        point &&
+        !isNegative) ||
       (type === 'charge' && point) ||
       (type === 'payment' && password && point)
     ) {

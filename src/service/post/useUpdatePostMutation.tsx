@@ -13,8 +13,8 @@ export const useUpdatePostMutation = () => {
           },
         })
       ).data,
-    onSuccess: (res) => {
-      navigate(`/posts/${res.id}`);
+    onSuccess: (_, { goods_id }) => {
+      navigate(`/posts/${goods_id}`);
     },
   });
 
