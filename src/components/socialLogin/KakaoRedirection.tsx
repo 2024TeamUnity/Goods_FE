@@ -5,8 +5,10 @@ export default function KakaoRedirection() {
   const navigate = useNavigate();
   useEffect(() => {
     const accessToken = new URL(window.location.toString()).searchParams.get('access');
-    if (accessToken) {
+    const refreshToken = new URL(window.location.toString()).searchParams.get('refresh');
+    if (accessToken && refreshToken) {
       localStorage.setItem('access_token', accessToken);
+      localStorage.setItem('refresh_token', refreshToken);
       navigate('/');
     }
   }, [navigate]);
