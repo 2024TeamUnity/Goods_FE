@@ -29,12 +29,12 @@ export default function SignUp() {
     }
     formData.append('email', data.email);
     formData.append('password', data.password);
-    formData.append('chkPassword', data.confirmPassword);
-    formData.append('phoneNumber', String(data.phoneNumber));
-    formData.append('tradePassword', String(data.paymentPassword));
-    formData.append('nickName', data.nickName);
+    formData.append('chk_password', data.confirmPassword);
+    formData.append('phone_number', String(data.phoneNumber));
+    formData.append('trade_password', String(data.paymentPassword));
+    formData.append('nick_name', data.nickName);
     if (file) {
-      formData.append('profileImage', file);
+      formData.append('profile_image', file);
     }
     signup(formData);
   });

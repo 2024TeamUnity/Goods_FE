@@ -70,8 +70,8 @@ export default function HomeMap() {
     const latlng = map.getCenter();
 
     const res = (
-      await axios.get('/api/goods', { params: { lat: latlng.getLat(), lng: latlng.getLng() } })
-    ).data;
+      await axios.get('/api/api/goods', { params: { lat: latlng.getLat(), lng: latlng.getLng() } })
+    ).data.content;
     setHomeList(res);
     setGoodsList(res);
   };

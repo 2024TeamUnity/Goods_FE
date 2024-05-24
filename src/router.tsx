@@ -46,7 +46,7 @@ export default function Router() {
         <Route path='/chatroom/:roomId' element={<ChatRoom />} />
         <Route path='/chatroom' element={<ChatRoomList />} />
       </Route>
-      <Route path='/auth/kakao' element={<KakaoRedirection />} />
+      <Route path='/oauth/kakao' element={<KakaoRedirection />} />
       <Route path='/shop/:id' element={<Shop />} />
       <Route path='*' element={<NotFoundPage />} />
     </Routes>

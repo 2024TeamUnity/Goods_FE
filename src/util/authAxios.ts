@@ -26,13 +26,13 @@ client.interceptors.response.use(
   async (err) => {
     if (err instanceof AxiosError && err.config) {
       if (err.response?.status === 401) {
-        const { accessToken } = (
+        const { access_token: accessToken } = (
           await axios.post(
             '/api/api/member/reissue',
             {},
             {
               headers: {
-                Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+                Authorization: `Bearer ${localStorage.getItem('access_token')}`,
               },
               withCredentials: true,
             },
