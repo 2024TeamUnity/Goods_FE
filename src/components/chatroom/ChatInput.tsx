@@ -1,8 +1,15 @@
-import React, { useRef, useState } from 'react';
+import React, { Dispatch, SetStateAction, useRef } from 'react';
 
-export default function ChatInput() {
+export default function ChatInput({
+  msg,
+  setMsg,
+  onSubmitMsg,
+}: {
+  msg: string;
+  setMsg: Dispatch<SetStateAction<string>>;
+  onSubmitMsg: (message: string) => void;
+}) {
   const ref = useRef<HTMLTextAreaElement>(null);
-  const [msg, setMsg] = useState('');
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setMsg(e.currentTarget.value);
@@ -17,7 +24,7 @@ export default function ChatInput() {
       e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`;
     } else if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      console.log(msg);
+      onSubmitMsg(msg);
       setMsg('');
       e.currentTarget.style.height = 'auto';
     }
@@ -28,7 +35,7 @@ export default function ChatInput() {
     if (ref.current) {
       const { current } = ref;
       current.style.height = 'auto';
-      console.log(msg);
+      onSubmitMsg(msg);
       setMsg('');
       current.focus();
     }

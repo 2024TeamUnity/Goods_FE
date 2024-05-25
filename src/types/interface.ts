@@ -131,12 +131,12 @@ export interface IChatLog {
 }
 
 export interface IChatHistoryData {
-  room_id: number;
-  goods_id: number;
-  goods_seller: string;
-  goods_name: string;
-  goods_image: string;
-  goods_price: number;
+  roomId: number;
+  goodsId: number;
+  goodsSeller: string;
+  goodsName: string;
+  goodsImage: string;
+  goodsPrice: number;
   chatLog: IChatLog[];
 }
 
@@ -219,4 +219,10 @@ export interface IGoodsList {
   lat: number;
   lng: number;
   uploaded_before: number;
+}
+
+export interface IChatMessage {
+  room_id: number;
+  goods_id: number;
+  message: string;
 }

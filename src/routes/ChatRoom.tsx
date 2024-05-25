@@ -1,14 +1,64 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import ChatHistory from '../components/chatroom/ChatHistory';
 import GoodsInfo from '../components/chatroom/GoodsInfo';
 import { useChatHistoryQuery } from '../service/chat/useChatHistoryQuery';
 import ChatInput from '../components/chatroom/ChatInput';
+import { useEffect, useRef, useState } from 'react';
+import { CompatClient, Stomp } from '@stomp/stompjs';
+import SockJS from 'sockjs-client';
+import { IChatLog, IChatMessage } from '../types/interface';
 
 export default function ChatRoom() {
-  const { roomId } = useParams();
   const navigate = useNavigate();
   const handleNavigate = () => navigate(-1);
-  const { data, isLoading } = useChatHistoryQuery(roomId!);
+  const { state } = useLocation();
+  const { data, isLoading } = useChatHistoryQuery(state.roomId);
+  const [chatLog, setChatLog] = useState<IChatLog[]>([]);
+  const [msg, setMsg] = useState('');
+
+  const stompClient = useRef<CompatClient | null>(null);
+
+  const handleSendMsg = (message: string) => {
+    if (stompClient.current && stompClient.current.connected) {
+      const chatMessage: IChatMessage = {
+        room_id: Number(state.room_id),
+        goods_id: Number(state.goodsId),
+        message,
+      };
+      stompClient.current.send(
+        `/pub/message`,
+        {
+          Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+        },
+        JSON.stringify(chatMessage),
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (data) {
+      setChatLog(data.chatLog);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    const connectHandler = () => {
+      const socket = new SockJS('/chat');
+
+      stompClient.current = Stomp.over(socket);
+
+      stompClient.current.connect(
+        { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+        () => {
+          stompClient.current?.subscribe(`/sub/message/${state.roomId}`, (msg) => {
+            setChatLog((prev) => (prev.length !== 0 ? [...prev, JSON.parse(msg.body)] : []));
+          });
+        },
+        { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+      );
+    };
+    connectHandler();
+  }, [state.roomId]);
 
   if (isLoading) return <h1>loading...</h1>;
   return (
@@ -31,20 +81,20 @@ export default function ChatRoom() {
               />
             </svg>
           </button>
-          <h1 className='text-2xl font-bold text-center'>{data?.goods_seller}</h1>
+          <h1 className='text-2xl font-bold text-center'>{data?.goodsSeller}</h1>
         </div>
         <GoodsInfo
           info={{
-            id: data!.goods_id,
-            image: data!.goods_image,
-            name: data!.goods_seller,
-            title: data!.goods_name,
-            price: data!.goods_price,
+            id: data!.goodsId,
+            image: data!.goodsImage,
+            name: data!.goodsSeller,
+            title: data!.goodsName,
+            price: data!.goodsPrice,
           }}
         />
         <div className='divider before:h-1 after:h-1' />
-        <ChatHistory chatLog={data!.chatLog} />
-        <ChatInput />
+        <ChatHistory chatLog={chatLog} />
+        <ChatInput msg={msg} setMsg={setMsg} onSubmitMsg={handleSendMsg} />
       </div>
     </div>
   );
