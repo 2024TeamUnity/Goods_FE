@@ -5,8 +5,13 @@ import { useState } from 'react';
 
 export default function Payment() {
   const [password, setPassword] = useState<number>();
-
   const { state } = useLocation();
+
+  const addComma = (point: string): string => {
+    const commaPoint = point.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return commaPoint;
+  };
+
   return (
     <>
       <div className='flex h-20 px-3 py-3 md:px-7'>
@@ -22,7 +27,7 @@ export default function Payment() {
           <img className='object-cover w-20 h-20 mr-4 rounded-xl' src={state.image} alt='img' />
           <div className='flex flex-col justify-around flex-1 w-full'>
             <p>{state.title}</p>
-            <p className='text-xl font-bold'>{state.price}원</p>
+            <p className='text-xl font-bold'>{`${addComma(String(state.price))}원`}</p>
           </div>
         </Link>
         <div className='w-full max-w-lg mt-6'>

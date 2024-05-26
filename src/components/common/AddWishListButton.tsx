@@ -9,7 +9,7 @@ export default function AddWishListButton({ goodsId, wish }: { goodsId: number; 
 
   const handleLikeBtnClick = () => {
     if (!isAdded) {
-      addItem(goodsId);
+      addItem({ goodsId });
       setIsAdded(true);
       return;
     }

@@ -6,6 +6,7 @@ import { useUpdateStateMutation } from '../service/post/useUpdateStateMutation';
 import AddWishListButton from '../components/common/AddWishListButton';
 import PostDeleteBtn from '../components/postDelete/PostDeleteBtn';
 import { useProfileQuery } from '../service/mypage/useUserQueries';
+import { getTime } from '../util/getTime';
 
 export default function PostDetail() {
   const { id: goodsId } = useParams();
@@ -88,7 +89,9 @@ export default function PostDetail() {
                 <h1 className='my-4 text-2xl md:my-8 md:text-3xl'>{data!.goods_name}</h1>
               </div>
               <div className='flex items-center justify-between md:flex-1'>
-                <h2 className='text-sm text-stone-400 md:text-base'>{data!.uploaded_before}</h2>
+                <h2 className='text-sm text-stone-400 md:text-base'>
+                  {getTime(data!.uploaded_before)}
+                </h2>
                 {isAutor && (
                   <select
                     name='goods-state'

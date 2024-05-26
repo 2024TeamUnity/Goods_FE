@@ -29,7 +29,7 @@ client.interceptors.response.use(
         const { access_token: accessToken, refresh_token: refreshToken } = (
           await axios.post(
             '/api/api/member/reissue',
-            {},
+            { refresh_token: localStorage.getItem('refresh_token') },
             {
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
