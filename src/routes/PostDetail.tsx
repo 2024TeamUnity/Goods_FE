@@ -131,7 +131,7 @@ export default function PostDetail() {
                     />
                   </svg>
                 </Link>
-                <PostDeleteBtn goodsId={goodsId!} />
+                <PostDeleteBtn goodsId={goodsId!} memberId={profile!.member_id} />
               </>
             ) : (
               <button onClick={handleToChat} className='mr-2 btn btn-primary'>

@@ -156,9 +156,7 @@ export interface IChargePoint {
 }
 
 export interface IWithdrawPoint {
-  point: string;
-  bank_name: string;
-  account_number: string;
+  price: string;
 }
 
 export interface ITradePoint {

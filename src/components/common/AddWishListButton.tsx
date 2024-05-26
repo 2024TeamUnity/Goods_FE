@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAddWishItemMutation } from '../../service/mypage/useAddWishItemMutation';
 import { useRemoveWishItemMutation } from '../../service/mypage/useRemoveWishItemMutation';
 
 export default function AddWishListButton({ goodsId, wish }: { goodsId: number; wish: boolean }) {
-  const [isAdded, setIsAdded] = useState(wish);
+  const [isAdded, setIsAdded] = useState(false);
   const addItem = useAddWishItemMutation();
   const removeItem = useRemoveWishItemMutation();
+
+  useEffect(() => {
+    setIsAdded(wish);
+  }, [wish]);
 
   const handleLikeBtnClick = () => {
     if (!isAdded) {

@@ -8,10 +8,11 @@ import client from '../../util/authAxios';
 export const useReadPostQuery = (goodsId: string) => {
   const isAuth = useRecoilValue(isAuthState);
   const { isLoading, data } = useQuery<IGoodsData>({
-    queryKey: ['goodsDetail', goodsId],
+    queryKey: ['goodsDetail', goodsId, isAuth],
     queryFn: async () => {
       const endPoint = isAuth ? `/api/goods/${goodsId}` : `/api/api/goods/${goodsId}`;
       const apiClient = isAuth ? client : axios;
+      console.log(isAuth);
       return (await apiClient.get(endPoint)).data;
     },
   });

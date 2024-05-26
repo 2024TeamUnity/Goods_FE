@@ -75,9 +75,7 @@ export default function PointCalc({ type, bank, account, password, price, goodsI
   const handleSubmit = () => {
     if (type === 'transfer') {
       withdraw({
-        point,
-        bank_name: bank!,
-        account_number: String(account),
+        price: point,
       });
     } else if (type === 'payment') {
       /* 임시 */
