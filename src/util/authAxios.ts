@@ -1,7 +1,7 @@
 /* eslint-disable no-param-reassign */
 import axios, { AxiosError } from 'axios';
 
-const client = axios.create({ baseURL: '/api', withCredentials: true });
+const client = axios.create({ baseURL: '/api' });
 
 client.interceptors.request.use(
   (config) => {
@@ -34,7 +34,6 @@ client.interceptors.response.use(
               headers: {
                 Authorization: `Bearer ${localStorage.getItem('access_token')}`,
               },
-              withCredentials: true,
             },
           )
         ).data;

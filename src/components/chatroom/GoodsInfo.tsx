@@ -3,7 +3,14 @@ import { Link } from 'react-router-dom';
 export default function GoodsInfo({
   info,
 }: {
-  info: { id: number; image: string; name: string; title: string; price: number };
+  info: {
+    id: number;
+    image: string;
+    name: string;
+    title: string;
+    price: number;
+    memberType: string;
+  };
 }) {
   return (
     <div className='flex items-center justify-between px-4 my-5'>
@@ -14,9 +21,11 @@ export default function GoodsInfo({
           <span className='text-lg'>{info.price}원</span>
         </div>
       </Link>
-      <Link to='/payment' state={info}>
-        <button className='btn btn-active btn-primary btn-md'>거래 요청</button>
-      </Link>
+      {info.memberType === 'BUYER' && (
+        <Link to='/payment' state={info}>
+          <button className='btn btn-active btn-primary btn-md'>거래 요청</button>
+        </Link>
+      )}
     </div>
   );
 }

@@ -35,7 +35,7 @@ export default function PostDetail() {
       const res = (await client.post(`api/chat/room/${goodsId}`)).data;
       console.log(res);
       if (res.room_id) {
-        navigate(`/chatroom/${goodsId}`, { state: { roomId: res.room_id, goodsId } });
+        navigate(`/room/${res.room_id}`, { state: { roomId: res.room_id, goodsId } });
       }
       return res;
     } catch (e) {

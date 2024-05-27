@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useMyInfoQuery } from '../../service/signin/useMyInfoQuery';
 import { useSignoutMutation } from '../../service/signin/useSignoutMutation';
+import { useRecoilValue } from 'recoil';
+import { notReadState } from '../../store/atom';
 
 export default function Drawer() {
   const { info, isLoading } = useMyInfoQuery();
   const logout = useSignoutMutation();
+  const notRead = useRecoilValue(notReadState);
 
   const handleLogout = () => logout();
 
@@ -61,7 +64,14 @@ export default function Drawer() {
               <Link to='/mypage'>마이페이지</Link>
             </li>
             <li>
-              <Link to='/chatroom'>채팅 목록</Link>
+              <Link className='relative' to='/roomList'>
+                채팅 목록
+                {notRead !== 0 && (
+                  <div className='absolute left-[75px] top-0 flex items-center justify-center w-5 h-5 p-2 text-white bg-black border rounded-full'>
+                    {notRead}
+                  </div>
+                )}
+              </Link>
             </li>
             <li>
               <Link to='/wish-history'>관심 목록</Link>
