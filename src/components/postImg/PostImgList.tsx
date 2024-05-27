@@ -11,6 +11,7 @@ export default function PostImgList({ prevThumbnails }: { prevThumbnails: string
 
   useEffect(() => {
     setImgUrls(prevThumbnails);
+    console.log(prevThumbnails);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

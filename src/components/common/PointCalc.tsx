@@ -1,9 +1,9 @@
 import { ChangeEvent, useEffect, useState } from 'react';
 import { IPointCalc } from '../../types/interface';
 import { usePointQuery } from '../../service/point/usePointQuery';
-import { useChargeMutation } from '../../service/point/useChargeMutation';
 import { useWithdrawMutation } from '../../service/point/useWithdrawMutation';
 import { useTradePointMutation } from '../../service/point/useTradePointMutation';
+import ChargeBtn from '../charge/ChargeBtn';
 
 export default function PointCalc({ type, bank, account, password, price, goodsId }: IPointCalc) {
   const [point, setPoint] = useState('');
@@ -55,7 +55,12 @@ export default function PointCalc({ type, bank, account, password, price, goodsI
     }
 
     if (
-      (type === 'transfer' && bank && account && point && !isNegative) ||
+      (type === 'transfer' &&
+        bank &&
+        account &&
+        Number(point) <= curPoint &&
+        point &&
+        !isNegative) ||
       (type === 'charge' && point) ||
       (type === 'payment' && password && point)
     ) {
@@ -65,15 +70,12 @@ export default function PointCalc({ type, bank, account, password, price, goodsI
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [bank, account, point, type, password, curPoint]);
 
-  const { mutate: charge } = useChargeMutation();
   const { mutate: withdraw } = useWithdrawMutation();
   const { mutate: trade } = useTradePointMutation();
   const handleSubmit = () => {
     if (type === 'transfer') {
       withdraw({
-        point,
-        bank_name: bank!,
-        account_number: String(account),
+        price: point,
       });
     } else if (type === 'payment') {
       /* 임시 */
@@ -82,13 +84,6 @@ export default function PointCalc({ type, bank, account, password, price, goodsI
         goods_id: goodsId!,
         price: String(price),
         trade_password: String(password),
-      });
-    } else {
-      /* 임시 */
-      charge({
-        price: point,
-        payment_id: 1,
-        imp_uid: '1',
       });
     }
   };
@@ -138,12 +133,16 @@ export default function PointCalc({ type, bank, account, password, price, goodsI
           <p className='text-lg font-bold md:text-xl'>{`${newPoint}P`}</p>
         </div>
       </div>
-      <button
-        onClick={handleSubmit}
-        className={`w-full max-w-lg btn btn-accent${isValid ? '' : ' btn-disabled'}`}
-      >
-        {typeStr}하기
-      </button>
+      {type === 'charge' ? (
+        <ChargeBtn point={point} isValid={isValid} />
+      ) : (
+        <button
+          onClick={handleSubmit}
+          className={`w-full max-w-lg btn btn-accent${isValid ? '' : ' btn-disabled'}`}
+        >
+          {typeStr}하기
+        </button>
+      )}
     </>
   );
 }

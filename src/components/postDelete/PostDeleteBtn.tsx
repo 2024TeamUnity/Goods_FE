@@ -1,13 +1,19 @@
 import { useRef } from 'react';
 import { useDeletePostMutation } from '../../service/post/useDeletePostMutation';
 
-export default function PostDeleteBtn({ goodsId }: { goodsId: string }) {
+export default function PostDeleteBtn({
+  goodsId,
+  memberId,
+}: {
+  goodsId: string;
+  memberId: number;
+}) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const showModal = () => {
     dialogRef.current?.showModal();
   };
 
-  const mutate = useDeletePostMutation();
+  const mutate = useDeletePostMutation(String(memberId));
 
   const handleDeletePost = () => {
     mutate(goodsId!);

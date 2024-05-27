@@ -10,7 +10,7 @@ export default function Drawer() {
 
   if (isLoading) return <div className='w-8 h-8 rounded-full md:w-10 md:h-10 skeleton' />;
   return (
-    <div className='flex items-center justify-end w-8 md:w-16 drawer drawer-end'>
+    <div className='z-50 flex items-center justify-end w-8 md:w-16 drawer drawer-end'>
       <input id='my-drawer-4' type='checkbox' className='drawer-toggle' />
       <div className='drawer-content'>
         <label htmlFor='my-drawer-4' className='drawer-button'>

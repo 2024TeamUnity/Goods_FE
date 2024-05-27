@@ -36,7 +36,7 @@ export default function Shop() {
           <h2 className='mt-8 mb-4 ml-4 text-xl font-bold md:text-2xl'>판매 목록</h2>
           {!salesLoading && (
             <ul className='flex flex-col items-center justify-center w-full max-w-md mx-auto mb-20 md:max-w-5xl gap-y-3'>
-              {salesData!.length === 0 ? (
+              {salesData!.content.length === 0 ? (
                 <div className='flex flex-col items-center justify-center w-full h-96 gap-y-5'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -58,7 +58,7 @@ export default function Shop() {
                   </Link>
                 </div>
               ) : (
-                salesData!.map((item) => {
+                salesData!.content.map((item) => {
                   return (
                     <CardListItem
                       key={item.goods_id}

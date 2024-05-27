@@ -145,21 +145,18 @@ export interface IMyInfo {
   nick_name: string;
   phone_number: string;
   profile_image: string | null;
+  trade_password_exists: boolean;
   star: number;
   badge_list: string[];
-  trade_password_exists: boolean;
 }
 
 export interface IChargePoint {
   price: string;
-  payment_id: number;
-  imp_uid: string;
+  payment_id: string;
 }
 
 export interface IWithdrawPoint {
-  point: string;
-  bank_name: string;
-  account_number: string;
+  price: string;
 }
 
 export interface ITradePoint {

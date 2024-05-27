@@ -6,6 +6,7 @@ import { useUpdateStateMutation } from '../service/post/useUpdateStateMutation';
 import AddWishListButton from '../components/common/AddWishListButton';
 import PostDeleteBtn from '../components/postDelete/PostDeleteBtn';
 import { useProfileQuery } from '../service/mypage/useUserQueries';
+import { getTime } from '../util/getTime';
 
 export default function PostDetail() {
   const { id: goodsId } = useParams();
@@ -19,7 +20,7 @@ export default function PostDetail() {
   const handleState = (state: string) => {
     mutate({
       goods_id: goodsId!,
-      state,
+      goods_status: state,
     });
   };
 
@@ -88,7 +89,9 @@ export default function PostDetail() {
                 <h1 className='my-4 text-2xl md:my-8 md:text-3xl'>{data!.goods_name}</h1>
               </div>
               <div className='flex items-center justify-between md:flex-1'>
-                <h2 className='text-sm text-stone-400 md:text-base'>{data!.uploaded_before}</h2>
+                <h2 className='text-sm text-stone-400 md:text-base'>
+                  {getTime(data!.uploaded_before)}
+                </h2>
                 {isAutor && (
                   <select
                     name='goods-state'
@@ -104,7 +107,7 @@ export default function PostDetail() {
               </div>
             </div>
           </div>
-          <div className='fixed bottom-0 left-0 z-50 flex items-center w-full h-20 px-3 py-3 bg-white border-t md:relative md:border-0 md:p-0'>
+          <div className='fixed bottom-0 left-0 z-40 flex items-center w-full h-20 px-3 py-3 bg-white border-t md:relative md:border-0 md:p-0'>
             <div className='flex items-center ml-2 mr-4 md:ml-0'>
               <AddWishListButton goodsId={Number(goodsId)} wish={data!.liked} />
             </div>
@@ -128,7 +131,7 @@ export default function PostDetail() {
                     />
                   </svg>
                 </Link>
-                <PostDeleteBtn goodsId={goodsId!} />
+                <PostDeleteBtn goodsId={goodsId!} memberId={profile!.member_id} />
               </>
             ) : (
               <button onClick={handleToChat} className='mr-2 btn btn-primary'>
