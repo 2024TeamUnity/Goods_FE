@@ -53,7 +53,7 @@ export default function MyPage() {
             {!pointLoading && (
               <div className='flex items-center justify-between flex-auto mb-10'>
                 <p className='text-xl font-bold'>포인트</p>
-                <p className='text-xl font-bold'>{point.price}</p>
+                <p className='text-xl font-bold'>{`${point.price}P`}</p>
               </div>
             )}
             <div className='flex justify-between flex-none'>
