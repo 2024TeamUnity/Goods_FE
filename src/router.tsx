@@ -44,8 +44,8 @@ export default function Router() {
         <Route path='/mypage/charge' element={<PointCharge />} />
         <Route path='/mypage/transfer' element={<Transfer />} />
         <Route path='/payment' element={<Payment />} />
-        <Route path='/chatroom/:roomId' element={<ChatRoom />} />
-        <Route path='/chatroom' element={<ChatRoomList />} />
+        <Route path='/room/:roomId' element={<ChatRoom />} />
+        <Route path='/roomList' element={<ChatRoomList />} />
         <Route path='/payment/redirect' element={<PayRedirect />} />
       </Route>
       <Route path='/oauth/kakao' element={<KakaoRedirection />} />

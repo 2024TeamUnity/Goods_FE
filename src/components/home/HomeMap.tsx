@@ -61,9 +61,10 @@ export default function HomeMap() {
     });
   }, [keyword]);
 
-  const handleResetSearch = () => {
+  const handleResetSearch = async () => {
     setSearchList([]);
-    setHomeList([]);
+    const res = (await refetch()).data;
+    setHomeList(res!);
   };
 
   const handleMapDrag = async (map: kakao.maps.Map) => {

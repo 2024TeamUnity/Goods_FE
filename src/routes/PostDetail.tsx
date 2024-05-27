@@ -1,12 +1,13 @@
 import Carousel from '../components/carousel/Carousel';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import { useReadPostQuery } from '../service/post/useReadPostQuery';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useUpdateStateMutation } from '../service/post/useUpdateStateMutation';
 import AddWishListButton from '../components/common/AddWishListButton';
 import PostDeleteBtn from '../components/postDelete/PostDeleteBtn';
 import { useProfileQuery } from '../service/mypage/useUserQueries';
 import { getTime } from '../util/getTime';
+import client from '../util/authAxios';
 
 export default function PostDetail() {
   const { id: goodsId } = useParams();
@@ -29,7 +30,19 @@ export default function PostDetail() {
     return commaPrice;
   };
 
-  const handleToChat = () => {};
+  const navigate = useNavigate();
+  const handleToChat = async () => {
+    try {
+      const res = (await client.post(`api/chat/room/${goodsId}`)).data;
+      console.log(res);
+      if (res.room_id) {
+        navigate(`/room/${res.room_id}`, { state: { roomId: res.room_id, goodsId } });
+      }
+      return res;
+    } catch (e) {
+      navigate(`/notfound`);
+    }
+  };
 
   if (isLoading) {
     return <div>Loading...</div>;

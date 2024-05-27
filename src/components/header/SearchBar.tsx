@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useMatch, useNavigate } from 'react-router-dom';
-import { ISearchData } from '../../mocks/data/searchData';
 import { useSearchMutation, useUpdateSearchMutation } from '../../service/map/useSearchMutation';
+import { IGoodsList } from '../../types/interface';
 
 export default function SearchBar() {
   const [keyword, setKeyword] = useState('');
-  const [autocomplete, setAutocomplete] = useState<ISearchData[]>([]);
+  const [autocomplete, setAutocomplete] = useState<IGoodsList[]>([]);
   const [selectedItem, setSelectedItem] = useState(0);
 
   const navigate = useNavigate();
@@ -24,7 +24,7 @@ export default function SearchBar() {
     if (!keyword) return;
     if (selectedItem < autocomplete.length) {
       if (key === 'Enter') {
-        search(autocomplete[selectedItem].name);
+        search(autocomplete[selectedItem].goods_name);
         if (!homeMatch) navigate('/'); // 홈 아닌 다른페이지에서 검색했다면 홈으로 이동
       } else if (key === 'ArrowUp' && selectedItem >= 0) {
         setSelectedItem((prev) => (prev === 0 ? prev + autocomplete.length - 1 : prev - 1));
@@ -79,13 +79,13 @@ export default function SearchBar() {
           {autocomplete?.map((item, index) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
             <li
-              onClick={() => handleKeywordSubmit(item.name)}
+              onClick={() => handleKeywordSubmit(item.goods_name)}
               className={`p-2 font-bold hover:bg-neutral-200 rounded-xl ${
                 selectedItem === index && 'bg-neutral-200'
               }`}
-              key={item.id}
+              key={`${item.goods_id}_${item.lat}`}
             >
-              {item.name}
+              {item.goods_name}
             </li>
           ))}
         </ul>

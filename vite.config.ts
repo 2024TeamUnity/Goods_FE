@@ -12,6 +12,12 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ''), // 프록시 요청의 경로를 재작성하는 함수를 설정한다.
         ws: true,
       },
+      '/chat': {
+        target: 'http://ec2-13-124-41-239.ap-northeast-2.compute.amazonaws.com:8080/api/chat',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/chat/, ''),
+        ws: true,
+      },
     },
   },
 });

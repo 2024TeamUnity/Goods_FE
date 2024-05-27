@@ -54,3 +54,8 @@ export const goodsListState = atom<IGoodsList[]>({
   key: 'goodsList',
   default: [],
 });
+
+export const notReadState = atom({
+  key: 'notReadMsg',
+  default: 0,
+});
