@@ -9,6 +9,11 @@ export default function MyPage() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [password, setPassword] = useState<string>('');
 
+  const addComma = (point: string): string => {
+    const commaPoint = point.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return commaPoint;
+  };
+
   const showModal = () => {
     dialogRef.current?.showModal();
   };
@@ -53,7 +58,7 @@ export default function MyPage() {
             {!pointLoading && (
               <div className='flex items-center justify-between flex-auto mb-10'>
                 <p className='text-xl font-bold'>포인트</p>
-                <p className='text-xl font-bold'>{`${point.price}P`}</p>
+                <p className='text-xl font-bold'>{`${addComma(point.price)}P`}</p>
               </div>
             )}
             <div className='flex justify-between flex-none'>
