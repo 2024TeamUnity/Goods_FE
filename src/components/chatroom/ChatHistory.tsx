@@ -2,8 +2,9 @@ import { useEffect, useRef } from 'react';
 import { IChatLog } from '../../types/interface';
 import { useScroll } from '../../util/useScroll';
 
-export default function ChatHistory({ chatLog }: { chatLog: IChatLog[] }) {
+export default function ChatHistory({ chatLog, myId }: { chatLog: IChatLog[]; myId: number }) {
   const ulRef = useRef<HTMLUListElement>(null);
+  const initRef = useRef<HTMLDivElement>(null);
   const show = useScroll(ulRef);
 
   const handleClick = () => {
@@ -12,27 +13,41 @@ export default function ChatHistory({ chatLog }: { chatLog: IChatLog[] }) {
     }
   };
 
+  const convertToCurrentDateTime = (timeString: string) => {
+    const currentDate = new Date();
+    const currentDateString = currentDate.toISOString().split('T')[0];
+    const dateTimeString = `${currentDateString}T${timeString}Z`;
+    const dateTime = new Date(dateTimeString);
+
+    return dateTime.toTimeString().split('GMT')[0];
+  };
+
   useEffect(() => {
-    handleClick();
-  }, []);
+    if (initRef.current) {
+      initRef.current.scrollIntoView({ behavior: 'instant' });
+    }
+  }, [chatLog]);
 
   return (
     <ul className='relative w-full py-3 overflow-y-auto h-3/5' ref={ulRef}>
       {chatLog?.map((item) => (
         <li
-          key={item.created_at}
-          className={`chat  ${item.sender === '구매자' ? 'chat-end' : 'chat-start'}`} // sender가 나 인지 아닌지만 알 수 있으면
+          key={`${item.created_at}_${item.message}`}
+          className={`chat  ${Number(item.sender_id) === myId ? 'chat-end' : 'chat-start'}`}
         >
           <div
             className={`text-black chat-bubble ${
-              item.sender === '구매자' ? 'bg-primary-content' : 'bg-neutral-content'
+              Number(item.sender_id) === myId ? 'bg-primary-content' : 'bg-neutral-content'
             }`}
           >
             {item.message}
           </div>
-          <div className='opacity-50 chat-footer'>{item.created_at}</div>
+          <div className='opacity-50 chat-footer'>
+            {convertToCurrentDateTime(item.created_at?.split('T')[1])}
+          </div>
         </li>
       ))}
+      <div ref={initRef} />
 
       {show && (
         <button
@@ -54,3 +69,6 @@ export default function ChatHistory({ chatLog }: { chatLog: IChatLog[] }) {
     </ul>
   );
 }
+// item.created_at
+// ? convertToCurrentDateTime(item.created_at?.split('T')[1])
+// : Date.now()

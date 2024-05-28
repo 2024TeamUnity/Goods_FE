@@ -118,15 +118,16 @@ export interface IChatRoomListData {
   goods_price: number;
   sender: string;
   receiver: string;
-  non_read: number;
+  not_read: number;
   last_message: string;
   updated_at: string;
+  partner: string;
 }
 
 export interface IChatLog {
   message: string;
-  sender: string;
-  receiver: string;
+  sender_id: string;
+  receiver_id: string;
   created_at: string;
 }
 
@@ -137,7 +138,10 @@ export interface IChatHistoryData {
   goods_name: string;
   goods_image: string;
   goods_price: number;
-  chatLog: IChatLog[];
+  chat_logs: IChatLog[];
+  member_id: number;
+  partner: string;
+  member_type: string;
 }
 
 export interface IMyInfo {

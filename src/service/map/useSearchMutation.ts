@@ -9,7 +9,8 @@ export const useSearchMutation = (callback: Dispatch<SetStateAction<string>>) =>
   const setHomeList = useSetRecoilState(homeListState);
   const setSearchList = useSetRecoilState(searchResultState);
   const { mutate } = useMutation({
-    mutationFn: async (keyword: string) => (await axios.post('api/goods/search', { keyword })).data,
+    mutationFn: async (keyword: string) =>
+      (await axios.post('api/api/goods/search', { keyword })).data.content,
     onSuccess: (data: IGoodsList[]) => {
       setHomeList(data);
       setSearchList(data);
@@ -38,9 +39,10 @@ export const useUpdateSearchMutation = (
   keyword: string,
 ) => {
   const { mutate } = useMutation({
-    mutationFn: async () => (await axios.post('api/goods/search', { keyword })).data,
+    mutationFn: async () => (await axios.post('/api/api/goods/search', { keyword })).data.content,
     onSuccess: (data) => {
-      callback([{ id: Date.now(), name: keyword }, ...data]);
+      callback([{ id: Date.now(), goods_name: keyword } as unknown, ...data]);
+      console.log(data);
     },
   });
   return mutate;

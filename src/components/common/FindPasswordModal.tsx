@@ -10,7 +10,7 @@ export default function FindPasswordModal({ closeModal }: { closeModal: () => vo
   const handleSendPassword = () => {
     findPassword(email);
     // eslint-disable-next-line no-alert
-    alert('이메일을 확인 해 주세요.');
+    alert('이메일이 발송 되었습니다.');
     closeModal();
   };
 
