@@ -34,7 +34,6 @@ export default function PostDetail() {
   const handleToChat = async () => {
     try {
       const res = (await client.post(`api/chat/room/${goodsId}`)).data;
-      console.log(res);
       if (res.room_id) {
         navigate(`/room/${res.room_id}`, { state: { roomId: res.room_id, goodsId } });
       }

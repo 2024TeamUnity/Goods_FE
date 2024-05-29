@@ -92,7 +92,6 @@ export default function PointCalc({
         price: point,
       });
     } else if (type === 'payment') {
-      console.log(sellerId);
       trade({
         seller_id: sellerId!,
         goods_id: goodsId!,

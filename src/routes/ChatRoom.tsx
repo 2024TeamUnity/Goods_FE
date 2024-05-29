@@ -52,7 +52,7 @@ export default function ChatRoom() {
             ...prev,
             {
               message: messageData.message,
-              created_at: new Date().toISOString(), // ISO string for consistency
+              created_at: new Date().toISOString(),
               sender_id: messageData.sender_id,
               receiver_id: '',
             },

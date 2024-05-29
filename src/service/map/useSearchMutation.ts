@@ -42,7 +42,6 @@ export const useUpdateSearchMutation = (
     mutationFn: async () => (await axios.post('/api/api/goods/search', { keyword })).data.content,
     onSuccess: (data) => {
       callback([{ id: Date.now(), goods_name: keyword } as unknown, ...data]);
-      console.log(data);
     },
   });
   return mutate;
