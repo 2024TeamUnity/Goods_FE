@@ -5,11 +5,23 @@ import { useWithdrawMutation } from '../../service/point/useWithdrawMutation';
 import { useTradePointMutation } from '../../service/point/useTradePointMutation';
 import ChargeBtn from '../charge/ChargeBtn';
 
-export default function PointCalc({ type, bank, account, password, price, goodsId }: IPointCalc) {
+export default function PointCalc({
+  type,
+  bank,
+  account,
+  password,
+  price,
+  goodsId,
+  sellerId,
+}: IPointCalc) {
+  const { data, isLoading } = usePointQuery();
+  const { mutate: withdraw } = useWithdrawMutation();
+  const { mutate: trade } = useTradePointMutation();
   const [point, setPoint] = useState('');
   const [isNegative, setIsNegative] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
-  const [curPoint, setCurPoint] = useState<number>(0);
+  const [newPoint, setNewPoint] = useState('');
+  const [curPoint, setCurPoint] = useState(0);
 
   const typeDescription: { [key: string]: string } = {
     charge: '충전',
@@ -19,14 +31,10 @@ export default function PointCalc({ type, bank, account, password, price, goodsI
 
   const typeStr = typeDescription[type];
 
-  const { data, isLoading } = usePointQuery();
-
   const addComma = (point: string): string => {
     const commaPoint = point.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return commaPoint;
   };
-
-  const [newPoint, setNewPoint] = useState(addComma(String(curPoint)));
 
   const handlePoint = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -48,10 +56,18 @@ export default function PointCalc({ type, bank, account, password, price, goodsI
 
   useEffect(() => {
     if (!data) return;
+
     setCurPoint(data.price);
 
-    if (price && data.price < price) {
-      setIsNegative(true);
+    if (type === 'payment') {
+      const afterPointNum = +curPoint - +price!;
+      if (afterPointNum < 0) {
+        setIsNegative(true);
+        return;
+      }
+      setIsNegative(false);
+      const afterPointStr = addComma(String(afterPointNum));
+      setNewPoint(afterPointStr);
     }
 
     if (
@@ -62,25 +78,23 @@ export default function PointCalc({ type, bank, account, password, price, goodsI
         point &&
         !isNegative) ||
       (type === 'charge' && point) ||
-      (type === 'payment' && password && point)
+      (type === 'payment' && password && price)
     ) {
       return setIsValid(true);
     }
     return setIsValid(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bank, account, point, type, password, curPoint]);
+  }, [bank, account, point, type, password, curPoint, data]);
 
-  const { mutate: withdraw } = useWithdrawMutation();
-  const { mutate: trade } = useTradePointMutation();
   const handleSubmit = () => {
     if (type === 'transfer') {
       withdraw({
         price: point,
       });
     } else if (type === 'payment') {
-      /* 임시 */
+      console.log(sellerId);
       trade({
-        seller_id: 1,
+        seller_id: sellerId!,
         goods_id: goodsId!,
         price: String(price),
         trade_password: String(password),

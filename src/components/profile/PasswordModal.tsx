@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useUpdatePasswordMutation } from '../../service/mypage/useUpdatePasswordMutation';
 
-export default function PasswordModal({ title }: { title: string }) {
+export default function PasswordModal({ title, noExist }: { title: string; noExist: boolean }) {
   const [curPassword, setCurPassword] = useState<string>('');
   const [newPassword, setNewPassword] = useState<string>('');
   const [valid, setValid] = useState<boolean>(true);
@@ -65,19 +65,21 @@ export default function PasswordModal({ title }: { title: string }) {
           )}
           <div className='justify-center mt-0 modal-action'>
             <form method='dialog'>
-              <label
-                htmlFor={`${type}-curPassword`}
-                className='flex w-full max-w-lg mb-8 input input-bordered md:max-w-5xl'
-              >
-                <input
-                  id={`${type}-curPassword`}
-                  type='password'
-                  value={curPassword}
-                  onChange={(e) => setCurPassword(e.target.value)}
-                  placeholder={`현재 ${title}`}
-                  className='font-normal grow'
-                />
-              </label>
+              {!noExist && (
+                <label
+                  htmlFor={`${type}-curPassword`}
+                  className='flex w-full max-w-lg mb-8 input input-bordered md:max-w-5xl'
+                >
+                  <input
+                    id={`${type}-curPassword`}
+                    type='password'
+                    value={curPassword}
+                    onChange={(e) => setCurPassword(e.target.value)}
+                    placeholder={`현재 ${title}`}
+                    className='font-normal grow'
+                  />
+                </label>
+              )}
               <label
                 htmlFor={`${type}-newPassword`}
                 className='flex w-full max-w-lg input input-bordered md:max-w-5xl'
@@ -106,7 +108,7 @@ export default function PasswordModal({ title }: { title: string }) {
                   type='button'
                   onClick={handleUpdatePassword}
                   className={`btn w-32 mr-2 shrink md:w-40 btn-accent ${
-                    curPassword && newPassword && valid ? '' : ' btn-disabled'
+                    (curPassword || noExist) && newPassword && valid ? '' : ' btn-disabled'
                   }`}
                 >
                   변경

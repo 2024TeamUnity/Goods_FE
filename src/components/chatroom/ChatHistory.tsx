@@ -14,12 +14,16 @@ export default function ChatHistory({ chatLog, myId }: { chatLog: IChatLog[]; my
   };
 
   const convertToCurrentDateTime = (timeString: string) => {
+    if (!timeString) return;
+
     const currentDate = new Date();
     const currentDateString = currentDate.toISOString().split('T')[0];
     const dateTimeString = `${currentDateString}T${timeString}Z`;
     const dateTime = new Date(dateTimeString);
+    const hour = dateTime.toTimeString().split(':')[0];
+    const min = dateTime.toTimeString().split(':')[1];
 
-    return dateTime.toTimeString().split('GMT')[0];
+    return `${hour}:${min}`;
   };
 
   useEffect(() => {
@@ -29,8 +33,8 @@ export default function ChatHistory({ chatLog, myId }: { chatLog: IChatLog[]; my
   }, [chatLog]);
 
   return (
-    <ul className='relative w-full py-3 overflow-y-auto h-3/5' ref={ulRef}>
-      {chatLog?.map((item) => (
+    <ul className='relative w-full py-3 overflow-y-auto h-3/4' ref={ulRef}>
+      {chatLog!.map((item) => (
         <li
           key={`${item.created_at}_${item.message}`}
           className={`chat  ${Number(item.sender_id) === myId ? 'chat-end' : 'chat-start'}`}
@@ -43,7 +47,7 @@ export default function ChatHistory({ chatLog, myId }: { chatLog: IChatLog[]; my
             {item.message}
           </div>
           <div className='opacity-50 chat-footer'>
-            {convertToCurrentDateTime(item.created_at?.split('T')[1])}
+            {convertToCurrentDateTime(item.created_at.split('Z')[0].split('T')[1])}
           </div>
         </li>
       ))}
@@ -69,6 +73,3 @@ export default function ChatHistory({ chatLog, myId }: { chatLog: IChatLog[]; my
     </ul>
   );
 }
-// item.created_at
-// ? convertToCurrentDateTime(item.created_at?.split('T')[1])
-// : Date.now()
