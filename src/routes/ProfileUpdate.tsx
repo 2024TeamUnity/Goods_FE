@@ -188,11 +188,14 @@ export default function ProfileUpdate() {
             <div className='w-full max-w-lg px-5 mb-10'>
               <div className='flex items-center justify-between w-full max-w-lg gap-2 mb-4 font-bold input input-bordered md:max-w-5xl'>
                 <span>비밀번호</span>
-                <PasswordModal title='비밀번호' />
+                <PasswordModal title='비밀번호' noExist={false} />
               </div>
               <div className='flex items-center justify-between w-full max-w-lg gap-2 mb-4 font-bold input input-bordered md:max-w-5xl'>
-                <span>간편결제 비밀번호</span>
-                <PasswordModal title='간편결제 비밀번호' />
+                <div>
+                  <span>간편결제 비밀번호</span>
+                  {!data?.trade_password_exists && <span className='ml-4 text-accent'>*</span>}
+                </div>
+                <PasswordModal title='간편결제 비밀번호' noExist={!data!.trade_password_exists} />
               </div>
               <button
                 onClick={onSubmit}

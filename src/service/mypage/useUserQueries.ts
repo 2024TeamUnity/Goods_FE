@@ -34,7 +34,7 @@ export const useUpdateProfileMutation = () => {
         })
       ).data,
     onSuccess: (req) => {
-      if (req.nickName) {
+      if (req.nick_name) {
         navigate('/mypage');
       }
     },

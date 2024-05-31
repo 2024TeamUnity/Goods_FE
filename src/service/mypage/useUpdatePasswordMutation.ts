@@ -7,7 +7,7 @@ export const useUpdatePasswordMutation = (type: string) => {
       curPassword,
       newPassword,
     }: {
-      curPassword: string;
+      curPassword?: string;
       newPassword: string;
     }) =>
       (

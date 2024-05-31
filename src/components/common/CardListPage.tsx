@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useMatch } from 'react-router-dom';
 import {
   IPurchaseHistoryResponse,
   ISalesHistoryResponse,
@@ -13,6 +13,8 @@ export default function CardListPage({
   data: IPurchaseHistoryResponse | IWishHistoryResponse | ISalesHistoryResponse;
   title: string;
 }) {
+  const purchaseHistoryMatch = useMatch('/purchase-history');
+
   return (
     <div className='max-w-md px-5 mx-auto md:max-w-5xl'>
       <ul className='flex flex-col items-center justify-center w-full mx-auto md:max-w-xl gap-y-3'>
@@ -41,6 +43,10 @@ export default function CardListPage({
         ) : (
           Array.isArray(data.content) &&
           data.content.map((item) => {
+            const cardProps = purchaseHistoryMatch
+              ? { traded_before: item!.traded_before }
+              : { uploaded_before: item!.uploaded_before };
+
             return (
               <CardListItem
                 key={item.goods_id}
@@ -49,7 +55,7 @@ export default function CardListPage({
                 name={item.goods_name}
                 price={item.price}
                 status={item.goods_status}
-                uploaded_before={item.uploaded_before}
+                {...cardProps}
               />
             );
           })

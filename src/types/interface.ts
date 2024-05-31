@@ -33,6 +33,7 @@ export interface IPointCalc {
   password?: number;
   price?: number;
   goodsId?: number;
+  sellerId?: number;
 }
 
 export interface ISalesHistoryData {
@@ -40,13 +41,13 @@ export interface ISalesHistoryData {
   price: number;
   goods_thumbnail: string;
   goods_status: string;
-  uploaded_before: number;
+  uploaded_before?: number;
   goods_id: number;
+  traded_before?: number;
 }
 export interface IPurchaseHistoryData extends ISalesHistoryData {
   seller_name: string;
   member_id: number;
-  traded_before: number;
 }
 
 export interface IRatingModal {
@@ -55,22 +56,17 @@ export interface IRatingModal {
   id: number;
 }
 
-export interface IWishHistoryData {
+export interface IWishHistoryData extends ISalesHistoryData {
   seller_name: string;
-  goods_name: string;
-  price: number;
-  goods_thumbnail: string;
-  goods_status: string;
-  uploaded_before: number;
   address: string;
-  goods_id: number;
 }
 
 export interface ICardListItemProps {
   id: number;
   img: string;
   name: string;
-  uploaded_before: number;
+  uploaded_before?: number;
+  traded_before?: number;
   status: string;
   price: number;
 }

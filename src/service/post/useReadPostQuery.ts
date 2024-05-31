@@ -12,7 +12,6 @@ export const useReadPostQuery = (goodsId: string) => {
     queryFn: async () => {
       const endPoint = isAuth ? `/api/goods/${goodsId}` : `/api/api/goods/${goodsId}`;
       const apiClient = isAuth ? client : axios;
-      console.log(isAuth);
       return (await apiClient.get(endPoint)).data;
     },
   });

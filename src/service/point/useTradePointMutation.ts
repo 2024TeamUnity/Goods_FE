@@ -8,7 +8,7 @@ export const useTradePointMutation = () => {
   const { mutate } = useMutation({
     mutationFn: async (data: ITradePoint) => (await client.post('/api/trade/point', data)).data,
     onSuccess: () => {
-      navigate(-1);
+      navigate('/purchase-history');
     },
   });
 

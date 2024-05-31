@@ -39,34 +39,31 @@ export default function ChatRoom() {
   }, [data]);
 
   useEffect(() => {
-    const connectHandler = () => {
-      const socket = new SockJS(import.meta.env.VITE_CHAT_SERVER);
+    const socket = new SockJS(import.meta.env.VITE_CHAT_SERVER);
 
-      stompClient.current = Stomp.over(socket);
+    stompClient.current = Stomp.over(socket);
 
-      stompClient.current.connect(
-        { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
-        () => {
-          stompClient.current?.subscribe(`/sub/message/${roomId}`, (msg) => {
-            setChatLog((prev) =>
-              prev.length !== 0
-                ? [
-                    ...prev,
-                    {
-                      message: JSON.parse(msg.body).message,
-                      created_at: Date.now().toString(),
-                      sender_id: String(data!.member_id),
-                      receiver_id: '',
-                    },
-                  ]
-                : [],
-            );
-          });
-        },
-        { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
-      );
+    stompClient.current.connect(
+      { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+      () => {
+        stompClient.current?.subscribe(`/sub/message/${roomId}`, (msg) => {
+          const messageData = JSON.parse(msg.body);
+          setChatLog((prev) => [
+            ...prev,
+            {
+              message: messageData.message,
+              created_at: new Date().toISOString(),
+              sender_id: messageData.sender_id,
+              receiver_id: '',
+            },
+          ]);
+        });
+      },
+      { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
+    );
+    return () => {
+      stompClient.current?.disconnect();
     };
-    connectHandler();
   }, [roomId, data]);
 
   if (isLoading) return <h1>loading...</h1>;
@@ -102,7 +99,7 @@ export default function ChatRoom() {
             memberType: data!.member_type,
           }}
         />
-        <div className='divider before:h-1 after:h-1' />
+        <div className='h-0 mb-0 divider' />
         <ChatHistory chatLog={chatLog} myId={data!.member_id} />
         <ChatInput msg={msg} setMsg={setMsg} onSubmitMsg={handleSendMsg} />
       </div>

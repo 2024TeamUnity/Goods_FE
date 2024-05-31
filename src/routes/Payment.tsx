@@ -21,7 +21,7 @@ export default function Payment() {
           </div>
         </Link>
       </div>
-      <div className='flex flex-col items-center w-full max-w-lg px-5 mx-auto'>
+      <div className='flex flex-col items-center w-full max-w-lg px-5 mx-auto mb-20'>
         <h1 className='my-12 text-2xl font-bold text-center md:text-3xl'>결제하기</h1>
         <Link to={`/posts/${state.id}`} className='flex justify-start w-full max-w-lg'>
           <img className='object-cover w-20 h-20 mr-4 rounded-xl' src={state.image} alt='img' />
@@ -46,7 +46,13 @@ export default function Payment() {
             />
           </label>
         </div>
-        <PointCalc type='payment' password={password} price={state.price} goodsId={state.id} />
+        <PointCalc
+          type='payment'
+          password={password}
+          price={state.price}
+          goodsId={state.id}
+          sellerId={state.sellerId}
+        />
       </div>
     </>
   );
