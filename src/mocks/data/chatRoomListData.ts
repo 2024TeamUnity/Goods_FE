@@ -9,9 +9,10 @@ export const chatRoomList: IChatRoomListData[] = [
     goods_price: 20000,
     sender: '구매자',
     receiver: '판매자',
-    non_read: 10,
+    not_read: 10,
     last_message: '삽니다',
     updated_at: '2024-05-14',
+    partner: '판매자',
   },
   {
     room_id: 2,
@@ -22,9 +23,10 @@ export const chatRoomList: IChatRoomListData[] = [
     goods_price: 100000,
     sender: '구매자',
     receiver: '판매자',
-    non_read: 0,
+    not_read: 0,
     last_message: '삽니다',
     updated_at: '2024-05-14',
+    partner: '판매자',
   },
   {
     room_id: 3,
@@ -35,9 +37,10 @@ export const chatRoomList: IChatRoomListData[] = [
     goods_price: 100000,
     sender: '구매자',
     receiver: '판매자',
-    non_read: 2,
+    not_read: 2,
     last_message: '삽니다',
     updated_at: '2024-05-14',
+    partner: '판매자',
   },
   {
     room_id: 4,
@@ -48,9 +51,10 @@ export const chatRoomList: IChatRoomListData[] = [
     goods_price: 1000000,
     sender: '구매자',
     receiver: '판매자',
-    non_read: 8,
+    not_read: 8,
     last_message:
       'https://images.samsung.com/kdp/goods/2023/08/03/98f31ad5-b606-4b93-8ed0-5a78af443e7d.png?$PD_GALLERY_L_PNG$',
     updated_at: '2024-05-14',
+    partner: '판매자',
   },
 ];
