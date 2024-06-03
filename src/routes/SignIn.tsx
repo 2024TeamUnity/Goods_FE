@@ -6,7 +6,7 @@ import FindPasswordModal from '../components/common/FindPasswordModal';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('!l8gY5f(vh');
   const [showModal, setShowModal] = useState(false);
   const login = useSigninMutation();
 

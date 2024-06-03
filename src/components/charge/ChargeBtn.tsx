@@ -1,6 +1,7 @@
 import { useProfileQuery } from '../../service/mypage/useUserQueries';
 import { useChargeMutation } from '../../service/point/useChargeMutation';
 import * as PortOne from '@portone/browser-sdk/v2';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 export default function ChargeBtn({ point, isValid }: { point: string; isValid: boolean }) {
   const { data, isLoading } = useProfileQuery();
@@ -37,7 +38,7 @@ export default function ChargeBtn({ point, isValid }: { point: string; isValid: 
     }
   }
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <LoadingSpinner />;
   return (
     <button
       onClick={() => requestPayment()}

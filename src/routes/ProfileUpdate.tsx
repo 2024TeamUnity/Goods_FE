@@ -5,6 +5,7 @@ import { IProfileUpdate } from '../types/interface';
 import React, { useEffect, useRef, useState } from 'react';
 import { useProfileQuery, useUpdateProfileMutation } from '../service/mypage/useUserQueries';
 import PasswordModal from '../components/profile/PasswordModal';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export default function ProfileUpdate() {
   const { isLoading, data } = useProfileQuery();
@@ -80,7 +81,7 @@ export default function ProfileUpdate() {
       <div className='flex flex-col items-center justify-center w-full px-5 mx-auto md:max-w-5xl'>
         <h2 className='my-12 text-2xl font-bold text-center md:text-3xl'>프로필 수정</h2>
         {isLoading ? (
-          'Loading...'
+          <LoadingSpinner />
         ) : (
           <>
             <div className='flex justify-center mb-6'>

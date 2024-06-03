@@ -1,6 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useReadPostQuery } from '../service/post/useReadPostQuery';
 import PostCreate from './PostCreate';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export default function PostEdit() {
   const { id: goodsId } = useParams();
@@ -8,7 +9,7 @@ export default function PostEdit() {
   const { data, isLoading } = useReadPostQuery(goodsId!);
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
   return (
     <PostCreate
