@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useReadPostQuery } from '../../service/post/useReadPostQuery';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 export default function GoodsInfo({
   info,
@@ -21,7 +22,7 @@ export default function GoodsInfo({
   };
 
   if (isLoading) {
-    return <p>Loading...</p>;
+    return <LoadingSpinner />;
   }
 
   const combinedInfo = {

@@ -3,6 +3,7 @@ import { useChatRoomListQuery } from '../service/chat/useChatRoomListQuery';
 import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { notReadState } from '../store/atom';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export default function ChatRoomList() {
   const { data, isLoading } = useChatRoomListQuery();
@@ -13,13 +14,14 @@ export default function ChatRoomList() {
     const totalNotRead = data?.reduce((acc, cur) => (acc += cur.not_read), 0);
     setNotRead(totalNotRead!);
   }, [data, setNotRead]);
-
-  if (isLoading) return <p>Loading...</p>;
   return (
     <div className='w-full px-5 md:mx-auto md:max-w-5xl'>
       <h2 className='my-12 text-2xl font-bold text-center md:text-3xl'>채팅 목록</h2>
       <ul className='flex flex-col items-center justify-center w-full mx-auto mb-20 md:max-w-xl'>
-        {data!.length === 0 ? (
+        {/* eslint-disable-next-line no-nested-ternary */}
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : data!.length === 0 ? (
           <h3 className='text-lg'>결과가 없습니다.</h3>
         ) : (
           Array.isArray(data) &&

@@ -4,6 +4,7 @@ import { usePointQuery } from '../../service/point/usePointQuery';
 import { useWithdrawMutation } from '../../service/point/useWithdrawMutation';
 import { useTradePointMutation } from '../../service/point/useTradePointMutation';
 import ChargeBtn from '../charge/ChargeBtn';
+import LoadingSpinner from './LoadingSpinner';
 
 export default function PointCalc({
   type,
@@ -101,7 +102,7 @@ export default function PointCalc({
     }
   };
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <LoadingSpinner />;
   return (
     <>
       <div className='w-full max-w-lg mt-6'>

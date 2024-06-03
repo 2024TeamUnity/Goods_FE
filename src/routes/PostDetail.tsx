@@ -8,6 +8,7 @@ import PostDeleteBtn from '../components/postDelete/PostDeleteBtn';
 import { useProfileQuery } from '../service/mypage/useUserQueries';
 import { getTime } from '../util/getTime';
 import client from '../util/authAxios';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export default function PostDetail() {
   const { id: goodsId } = useParams();
@@ -44,7 +45,7 @@ export default function PostDetail() {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />;
   }
   return (
     <div className='w-full max-w-lg px-5 mx-auto mt-5 md:max-w-5xl'>
