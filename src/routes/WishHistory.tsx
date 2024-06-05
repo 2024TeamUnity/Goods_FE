@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { usePaginatedHistoryQuery } from '../service/mypage/useWishHistoryQuery';
 import Observer from '../components/common/Observer';
@@ -7,15 +6,13 @@ import { getTime } from '../util/getTime';
 import AddWishListButton from '../components/common/AddWishListButton';
 import HistoryPageContainer from '../components/common/HistoryPageContainer';
 import { addComma } from '../util/addComma';
+import { useReduceHistory } from '../util/useReduceHistory';
+import { IWishHistoryData } from '../types/interface';
 
 export default function WishHistory() {
   const { data, isLoading, hasNextPage, fetchNextPage } = usePaginatedHistoryQuery();
 
-  const wishList = useMemo(() => {
-    if (data) {
-      return data.pages.reduce((acc, cur) => [...acc, ...cur], []);
-    }
-  }, [data]);
+  const wishList = useReduceHistory<IWishHistoryData>(data!);
 
   if (isLoading) return <LoadingSpinner />;
   return (

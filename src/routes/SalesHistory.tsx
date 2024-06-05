@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import HistoryPageContainer from '../components/common/HistoryPageContainer';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import Observer from '../components/common/Observer';
@@ -7,6 +6,8 @@ import { useProfileQuery } from '../service/mypage/useUserQueries';
 import { Link } from 'react-router-dom';
 import { getTime } from '../util/getTime';
 import { addComma } from '../util/addComma';
+import { useReduceHistory } from '../util/useReduceHistory';
+import { ISalesHistoryData } from '../types/interface';
 
 export default function SalesHistory() {
   const { data: profile, isLoading: profileLoading } = useProfileQuery();
@@ -14,11 +15,7 @@ export default function SalesHistory() {
     String(profile?.member_id),
   );
 
-  const salesItems = useMemo(() => {
-    if (data) {
-      return data.pages.reduce((acc, cur) => [...acc, ...cur], []);
-    }
-  }, [data]);
+  const salesItems = useReduceHistory<ISalesHistoryData>(data!);
 
   if (isLoading || profileLoading) return <LoadingSpinner />;
   return (
