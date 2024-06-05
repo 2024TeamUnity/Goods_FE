@@ -1,11 +1,61 @@
-import CardListPage from '../components/common/CardListPage';
+import { useMemo } from 'react';
+import HistoryPageContainer from '../components/common/HistoryPageContainer';
 import LoadingSpinner from '../components/common/LoadingSpinner';
-import { useSalesHistoryQuery } from '../service/mypage/useSalseHistoryQuery';
+import Observer from '../components/common/Observer';
+import { usePaginatedSalesHistoryQuery } from '../service/mypage/useSalseHistoryQuery';
 import { useProfileQuery } from '../service/mypage/useUserQueries';
+import { Link } from 'react-router-dom';
+import { getTime } from '../util/getTime';
 
 export default function SalesHistory() {
   const { data: profile, isLoading: profileLoading } = useProfileQuery();
-  const { data, isLoading } = useSalesHistoryQuery(String(profile?.member_id));
+  const { data, isLoading, hasNextPage, fetchNextPage } = usePaginatedSalesHistoryQuery(
+    String(profile?.member_id),
+  );
+
+  const salesItems = useMemo(() => {
+    if (data) {
+      return data.pages.reduce((acc, cur) => [...acc, ...cur], []);
+    }
+  }, [data]);
+
+  const addComma = (price: string): string => {
+    const commaPrice = price.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return commaPrice;
+  };
   if (isLoading || profileLoading) return <LoadingSpinner />;
-  return <CardListPage data={data!} title='판매 내역' />;
+  return (
+    <HistoryPageContainer isEmpty={!!!salesItems?.length} title='판매 목록'>
+      {salesItems?.map((item) => (
+        <li
+          key={item.goods_id}
+          className='flex flex-col w-full transition-all duration-200 scale-95 border rounded-xl gap-y-3 hover:scale-105'
+        >
+          <Link
+            to={`/posts/${item.goods_id}`}
+            className='flex items-center justify-start p-4 gap-x-8'
+          >
+            <img
+              className='object-cover w-24 h-24 rounded-xl md:w-32 md:h-32'
+              src={item.goods_thumbnail}
+              alt='img'
+            />
+            <div className='relative flex flex-col flex-1 py-2'>
+              <p className='text-lg font-bold'>{item.goods_name}</p>
+              <p className='flex-1 mt-2 mb-4 text-sm text-neutral-500'>
+                {getTime(item.uploaded_before!)}
+              </p>
+              <div className='flex items-center justify-start text-base gap-x-2'>
+                <div className='flex items-center justify-center w-16 p-1 text-sm text-white bg-secondary rounded-xl'>
+                  {item.goods_status}
+                </div>
+                <span className='font-bold'>{addComma(String(item.price))}원</span>
+              </div>
+            </div>
+          </Link>
+        </li>
+      ))}
+      <Observer loadMore={fetchNextPage} hasNext={hasNextPage} />
+    </HistoryPageContainer>
+  );
 }
