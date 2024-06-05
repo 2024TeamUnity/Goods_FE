@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useReadPostQuery } from '../../service/post/useReadPostQuery';
 import LoadingSpinner from '../common/LoadingSpinner';
+import { addComma } from '../../util/addComma';
 
 export default function GoodsInfo({
   info,
@@ -15,11 +16,6 @@ export default function GoodsInfo({
   };
 }) {
   const { data, isLoading } = useReadPostQuery(String(info.id));
-
-  const addComma = (point: string): string => {
-    const commaPoint = point.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return commaPoint;
-  };
 
   if (isLoading) {
     return <LoadingSpinner />;

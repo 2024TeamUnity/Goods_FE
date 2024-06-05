@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import { getTime } from '../util/getTime';
 import AddWishListButton from '../components/common/AddWishListButton';
 import HistoryPageContainer from '../components/common/HistoryPageContainer';
+import { addComma } from '../util/addComma';
 
 export default function WishHistory() {
   const { data, isLoading, hasNextPage, fetchNextPage } = usePaginatedHistoryQuery();
@@ -15,11 +16,6 @@ export default function WishHistory() {
       return data.pages.reduce((acc, cur) => [...acc, ...cur], []);
     }
   }, [data]);
-
-  const addComma = (price: string): string => {
-    const commaPrice = price.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return commaPrice;
-  };
 
   if (isLoading) return <LoadingSpinner />;
   return (

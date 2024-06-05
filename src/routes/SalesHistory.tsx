@@ -6,6 +6,7 @@ import { usePaginatedSalesHistoryQuery } from '../service/mypage/useSalseHistory
 import { useProfileQuery } from '../service/mypage/useUserQueries';
 import { Link } from 'react-router-dom';
 import { getTime } from '../util/getTime';
+import { addComma } from '../util/addComma';
 
 export default function SalesHistory() {
   const { data: profile, isLoading: profileLoading } = useProfileQuery();
@@ -19,10 +20,6 @@ export default function SalesHistory() {
     }
   }, [data]);
 
-  const addComma = (price: string): string => {
-    const commaPrice = price.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return commaPrice;
-  };
   if (isLoading || profileLoading) return <LoadingSpinner />;
   return (
     <HistoryPageContainer isEmpty={!!!salesItems?.length} title='판매 목록'>

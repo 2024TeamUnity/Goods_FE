@@ -5,6 +5,7 @@ import { useWithdrawMutation } from '../../service/point/useWithdrawMutation';
 import { useTradePointMutation } from '../../service/point/useTradePointMutation';
 import ChargeBtn from '../charge/ChargeBtn';
 import LoadingSpinner from './LoadingSpinner';
+import { addComma } from '../../util/addComma';
 
 export default function PointCalc({
   type,
@@ -31,11 +32,6 @@ export default function PointCalc({
   };
 
   const typeStr = typeDescription[type];
-
-  const addComma = (point: string): string => {
-    const commaPoint = point.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return commaPoint;
-  };
 
   const handlePoint = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
