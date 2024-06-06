@@ -1,29 +1,39 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import Profile from '../components/profile/Profile';
 import { Link } from 'react-router-dom';
 import logo from '../assets/logo.webp';
 import { useProfileQuery, useResignMutation } from '../service/mypage/useUserQueries';
 import { usePointQuery } from '../service/point/usePointQuery';
+import Modal from '../components/common/Modal';
 
 export default function MyPage() {
-  const dialogRef = useRef<HTMLDialogElement>(null);
   const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const addComma = (point: string): string => {
     const commaPoint = point.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     return commaPoint;
   };
 
-  const showModal = () => {
-    dialogRef.current?.showModal();
-  };
-
   const { data: profile, isLoading: profileLoading } = useProfileQuery();
   const { data: point, isLoading: pointLoading } = usePointQuery();
-  const { mutate, isError } = useResignMutation();
+  const mutate = useResignMutation(() => setError(true));
 
   const handleResign = () => {
     mutate({ password });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleResign();
+    }
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setError(false);
+    setPassword('');
   };
 
   return (
@@ -134,53 +144,33 @@ export default function MyPage() {
               </Link>
             </li>
             <li className='my-8'>
-              <button onClick={showModal}>회원 탈퇴</button>
-              <dialog ref={dialogRef} className='modal duration-0'>
-                <div className='modal-box'>
-                  <p className='py-4 text-center'>회원 탈퇴</p>
-                  {isError ? (
-                    <p className='py-4 text-lg font-normal text-center text-red-700'>
-                      비밀번호를 다시 입력해주세요.
-                    </p>
-                  ) : (
-                    <p className='py-4 text-lg font-normal text-center'>비밀번호를 입력하세요.</p>
-                  )}
-                  <div className='justify-center mt-0 modal-action'>
-                    <form method='dialog'>
-                      <label
-                        htmlFor='password'
-                        className='flex w-full max-w-lg mb-8 input input-bordered md:max-w-5xl'
-                      >
-                        <input
-                          id='password'
-                          type='password'
-                          value={password}
-                          onChange={(e) => setPassword(e.target.value)}
-                          placeholder='비밀번호'
-                          className='grow'
-                        />
-                      </label>
-                      <div className='flex justify-around w-full mb-4'>
-                        <button
-                          type='button'
-                          onClick={handleResign}
-                          className={`btn w-32 mr-2 shrink md:w-40 btn-accent ${
-                            password ? '' : ' btn-disabled'
-                          }`}
-                        >
-                          탈퇴
-                        </button>
-                        <button
-                          onClick={() => setPassword('')}
-                          className='w-32 ml-2 btn shrink md:w-40 btn-neutral'
-                        >
-                          취소
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              </dialog>
+              <button onClick={() => setIsOpen(true)}>회원 탈퇴</button>
+              <Modal
+                title='회원 탈퇴'
+                keyword='비밀번호를'
+                confirmBtnMsg='탈퇴'
+                isError={error}
+                hasSubmit
+                handleSubmit={handleResign}
+                isEmpty={!password}
+                isOpen={isOpen}
+                handleCloseModal={handleClose}
+              >
+                <label
+                  htmlFor='password'
+                  className='flex w-full max-w-lg mb-8 input input-bordered md:max-w-5xl'
+                >
+                  <input
+                    id='password'
+                    type='password'
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder='비밀번호'
+                    className='grow'
+                    onKeyDown={handleKeyDown}
+                  />
+                </label>
+              </Modal>
             </li>
           </ul>
         </div>

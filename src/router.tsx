@@ -50,6 +50,7 @@ export default function Router() {
       </Route>
       <Route path='/oauth/kakao' element={<KakaoRedirection />} />
       <Route path='/shop/:id' element={<Shop />} />
+      <Route path='/posts/undefined' element={<NotFoundPage />} />
       <Route path='*' element={<NotFoundPage />} />
     </Routes>
   );

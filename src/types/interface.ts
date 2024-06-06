@@ -50,12 +50,6 @@ export interface IPurchaseHistoryData extends ISalesHistoryData {
   member_id: number;
 }
 
-export interface IRatingModal {
-  onCloseModal: () => void;
-  onComplete: () => void;
-  id: number;
-}
-
 export interface IWishHistoryData extends ISalesHistoryData {
   seller_name: string;
   address: string;
@@ -216,4 +210,17 @@ export interface IGoodsList {
   lat: number;
   lng: number;
   uploaded_before: number;
+}
+
+export interface IModal {
+  isOpen: boolean;
+  children: React.ReactNode;
+  title: string;
+  keyword: string;
+  isError: boolean;
+  hasSubmit: boolean;
+  isEmpty: boolean;
+  handleSubmit: () => void;
+  handleCloseModal: () => void;
+  confirmBtnMsg: string;
 }

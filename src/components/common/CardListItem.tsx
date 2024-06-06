@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import RatingModal from './RatingModal';
 import { Link, useMatch } from 'react-router-dom';
 import { ICardListItemProps } from '../../types/interface';
 import AddWishListButton from './AddWishListButton';
 import { getTime } from '../../util/getTime';
+import RatingModal from './RatingModal';
 
 export default function CardListItem({
   id,
@@ -15,16 +15,20 @@ export default function CardListItem({
   traded_before,
 }: ICardListItemProps) {
   const [showModal, setShowModal] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isSubmit, setIsSubmit] = useState(false);
   const purchaseHistoryMatch = useMatch('/purchase-history');
   const wishHistoryMatch = useMatch('/wish-history');
 
-  const handleOpenModalClick = () => {
+  const handleOpenModal = () => {
+    setIsOpen(true);
     setShowModal(true);
   };
 
-  const handleCloseModal = () => setShowModal(false);
-  const handleSubmitComplete = () => setIsSubmit(true);
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setIsOpen(false);
+  };
 
   const addComma = (price: string): string => {
     const commaPrice = price.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -73,7 +77,7 @@ export default function CardListItem({
         </Link>
         {purchaseHistoryMatch && (
           <button
-            onClick={handleOpenModalClick}
+            onClick={handleOpenModal}
             className='bottom-0 left-0 w-full btn btn-active btn-neutral'
             disabled={isSubmit}
           >
@@ -95,9 +99,12 @@ export default function CardListItem({
           </button>
         )}
       </li>
-      {showModal && (
-        <RatingModal id={id} onComplete={handleSubmitComplete} onCloseModal={handleCloseModal} />
-      )}
+      <RatingModal
+        id={id}
+        isOpen={isOpen}
+        closeModal={handleCloseModal}
+        setIsSubmit={() => setIsSubmit(true)}
+      />
     </>
   );
 }

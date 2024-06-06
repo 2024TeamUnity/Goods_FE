@@ -1,16 +1,15 @@
 import { useForm } from 'react-hook-form';
 import { FormValueTypes } from '../types/interface';
-import EmailAuthModal from '../components/common/EmailAuthModal';
 import React, { useState } from 'react';
 import { useSignupMutation } from '../service/signup/useSignupMutation';
-import { useEmailAuthRequestMutation } from '../service/signup/useEmailAuthReqestMutation';
+import EmailAuthModal from '../components/common/EmailAuthModal';
 
 export default function SignUp() {
   const formData = new FormData();
-  const [shwoModal, setShowModal] = useState(false);
   const [disableModal, setDisableModal] = useState(false);
   const [file, setfile] = useState<File | null>(null);
   const [preview, setPreivew] = useState('');
+
   const {
     register,
     handleSubmit,
@@ -19,12 +18,11 @@ export default function SignUp() {
   } = useForm<FormValueTypes>();
 
   const signup = useSignupMutation();
-  const sendEmail = useEmailAuthRequestMutation();
 
   const onSubmit = handleSubmit((data) => {
     if (!disableModal) {
       // eslint-disable-next-line no-alert
-      alert('이메일 인증을 완료 해 주세요.');
+      alert('이메일 인증을 완료해주세요.');
       return;
     }
     formData.append('email', data.email);
@@ -38,12 +36,6 @@ export default function SignUp() {
     }
     signup(formData);
   });
-
-  const handleAuthEmailClick = async () => {
-    if (watch('email') === '') return;
-    sendEmail(watch('email'));
-    setShowModal(true);
-  };
 
   const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {
@@ -131,21 +123,8 @@ export default function SignUp() {
               className='w-full input input-bordered'
             />
             {errors?.email && <p className='mr-auto text-red-700'>{errors.email.message}</p>}
-            <button
-              onClick={handleAuthEmailClick}
-              type='button'
-              className='w-full btn btn-neutral'
-              disabled={disableModal}
-            >
-              이메일 인증
-            </button>
-            {shwoModal && (
-              <EmailAuthModal
-                email={watch('email')}
-                closeModal={() => setShowModal(false)}
-                setDisableModal={() => setDisableModal(true)}
-              />
-            )}
+
+            <EmailAuthModal email={watch('email')} setDisableModal={() => setDisableModal(true)} />
 
             <input
               {...register('password', {

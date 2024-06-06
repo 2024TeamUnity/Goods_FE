@@ -1,5 +1,6 @@
-import { useRef } from 'react';
+import { useState } from 'react';
 import { useDeletePostMutation } from '../../service/post/useDeletePostMutation';
+import Modal from '../common/Modal';
 
 export default function PostDeleteBtn({
   goodsId,
@@ -8,10 +9,7 @@ export default function PostDeleteBtn({
   goodsId: string;
   memberId: number;
 }) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const showModal = () => {
-    dialogRef.current?.showModal();
-  };
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const mutate = useDeletePostMutation(String(memberId));
 
@@ -21,7 +19,7 @@ export default function PostDeleteBtn({
 
   return (
     <>
-      <button onClick={showModal} className='mr-2 btn btn-neutral'>
+      <button onClick={() => setIsOpen(true)} className='mr-2 btn btn-neutral'>
         삭제
         <svg
           xmlns='http://www.w3.org/2000/svg'
@@ -34,28 +32,15 @@ export default function PostDeleteBtn({
           <path d='M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5' />
         </svg>
       </button>
-      <dialog ref={dialogRef} className='modal duration-0'>
-        <div className='modal-box'>
-          <p className='py-4 text-center'>게시글을 삭제하시겠습니까?</p>
-          <div className='justify-center mt-8 modal-action'>
-            <div className='flex justify-around w-full mb-4'>
-              <button
-                type='button'
-                onClick={handleDeletePost}
-                className='w-32 mr-2 btn shrink md:w-40 btn-accent'
-              >
-                삭제
-              </button>
-              <button
-                onClick={() => dialogRef.current?.close()}
-                className='w-32 ml-2 btn shrink md:w-40 btn-neutral'
-              >
-                취소
-              </button>
-            </div>
-          </div>
-        </div>
-      </dialog>
+      <Modal
+        isOpen={isOpen}
+        title='게시글 삭제'
+        handleSubmit={handleDeletePost}
+        handleCloseModal={() => setIsOpen(false)}
+        confirmBtnMsg='삭제'
+      >
+        <p className='py-4 text-lg font-normal text-center'>게시글을 삭제하시겠습니까?</p>
+      </Modal>
     </>
   );
 }
