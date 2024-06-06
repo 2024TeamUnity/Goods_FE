@@ -37,7 +37,13 @@ export default function WishHistory() {
                 {getTime(item.uploaded_before!)}
               </p>
               <div className='flex items-center justify-start text-base gap-x-2'>
-                <div className='flex items-center justify-center w-16 p-1 text-sm text-white bg-secondary rounded-xl'>
+                <div
+                  className={`flex items-center justify-center w-16 p-1 text-sm text-white rounded-xl ${
+                    item.goods_status === '판매중' && 'bg-secondary'
+                  } ${item.goods_status === '예약중' && 'bg-neutral-500'} ${
+                    item.goods_status === '거래완료' && 'bg-neutral'
+                  }`}
+                >
                   {item.goods_status}
                 </div>
                 <span className='font-bold'>{addComma(String(item.price))}원</span>
