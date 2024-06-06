@@ -4,15 +4,11 @@ import { Link } from 'react-router-dom';
 import logo from '../assets/logo.webp';
 import { useProfileQuery, useResignMutation } from '../service/mypage/useUserQueries';
 import { usePointQuery } from '../service/point/usePointQuery';
+import { addComma } from '../util/addComma';
 
 export default function MyPage() {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [password, setPassword] = useState<string>('');
-
-  const addComma = (point: string): string => {
-    const commaPoint = point.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return commaPoint;
-  };
 
   const showModal = () => {
     dialogRef.current?.showModal();

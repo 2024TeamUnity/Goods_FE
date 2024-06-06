@@ -35,6 +35,7 @@ module.exports = {
     'import/order': 'off',
     'import/no-cycle': 'off',
     'react/destructuring-assignment': 'off',
+    "no-extra-boolean-cast":"off"
   },
   ignorePatterns: ['.eslintrc.cjs', 'public', 'tailwind.config.js'],
 };

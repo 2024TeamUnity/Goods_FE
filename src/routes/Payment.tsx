@@ -2,15 +2,11 @@ import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo.webp';
 import PointCalc from '../components/common/PointCalc';
 import { useState } from 'react';
+import { addComma } from '../util/addComma';
 
 export default function Payment() {
   const [password, setPassword] = useState<number>();
   const { state } = useLocation();
-
-  const addComma = (point: string): string => {
-    const commaPoint = point.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return commaPoint;
-  };
 
   return (
     <>
