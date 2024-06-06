@@ -2,22 +2,21 @@ import HistoryPageContainer from '../components/common/HistoryPageContainer';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import Observer from '../components/common/Observer';
 import { usePaginatedSalesHistoryQuery } from '../service/mypage/useSalseHistoryQuery';
-import { useProfileQuery } from '../service/mypage/useUserQueries';
 import { Link } from 'react-router-dom';
 import { getTime } from '../util/getTime';
 import { addComma } from '../util/addComma';
 import { useReduceHistory } from '../util/useReduceHistory';
 import { ISalesHistoryData } from '../types/interface';
 
-export default function SalesHistory() {
-  const { data: profile, isLoading: profileLoading } = useProfileQuery();
+export default function SalesHistory({ userId, loading }: { userId: string; loading: boolean }) {
+  // const { data: profile, isLoading: profileLoading } = useProfileQuery();
   const { data, isLoading, hasNextPage, fetchNextPage } = usePaginatedSalesHistoryQuery(
-    String(profile?.member_id),
+    String(userId),
   );
 
   const salesItems = useReduceHistory<ISalesHistoryData>(data!);
 
-  if (isLoading || profileLoading) return <LoadingSpinner />;
+  if (isLoading || loading) return <LoadingSpinner />;
   return (
     <HistoryPageContainer isEmpty={!!!salesItems?.length} title='판매 목록'>
       {salesItems?.map((item) => (
