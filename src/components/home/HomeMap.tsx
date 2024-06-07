@@ -14,6 +14,7 @@ import {
 import { Link } from 'react-router-dom';
 import { useNearbyGoods } from '../../service/map/useNearbyGoods';
 import axios from 'axios';
+import { debounce } from 'lodash';
 
 export default function HomeMap() {
   const setSearchList = useSetRecoilState(searchResultState);
@@ -77,13 +78,15 @@ export default function HomeMap() {
     setGoodsList(res);
   };
 
+  const debounceHandleMapDrag = debounce(handleMapDrag, 300);
+
   return (
     <>
       <Map // 지도를 표시할 Container
         center={state.center}
         className='relative w-full h-full'
         level={3} // 지도의 확대 레벨
-        onDrag={handleMapDrag}
+        onDrag={debounceHandleMapDrag}
       >
         {/* 현재 내 위치  */}
         <MyLocationMarker state={state} setState={setState} />
