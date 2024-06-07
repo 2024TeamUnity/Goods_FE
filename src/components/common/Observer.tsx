@@ -23,7 +23,18 @@ export default function Observer({
           <span ref={ref} className='my-5 loading loading-spinner loading-lg' />
         </div>
       ) : (
-        <h1 className='my-5 text-sm text-center md:text-lg'>마지막 페이지 입니다.</h1>
+        <div className='my-5'>
+          <svg
+            xmlns='http://www.w3.org/2000/svg'
+            width='16'
+            height='16'
+            fill='currentColor'
+            className='w-16 h-16 bi bi-dot fill-neutral-content'
+            viewBox='0 0 16 16'
+          >
+            <path d='M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3' />
+          </svg>
+        </div>
       )}
     </div>
   );
