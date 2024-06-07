@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom';
 import KakaoLoginButton from '../components/socialLogin/KakaoLoginButton';
 import { useSigninMutation } from '../service/signin/useSigninMutation';
 import React, { useState } from 'react';
-import FindPasswordModal from '../components/common/FindPasswordModal';
+import Modal from '../components/common/Modal';
+import { useFindPasswordMutation } from '../service/signin/useFindPasswordMutation';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('!l8gY5f(vh');
-  const [showModal, setShowModal] = useState(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const findPassword = useFindPasswordMutation(() => setIsOpen(false));
   const login = useSigninMutation();
 
   type Event = React.ChangeEvent<HTMLInputElement>;
@@ -17,6 +19,22 @@ export default function SignIn() {
   const handleSignin = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     login({ email, password });
+  };
+
+  const handleSendPassword = () => {
+    findPassword(email);
+    setEmail('');
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSendPassword();
+    }
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    setEmail('');
   };
 
   return (
@@ -82,11 +100,45 @@ export default function SignIn() {
             <Link className='text-sm text-center' to='/signup'>
               <span>회원가입</span>
             </Link>
-            <button className='text-sm text-center' onClick={() => setShowModal(true)}>
-              <span>비밀번호 찾기</span>
+            <button className='text-sm text-center' onClick={() => setIsOpen(true)}>
+              비밀번호 찾기
             </button>
+            <Modal
+              title='비밀번호 찾기'
+              keyword='이메일을'
+              confirmBtnMsg='전송'
+              isOpen={isOpen}
+              isError={false}
+              hasSubmit
+              isEmpty={!email}
+              handleSubmit={handleSendPassword}
+              handleCloseModal={handleClose}
+            >
+              <label
+                htmlFor='emailAuth'
+                className='flex items-center w-full max-w-lg gap-2 mb-8 input input-bordered md:max-w-5xl '
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  viewBox='0 0 16 16'
+                  fill='currentColor'
+                  className='w-4 h-4 opacity-70'
+                >
+                  <path d='M2.5 3A1.5 1.5 0 0 0 1 4.5v.793c.026.009.051.02.076.032L7.674 8.51c.206.1.446.1.652 0l6.598-3.185A.755.755 0 0 1 15 5.293V4.5A1.5 1.5 0 0 0 13.5 3h-11Z' />
+                  <path d='M15 6.954 8.978 9.86a2.25 2.25 0 0 1-1.956 0L1 6.954V11.5A1.5 1.5 0 0 0 2.5 13h11a1.5 1.5 0 0 0 1.5-1.5V6.954Z' />
+                </svg>
+                <input
+                  value={email}
+                  onChange={handleEmailChange}
+                  id='emailAuth'
+                  type='email'
+                  className='grow [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none'
+                  placeholder='이메일'
+                  onKeyDown={handleKeyDown}
+                />
+              </label>
+            </Modal>
           </div>
-          {showModal && <FindPasswordModal closeModal={() => setShowModal(false)} />}
         </div>
       </div>
     </div>

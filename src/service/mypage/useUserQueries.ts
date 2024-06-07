@@ -43,15 +43,19 @@ export const useUpdateProfileMutation = () => {
   return mutate;
 };
 
-export const useResignMutation = () => {
+export const useResignMutation = (setError: () => void) => {
   const navigate = useNavigate();
-  const { mutate, isError } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: async (password: { password: string }) =>
       (await client.put('/api/member/resign', password)).data,
-    onSuccess: () => {
-      navigate('/');
+    onSuccess: (res) => {
+      if (res.error_code) {
+        setError();
+      } else {
+        navigate('/');
+      }
     },
   });
 
-  return { mutate, isError };
+  return mutate;
 };
