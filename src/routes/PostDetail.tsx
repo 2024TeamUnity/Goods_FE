@@ -9,6 +9,7 @@ import { useProfileQuery } from '../service/mypage/useUserQueries';
 import { getTime } from '../util/getTime';
 import client from '../util/authAxios';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { addComma } from '../util/addComma';
 
 export default function PostDetail() {
   const { id: goodsId } = useParams();
@@ -24,11 +25,6 @@ export default function PostDetail() {
       goods_id: goodsId!,
       goods_status: state,
     });
-  };
-
-  const addComma = (price: number): string => {
-    const commaPrice = String(price).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return commaPrice;
   };
 
   const navigate = useNavigate();
@@ -124,7 +120,7 @@ export default function PostDetail() {
             <div className='flex items-center ml-2 mr-4 md:ml-0'>
               <AddWishListButton goodsId={Number(goodsId)} wish={data!.liked} />
             </div>
-            <h3 className='flex-1 text-xl font-bold'>{addComma(data!.price)}원</h3>
+            <h3 className='flex-1 text-xl font-bold'>{addComma(String(data!.price))}원</h3>
             {isAutor ? (
               <>
                 <Link to={`/posts/edit/${goodsId}`} className='mr-2 btn-primary btn'>

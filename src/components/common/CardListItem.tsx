@@ -4,6 +4,7 @@ import { ICardListItemProps } from '../../types/interface';
 import AddWishListButton from './AddWishListButton';
 import { getTime } from '../../util/getTime';
 import RatingModal from './RatingModal';
+import { addComma } from '../../util/addComma';
 
 export default function CardListItem({
   id,
@@ -28,11 +29,6 @@ export default function CardListItem({
   const handleCloseModal = () => {
     setShowModal(false);
     setIsOpen(false);
-  };
-
-  const addComma = (price: string): string => {
-    const commaPrice = price.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return commaPrice;
   };
 
   return (

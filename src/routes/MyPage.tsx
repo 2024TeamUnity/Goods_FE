@@ -5,16 +5,12 @@ import logo from '../assets/logo.webp';
 import { useProfileQuery, useResignMutation } from '../service/mypage/useUserQueries';
 import { usePointQuery } from '../service/point/usePointQuery';
 import Modal from '../components/common/Modal';
+import { addComma } from '../util/addComma';
 
 export default function MyPage() {
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-
-  const addComma = (point: string): string => {
-    const commaPoint = point.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return commaPoint;
-  };
 
   const { data: profile, isLoading: profileLoading } = useProfileQuery();
   const { data: point, isLoading: pointLoading } = usePointQuery();
