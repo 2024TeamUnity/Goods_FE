@@ -1,3 +1,5 @@
+import { InfiniteQueryObserverResult } from '@tanstack/react-query';
+
 export type FormValueTypes = {
   email: string;
   password: string;
@@ -223,4 +225,13 @@ export interface IModal {
   handleSubmit: () => void;
   handleCloseModal: () => void;
   confirmBtnMsg: string;
+}
+
+export interface IObserver {
+  hasNext: boolean;
+  loadMore: () => Promise<InfiniteQueryObserverResult>;
+}
+
+export interface IBottomSheet extends IObserver {
+  products: IGoodsList[];
 }

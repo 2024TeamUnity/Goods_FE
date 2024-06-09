@@ -1,25 +1,22 @@
 import { useRecoilValue } from 'recoil';
 import { homeListState } from '../../store/atom';
-import { Link } from 'react-router-dom';
-import { addComma } from '../../util/addComma';
+import BottomSheet from '../bottomSheet/BottomSheet';
+import HomeListItem from './HomeListItem';
+import Observer from '../common/Observer';
+import { IObserver } from '../../types/interface';
 
-export default function HomeList() {
+export default function HomeList({ hasNext, loadMore }: IObserver) {
   const products = useRecoilValue(homeListState);
+  console.log(products);
 
   return (
-    <ul className='overflow-y-auto border h-96 md:h-full md:w-96 bg-rgba(255,255,255,.7)'>
-      {Array.isArray(products) &&
-        products.map((product) => (
-          <Link to={`posts/${product.goods_id}`} key={`_${product.goods_id}`}>
-            <li className='flex items-center justify-start p-3 border gap-x-5'>
-              <img src={product.thumbnail_url} alt='thumbnail' className='w-24 h-24 rounded-xl' />
-              <div className='font-bold'>
-                <h3 className='mb-3 text-xl'>{product.goods_name}</h3>
-                <p className='text-lg md:text-base'>{`${addComma(String(product.price))}원`}</p>
-              </div>
-            </li>
-          </Link>
-        ))}
-    </ul>
+    <>
+      <ul className='overflow-y-auto hidden md:block pb-28 h-full w-[400px] bg-rgba(255,255,255,.7)'>
+        <HomeListItem products={products} />
+        <Observer hasNext={hasNext} loadMore={loadMore} />
+      </ul>
+
+      <BottomSheet products={products} hasNext={hasNext} loadMore={loadMore} />
+    </>
   );
 }

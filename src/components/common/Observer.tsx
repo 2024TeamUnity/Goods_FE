@@ -1,14 +1,8 @@
-import { InfiniteQueryObserverResult } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { IObserver } from '../../types/interface';
 
-export default function Observer({
-  loadMore,
-  hasNext,
-}: {
-  loadMore: () => Promise<InfiniteQueryObserverResult>;
-  hasNext: boolean;
-}) {
+export default function Observer({ loadMore, hasNext }: IObserver) {
   const { ref, inView } = useInView({ threshold: 1, delay: 500 });
 
   useEffect(() => {
@@ -17,7 +11,7 @@ export default function Observer({
     }
   }, [inView, loadMore]);
   return (
-    <div>
+    <div className='flex items-center justify-center'>
       {hasNext ? (
         <div className='text-center'>
           <span ref={ref} className='my-5 loading loading-spinner loading-lg' />
