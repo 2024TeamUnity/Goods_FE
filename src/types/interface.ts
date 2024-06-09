@@ -224,3 +224,10 @@ export interface IModal {
   handleCloseModal: () => void;
   confirmBtnMsg: string;
 }
+
+export interface IFCMNotification {
+  notification: {
+    title: string;
+    body: string;
+  };
+}
