@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { notReadState } from '../store/atom';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import { getTime } from '../util/getTime';
 
 export default function ChatRoomList() {
   const { data, isLoading } = useChatRoomListQuery();
@@ -14,6 +15,15 @@ export default function ChatRoomList() {
     const totalNotRead = data?.reduce((acc, cur) => (acc += cur.not_read), 0);
     setNotRead(totalNotRead!);
   }, [data, setNotRead]);
+
+  const handleTime = (timeString: string) => {
+    const localTime = new Date(`${timeString}Z`);
+    const timestamp = localTime.getTime();
+    const now = new Date();
+    const nowTimestamp = now.getTime();
+    return getTime((nowTimestamp - timestamp) / 1000);
+  };
+
   return (
     <div className='w-full px-5 md:mx-auto md:max-w-5xl'>
       <h2 className='my-12 text-2xl font-bold text-center md:text-3xl'>채팅 목록</h2>
@@ -41,7 +51,7 @@ export default function ChatRoomList() {
                   <div className='flex flex-col justify-around flex-1 w-full h-full min-w-0 py-2'>
                     <p className='text-lg font-bold truncate'>{item.partner}</p>
                     <p className='truncate'>{item.last_message}</p>
-                    <p className='text-sm truncate text-stone-400'>{item.updated_at}</p>
+                    <p className='text-sm truncate text-stone-400'>{handleTime(item.updated_at)}</p>
                   </div>
                   {item.not_read > 0 && (
                     <div className='btn btn-circle btn-secondary btn-sm'>{item.not_read}</div>

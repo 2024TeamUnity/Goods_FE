@@ -13,7 +13,7 @@ export default defineConfig({
         ws: true,
       },
       '/chat': {
-        target: 'http://ec2-13-124-41-239.ap-northeast-2.compute.amazonaws.com:8080/api/chat',
+        target: 'https://goods-trade.shop/api/chat',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/chat/, ''),
         ws: true,

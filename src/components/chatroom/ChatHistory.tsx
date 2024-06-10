@@ -16,12 +16,9 @@ export default function ChatHistory({ chatLog, myId }: { chatLog: IChatLog[]; my
   const convertToCurrentDateTime = (timeString: string) => {
     if (!timeString) return;
 
-    const currentDate = new Date();
-    const currentDateString = currentDate.toISOString().split('T')[0];
-    const dateTimeString = `${currentDateString}T${timeString}Z`;
-    const dateTime = new Date(dateTimeString);
-    const hour = dateTime.toTimeString().split(':')[0];
-    const min = dateTime.toTimeString().split(':')[1];
+    const currentDate = new Date(`${timeString}Z`);
+    const hour = currentDate.toTimeString().split(':')[0];
+    const min = currentDate.toTimeString().split(':')[1];
 
     return `${hour}:${min}`;
   };
@@ -46,9 +43,7 @@ export default function ChatHistory({ chatLog, myId }: { chatLog: IChatLog[]; my
           >
             {item.message}
           </div>
-          <div className='opacity-50 chat-footer'>
-            {convertToCurrentDateTime(item.created_at.split('Z')[0].split('T')[1])}
-          </div>
+          <div className='opacity-50 chat-footer'>{convertToCurrentDateTime(item.created_at)}</div>
         </li>
       ))}
       <div ref={initRef} />
