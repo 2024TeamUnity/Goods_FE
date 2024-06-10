@@ -12,17 +12,19 @@ import {
   searchResultState,
 } from '../../store/atom';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
 import { debounce } from 'lodash';
+import axios from 'axios';
 
 export default function HomeMap({
   state,
   setState,
-  products,
+  pageData,
+  listData,
 }: {
   state: IMyLocation;
   setState: Dispatch<SetStateAction<IMyLocation>>;
-  products: IGoodsList[];
+  pageData: IGoodsList[];
+  listData: IGoodsList[];
 }) {
   const setSearchList = useSetRecoilState(searchResultState);
   const setHomeList = useSetRecoilState(homeListState);
@@ -31,11 +33,11 @@ export default function HomeMap({
   const keyword = useRecoilValue(searchAddrState);
 
   useEffect(() => {
-    if (products) {
-      setHomeList(products!);
-      setGoodsList(products!);
+    if (pageData) {
+      setHomeList(pageData!);
+      setGoodsList(listData!);
     }
-  }, [products, setHomeList, setGoodsList]);
+  }, [pageData, setHomeList, setGoodsList, listData]);
 
   useEffect(() => {
     const geocoder = new kakao.maps.services.Geocoder();
@@ -58,17 +60,25 @@ export default function HomeMap({
 
   const handleResetSearch = async () => {
     setSearchList([]);
-    setHomeList(products!);
+    setHomeList(pageData!);
   };
 
   const handleMapDrag = async (map: kakao.maps.Map) => {
     const latlng = map.getCenter();
 
-    const res = (
-      await axios.get('/api/api/goods', { params: { lat: latlng.getLat(), lng: latlng.getLng() } })
+    const newListData = (
+      await axios.get('/api/api/goods', {
+        params: { lat: latlng.getLat(), lng: latlng.getLng(), responseType: 'list' },
+      })
+    ).data;
+    const newPageData = (
+      await axios.get('/api/api/goods', {
+        params: { lat: latlng.getLat(), lng: latlng.getLng(), responseType: 'page' },
+      })
     ).data.content;
-    setHomeList(res);
-    setGoodsList(res);
+
+    setHomeList(newPageData);
+    setGoodsList(newListData);
   };
 
   const debounceHandleMapDrag = debounce(handleMapDrag, 300);
