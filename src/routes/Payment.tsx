@@ -1,13 +1,30 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../assets/logo.webp';
 import PointCalc from '../components/common/PointCalc';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { addComma } from '../util/addComma';
+import { useProfileQuery } from '../service/mypage/useUserQueries';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export default function Payment() {
   const [password, setPassword] = useState<number>();
   const { state } = useLocation();
+  const { data, isLoading } = useProfileQuery();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (!data) return;
+
+    if (!data.trade_password_exists) {
+      // eslint-disable-next-line no-alert
+      alert(
+        '간편거래 비밀번호를 먼저 설정해주세요. 간편거래 비밀번호 설정을 위해 회원 정보 변경 페이지로 이동합니다.',
+      );
+      navigate('/mypage/update');
+    }
+  }, [data, navigate]);
+
+  if (isLoading) return <LoadingSpinner />;
   return (
     <>
       <div className='flex h-20 px-3 py-3 md:px-7'>
