@@ -1,20 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useChatRoomListQuery } from '../service/chat/useChatRoomListQuery';
-import { useEffect } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { notReadState } from '../store/atom';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { getTime } from '../util/getTime';
 
 export default function ChatRoomList() {
   const { data, isLoading } = useChatRoomListQuery();
-  const setNotRead = useSetRecoilState(notReadState);
-
-  useEffect(() => {
-    // eslint-disable-next-line no-return-assign, no-param-reassign
-    const totalNotRead = data?.reduce((acc, cur) => (acc += cur.not_read), 0);
-    setNotRead(totalNotRead!);
-  }, [data, setNotRead]);
 
   const handleTime = (timeString: string) => {
     const localTime = new Date(`${timeString}Z`);
