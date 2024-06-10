@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { IChatLog } from '../types/interface';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export default function ChatRoom() {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ export default function ChatRoom() {
     };
   }, [roomId, data]);
 
-  if (isLoading) return <h1>loading...</h1>;
+  if (isLoading) return <LoadingSpinner />;
   return (
     <div className='absolute top-0 left-0 flex items-center justify-center w-full h-screen overflow-y-hidden bg-slate-900 '>
       <div className='relative w-full h-full md:rounded-3xl md:h-[95%] md:w-[450px] p-3 md:p-5 bg-white md:border-4'>

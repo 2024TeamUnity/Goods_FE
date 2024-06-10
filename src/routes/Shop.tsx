@@ -23,14 +23,12 @@ export default function Shop() {
       <div className='w-full px-5 md:mx-auto md:max-w-5xl'>
         <h1 className='my-12 text-2xl font-bold text-center md:text-3xl'>판매자 프로필</h1>
         <div className='flex flex-col md:flex-row md:items-end'>
-          {!profileLoading && (
-            <Profile
-              nick_name={profile!.nick_name}
-              profile_image={profile!.profile_image}
-              star={profile!.star}
-              badge_list={profile!.badge_list}
-            />
-          )}
+          <Profile
+            nick_name={profile!.nick_name}
+            profile_image={profile!.profile_image}
+            star={profile!.star}
+            badge_list={profile!.badge_list}
+          />
         </div>
         <SalesHistory loading={profileLoading} userId={id!} />
       </div>
