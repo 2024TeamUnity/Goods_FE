@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useSendReviewMutation } from '../../service/mypage/useSendReviewMutation';
 import Modal from './Modal';
 
@@ -13,13 +13,17 @@ export default function RatingModal({
   closeModal: () => void;
   setIsSubmit: () => void;
 }) {
-  const [rating, setRating] = useState<number | null>(null);
-  const [rateColor] = useState(null);
+  const [rating, setRating] = useState(5);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRating(Number(e.currentTarget.dataset.score));
+  };
 
   const sendReview = useSendReviewMutation(setIsSubmit, closeModal);
 
   const handleCancelBtn = () => {
     closeModal();
+    setRating(5);
   };
 
   const handleSubmitReview = () => {
@@ -38,34 +42,21 @@ export default function RatingModal({
       handleCloseModal={handleCancelBtn}
       confirmBtnMsg='후기 등록'
     >
-      <div className='flex items-center justify-center gap-x-2'>
-        {[...Array(5)].map((_, index) => {
-          const currentRate = index + 1;
-          return (
-            // eslint-disable-next-line react/no-array-index-key
-            <div className='relative' key={index}>
-              {' '}
-              <label htmlFor='rate'>
-                <input
-                  value={currentRate}
-                  onClick={() => setRating(currentRate)}
-                  type='radio'
-                  id='rate'
-                  name='rate'
-                  className='absolute opacity-0 size-6 left-1 top-3'
-                />
-                <span
-                  className={`text-3xl ${
-                    currentRate <= (rateColor || rating!) ? 'text-yellow-300' : 'text-neutral-400'
-                  }`}
-                >
-                  {' '}
-                  &#9733;
-                </span>
-              </label>
-            </div>
-          );
-        })}
+      <div className='flex items-center justify-center rating rating-lg rating-half rate-container'>
+        <div className='rating rating-lg rating-half'>
+          <input type='radio' name='rating-10' className='rating-hidden' />
+          {[...Array(10)].map((_, index) => (
+            <input
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              type='radio'
+              name='rating-10'
+              className={`bg-yellow-500 mask mask-star-2 mask-half-${index % 2 === 0 ? 1 : 2}`}
+              onChange={handleChange}
+              data-score={(index + 1) / 2}
+            />
+          ))}
+        </div>
       </div>
     </Modal>
   );
