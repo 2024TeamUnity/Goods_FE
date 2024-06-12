@@ -8,7 +8,7 @@ const useBottomSheet = () => {
   const prevIsOpen = usePreviousValue(isOpen);
 
   const onDragEnd = (info: PointerEvent) => {
-    const shouldClose = info?.y > 20 || (info?.y >= 0 && info.y > 45);
+    const shouldClose = info.y > 45;
 
     if (shouldClose) {
       controls.start('hidden');
