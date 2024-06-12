@@ -5,7 +5,7 @@ import { usePaginatedSalesHistoryQuery } from '../service/mypage/useSalseHistory
 import { Link } from 'react-router-dom';
 import { getTime } from '../util/getTime';
 import { addComma } from '../util/addComma';
-import { useReduceHistory } from '../util/useReduceHistory';
+import { useMemoHistory } from '../util/useMemoHistory';
 import { ISalesHistoryData } from '../types/interface';
 
 export default function SalesHistory({ userId, loading }: { userId: string; loading: boolean }) {
@@ -13,7 +13,7 @@ export default function SalesHistory({ userId, loading }: { userId: string; load
     String(userId),
   );
 
-  const salesItems = useReduceHistory<ISalesHistoryData>(data!);
+  const salesItems = useMemoHistory<ISalesHistoryData>(data!);
 
   if (isLoading || loading) return <LoadingSpinner />;
   return (

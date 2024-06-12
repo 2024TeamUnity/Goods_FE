@@ -19,7 +19,7 @@ export default function Header() {
     navigate('/signup');
   };
   return (
-    <div className='fixed top-0 left-0 z-50 flex items-center justify-between w-full h-20 px-3 py-3 bg-white border-b md:px-7 gap-x-2'>
+    <div className='fixed top-0 left-0 z-40 flex items-center justify-between w-full h-20 px-3 py-3 bg-white border-b md:px-7 gap-x-2'>
       <Link to='/'>
         <div className='p-1 rounded-lg hover:bg-neutral-100 '>
           <img src={logo} alt='logo img' className='w-8 h-8 md:w-12 md:h-12' />
