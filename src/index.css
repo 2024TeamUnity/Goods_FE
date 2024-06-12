@@ -24,4 +24,11 @@
     }
     font-family: 'Nanum Gothic', sans-serif;
   }
+  details > summary {
+    list-style: none;
+  }
+
+  details summary::-webkit-details-marker {
+    display: none;
+  }
 }
