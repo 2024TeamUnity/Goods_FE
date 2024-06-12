@@ -8,30 +8,17 @@ export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] 
   const searchList = useRecoilValue(searchResultState);
 
   const handleClusterClick = async (_: kakao.maps.MarkerClusterer, cluster: kakao.maps.Cluster) => {
-    // const lat = cluster.getMarkers().map((item) => item.getPosition().getLat().toFixed(10))[0];
-    // const lng = cluster.getMarkers().map((item) => item.getPosition().getLat().toFixed(10))[0];
+    const bounds = cluster.getBounds();
+    const center = cluster.getCenter();
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
 
-    // const newPageData = (
-    //   await axios.get('/api/api/goods', {
-    //     params: { lat, lng, responseType: 'page' },
-    //   })
-    // ).data.content;
-    // console.log(newPageData);
-
-    // const res = goodsList?.filter((item) => {
-    //   const pos = new kakao.maps.LatLng(item.lat, item.lng).getLat().toFixed(10);
-    //   return lat.findIndex((item) => item === pos) !== -1;
-    // });
-    // setListState(res!);
-
-    const markers = cluster.getMarkers().map((item) => {
-      const position = item.getPosition();
-      return {
-        lat: position.getLat(),
-        lng: position.getLng(),
-      };
-    });
-    console.log(markers);
+    const payload = {
+      northEast: { lat: northEast.getLat(), lng: northEast.getLng() },
+      southWest: { lat: southWest.getLat(), lng: southWest.getLng() },
+      center: { lat: center.getLat(), lng: center.getLng() },
+    };
+    console.log(payload); // 백엔드에서 api 추가되면 전송
   };
 
   const handleMarkerClick = (pos: IGoodsList) => {
