@@ -6,13 +6,13 @@ import { getTime } from '../util/getTime';
 import AddWishListButton from '../components/common/AddWishListButton';
 import HistoryPageContainer from '../components/common/HistoryPageContainer';
 import { addComma } from '../util/addComma';
-import { useReduceHistory } from '../util/useReduceHistory';
+import { useMemoHistory } from '../util/useMemoHistory';
 import { IWishHistoryData } from '../types/interface';
 
 export default function WishHistory() {
   const { data, isLoading, hasNextPage, fetchNextPage } = usePaginatedHistoryQuery();
 
-  const wishList = useReduceHistory<IWishHistoryData>(data!);
+  const wishList = useMemoHistory<IWishHistoryData>(data!);
 
   if (isLoading) return <LoadingSpinner />;
   return (

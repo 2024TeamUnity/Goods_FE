@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 import { Map, ZoomControl } from 'react-kakao-maps-sdk';
 import MyLocationMarker from './MyLocationMarker';
-import { IMyLocation } from '../../types/interface';
+import { IGoodsList, IMyLocation } from '../../types/interface';
 import ProductMarkers from './ProductMarkers';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
@@ -12,36 +12,32 @@ import {
   searchResultState,
 } from '../../store/atom';
 import { Link } from 'react-router-dom';
-import { useNearbyGoods } from '../../service/map/useNearbyGoods';
-import axios from 'axios';
 import { debounce } from 'lodash';
+import axios from 'axios';
 
-export default function HomeMap() {
+export default function HomeMap({
+  state,
+  setState,
+  pageData,
+  listData,
+}: {
+  state: IMyLocation;
+  setState: Dispatch<SetStateAction<IMyLocation>>;
+  pageData: IGoodsList[];
+  listData: IGoodsList[];
+}) {
   const setSearchList = useSetRecoilState(searchResultState);
   const setHomeList = useSetRecoilState(homeListState);
   const [goodsList, setGoodsList] = useRecoilState(goodsListState);
   const isAuth = useRecoilValue(isAuthState);
   const keyword = useRecoilValue(searchAddrState);
 
-  const [state, setState] = useState<IMyLocation>({
-    center: {
-      lat: 0,
-      lng: 0,
-    },
-    errMsg: null,
-    isLoading: true,
-  });
-  const { refetch } = useNearbyGoods(state.center);
-
   useEffect(() => {
-    (async () => {
-      if (Object.values(state.center).every((item) => item !== 0)) {
-        const res = (await refetch()).data;
-        setGoodsList(res!);
-        setHomeList(res!);
-      }
-    })();
-  }, [setGoodsList, refetch, state.center, setHomeList]);
+    if (pageData) {
+      setHomeList(pageData!);
+      setGoodsList(listData!);
+    }
+  }, [pageData, setHomeList, setGoodsList, listData]);
 
   useEffect(() => {
     const geocoder = new kakao.maps.services.Geocoder();
@@ -60,26 +56,32 @@ export default function HomeMap() {
         });
       }
     });
-  }, [keyword]);
+  }, [keyword, setState]);
 
   const handleResetSearch = async () => {
     setSearchList([]);
-    const res = (await refetch()).data;
-    setHomeList(res!);
+    setHomeList(pageData!);
   };
 
   const handleMapDrag = async (map: kakao.maps.Map) => {
     const latlng = map.getCenter();
 
-    const res = (
-      await axios.get('/api/api/goods', { params: { lat: latlng.getLat(), lng: latlng.getLng() } })
+    const newListData = (
+      await axios.get('/api/api/goods', {
+        params: { lat: latlng.getLat(), lng: latlng.getLng(), responseType: 'list' },
+      })
+    ).data;
+    const newPageData = (
+      await axios.get('/api/api/goods', {
+        params: { lat: latlng.getLat(), lng: latlng.getLng(), responseType: 'page' },
+      })
     ).data.content;
-    setHomeList(res);
-    setGoodsList(res);
+
+    setHomeList(newPageData);
+    setGoodsList(newListData);
   };
 
   const debounceHandleMapDrag = debounce(handleMapDrag, 300);
-
   return (
     <>
       <Map // 지도를 표시할 Container
@@ -96,13 +98,13 @@ export default function HomeMap() {
       </Map>
       <button
         onClick={handleResetSearch}
-        className='absolute z-40 top-[340px] right-1 btn btn-primary text-white btn-sm md:btn-md'
+        className='absolute z-30 top-[340px] right-1 btn btn-primary text-white btn-sm md:btn-md'
       >
         검색 초기화
       </button>
       {isAuth && (
         <Link to='/posts/new'>
-          <button className='absolute z-40 p-3 text-white transition-colors duration-200 bg-black rounded-full bottom-5 right-5 md:p-4 md:bottom-8 md:right-8 hover:bg-neutral-700'>
+          <button className='absolute z-30 p-3 text-white transition-colors duration-200 bg-black rounded-full bottom-5 right-5 md:p-4 md:bottom-8 md:right-8 hover:bg-neutral-700'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

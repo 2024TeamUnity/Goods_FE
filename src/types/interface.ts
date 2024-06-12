@@ -1,3 +1,5 @@
+import { InfiniteQueryObserverResult } from '@tanstack/react-query';
+
 export type FormValueTypes = {
   email: string;
   password: string;
@@ -121,7 +123,7 @@ export interface IChatLog {
   created_at: string;
 }
 
-export interface IChatHistoryData {
+export interface IChatHistoryData extends IPageResponse {
   room_id: number;
   goods_id: number;
   goods_seller: string;
@@ -230,4 +232,13 @@ export interface IFCMNotification {
     title: string;
     body: string;
   };
+}
+
+export interface IObserver {
+  hasNext: boolean;
+  loadMore: () => Promise<InfiniteQueryObserverResult>;
+}
+
+export interface IBottomSheet extends IObserver {
+  products: IGoodsList[];
 }

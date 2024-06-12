@@ -7,18 +7,25 @@ export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] 
   const setListState = useSetRecoilState(homeListState);
   const searchList = useRecoilValue(searchResultState);
 
-  const handleClusterClick = (_: kakao.maps.MarkerClusterer, cluster: kakao.maps.Cluster) => {
-    const markerList = cluster.getMarkers().map((item) => item.getPosition().getLat().toFixed(10));
+  const handleClusterClick = async (_: kakao.maps.MarkerClusterer, cluster: kakao.maps.Cluster) => {
+    const bounds = cluster.getBounds();
+    const center = cluster.getCenter();
+    const northEast = bounds.getNorthEast();
+    const southWest = bounds.getSouthWest();
 
-    const res = goodsList?.filter((item) => {
-      const pos = new kakao.maps.LatLng(item.lat, item.lng).getLat().toFixed(10);
-      return markerList.findIndex((item) => item === pos) !== -1;
-    });
-    setListState(res!);
+    const payload = {
+      northEast: { lat: northEast.getLat(), lng: northEast.getLng() },
+      southWest: { lat: southWest.getLat(), lng: southWest.getLng() },
+      center: { lat: center.getLat(), lng: center.getLng() },
+    };
+    console.log(payload); // 백엔드에서 api 추가되면 전송
   };
 
   const handleMarkerClick = (pos: IGoodsList) => {
     setListState([pos]);
+
+    const { lat, lng } = pos;
+    console.log({ lat, lng });
   };
 
   return (
