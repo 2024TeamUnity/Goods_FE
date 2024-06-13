@@ -50,6 +50,7 @@ export interface ISalesHistoryData {
 export interface IPurchaseHistoryData extends ISalesHistoryData {
   seller_name: string;
   member_id: number;
+  review_exist: boolean;
 }
 
 export interface IWishHistoryData extends ISalesHistoryData {
