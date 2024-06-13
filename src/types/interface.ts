@@ -123,14 +123,12 @@ export interface IChatLog {
   created_at: string;
 }
 
-export interface IChatHistoryData extends IPageResponse {
+export interface IChatRoomData {
   room_id: number;
   goods_id: number;
-  goods_seller: string;
   goods_name: string;
   goods_image: string;
   goods_price: number;
-  chat_logs: IChatLog[];
   member_id: number;
   partner: string;
   member_type: string;
@@ -236,7 +234,7 @@ export interface IFCMNotification {
 
 export interface IObserver {
   hasNext: boolean;
-  loadMore: () => Promise<InfiniteQueryObserverResult>;
+  loadMore: (() => Promise<InfiniteQueryObserverResult>) | (() => Promise<void>);
 }
 
 export interface IBottomSheet extends IObserver {

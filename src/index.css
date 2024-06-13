@@ -25,3 +25,10 @@
     font-family: 'Nanum Gothic', sans-serif;
   }
 }
+
+@layer components {
+  /* 스크롤바 여백 설정*/
+  html:has(.drawer-toggle:checked) {
+    scrollbar-gutter: auto;
+  }
+}

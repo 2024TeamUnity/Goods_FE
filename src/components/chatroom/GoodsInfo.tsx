@@ -9,7 +9,6 @@ export default function GoodsInfo({
   info: {
     id: number;
     image: string;
-    name: string;
     title: string;
     price: number;
     memberType: string;

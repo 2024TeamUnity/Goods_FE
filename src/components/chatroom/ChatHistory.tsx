@@ -1,11 +1,25 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { IChatLog } from '../../types/interface';
 import { useScroll } from '../../util/useScroll';
+import Observer from '../common/Observer';
+import { InfiniteQueryObserverResult } from '@tanstack/react-query';
 
-export default function ChatHistory({ chatLog, myId }: { chatLog: IChatLog[]; myId: number }) {
+export default function ChatHistory({
+  chatList,
+  myId,
+  hasNextPage,
+  fetchNextPage,
+}: {
+  chatList: IChatLog[];
+  myId: number;
+  hasNextPage: boolean;
+  fetchNextPage: () => Promise<InfiniteQueryObserverResult>;
+}) {
   const ulRef = useRef<HTMLUListElement>(null);
-  const initRef = useRef<HTMLDivElement>(null);
+  // const endRef = useRef<HTMLDivElement>(null);
+  // const initRef = useRef<HTMLDivElement>(null);
   const show = useScroll(ulRef);
+  const [isMounted, setIsMounted] = useState(false);
 
   const handleClick = () => {
     if (ulRef.current) {
@@ -23,30 +37,51 @@ export default function ChatHistory({ chatLog, myId }: { chatLog: IChatLog[]; my
     return `${hour}:${min}`;
   };
 
+  /* 첫 렌더링 할 때 스크롤 최하단으로 */
   useEffect(() => {
-    if (initRef.current) {
-      initRef.current.scrollIntoView({ behavior: 'instant' });
+    if (ulRef.current && chatList.length > 0 && !isMounted) {
+      ulRef.current.scrollTop = ulRef.current.scrollHeight;
+      setIsMounted(true);
     }
-  }, [chatLog]);
+  }, [chatList, isMounted]);
+
+  /* 이전 채팅 불러올 때 스크롤 위치 유지 */
+  const handleScroll = () => {
+    if (ulRef.current && ulRef.current.scrollTop === 0 && hasNextPage) {
+      const currentScrollHeight = ulRef.current.scrollHeight;
+
+      return fetchNextPage().then(() => {
+        if (ulRef.current && ulRef.current.scrollHeight > currentScrollHeight) {
+          ulRef.current.scrollTop = ulRef.current.scrollHeight - currentScrollHeight;
+        }
+      });
+    }
+    return Promise.resolve(undefined);
+  };
 
   return (
     <ul className='relative w-full py-3 overflow-y-auto h-3/4' ref={ulRef}>
-      {chatLog!.map((item) => (
-        <li
-          key={`${item.created_at}_${item.message}`}
-          className={`chat  ${Number(item.sender_id) === myId ? 'chat-end' : 'chat-start'}`}
-        >
-          <div
-            className={`text-black chat-bubble ${
-              Number(item.sender_id) === myId ? 'bg-primary-content' : 'bg-neutral-content'
-            }`}
+      {isMounted && <Observer loadMore={handleScroll} hasNext={hasNextPage} />}
+      {/* <div ref={endRef} /> */}
+      {chatList &&
+        chatList.map((item) => (
+          <li
+            key={`${item.created_at}_${item.message}`}
+            className={`chat  ${Number(item.sender_id) === myId ? 'chat-end' : 'chat-start'}`}
           >
-            {item.message}
-          </div>
-          <div className='opacity-50 chat-footer'>{convertToCurrentDateTime(item.created_at)}</div>
-        </li>
-      ))}
-      <div ref={initRef} />
+            <div
+              className={`text-black chat-bubble ${
+                Number(item.sender_id) === myId ? 'bg-primary-content' : 'bg-neutral-content'
+              }`}
+            >
+              {item.message}
+            </div>
+            <div className='opacity-50 chat-footer'>
+              {convertToCurrentDateTime(item.created_at)}
+            </div>
+          </li>
+        ))}
+      {/* <div ref={initRef} /> */}
 
       {show && (
         <button
