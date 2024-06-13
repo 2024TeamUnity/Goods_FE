@@ -6,12 +6,10 @@ export default function RatingModal({
   id,
   isOpen,
   closeModal,
-  setIsSubmit,
 }: {
   id: number;
   isOpen: boolean;
   closeModal: () => void;
-  setIsSubmit: () => void;
 }) {
   const [rating, setRating] = useState(5);
 
@@ -19,7 +17,7 @@ export default function RatingModal({
     setRating(Number(e.currentTarget.dataset.score));
   };
 
-  const sendReview = useSendReviewMutation(setIsSubmit, closeModal);
+  const sendReview = useSendReviewMutation(closeModal);
 
   const handleCancelBtn = () => {
     closeModal();
