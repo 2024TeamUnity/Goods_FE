@@ -14,6 +14,7 @@ import {
 import { Link } from 'react-router-dom';
 import { debounce } from 'lodash';
 import axios from 'axios';
+import useBottomSheet from '../../util/useBottomSheet';
 
 export default function HomeMap({
   state,
@@ -31,6 +32,7 @@ export default function HomeMap({
   const [goodsList, setGoodsList] = useRecoilState(goodsListState);
   const isAuth = useRecoilValue(isAuthState);
   const keyword = useRecoilValue(searchAddrState);
+  const { isOpen } = useBottomSheet();
 
   useEffect(() => {
     if (pageData) {
@@ -104,7 +106,11 @@ export default function HomeMap({
       </button>
       {isAuth && (
         <Link to='/posts/new'>
-          <button className='absolute z-30 p-3 text-white transition-colors duration-200 bg-black rounded-full bottom-5 right-5 md:p-4 md:bottom-8 md:right-8 hover:bg-neutral-700'>
+          <button
+            className={`absolute p-3 text-white transition-colors duration-200 bg-black rounded-full bottom-5 right-5 md:p-4 md:bottom-8 md:right-8 hover:bg-neutral-700 ${
+              isOpen ? 'z-[101]' : 'z-30'
+            }`}
+          >
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

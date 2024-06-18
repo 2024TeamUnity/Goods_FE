@@ -59,3 +59,8 @@ export const notReadState = atom({
   key: 'notReadMsg',
   default: 0,
 });
+
+export const isOpenBottomSheetState = atom({
+  key: 'isOpenBottomSheet',
+  default: false,
+});
