@@ -236,3 +236,8 @@ export interface IObserver {
 export interface IBottomSheet extends IObserver {
   products: IGoodsList[];
 }
+
+export interface IChatRoomListItem extends IChatRoomListData {
+  deleteState: { showButton: boolean; showModal: boolean };
+  handleShowModal: (e: React.MouseEvent<HTMLButtonElement>, roomId: number) => void;
+}
