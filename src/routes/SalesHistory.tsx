@@ -41,7 +41,7 @@ export default function SalesHistory({ userId, loading }: { userId: string; load
                 <div className='flex items-center justify-center w-16 p-1 text-sm text-white bg-secondary rounded-xl'>
                   {item.goods_status}
                 </div>
-                <span className='font-bold'>{addComma(String(item.price))}원</span>
+                <span className='font-bold line-clamp-1'>{addComma(String(item.price))}원</span>
               </div>
             </div>
           </Link>

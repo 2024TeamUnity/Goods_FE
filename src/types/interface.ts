@@ -225,13 +225,6 @@ export interface IModal {
   confirmBtnMsg: string;
 }
 
-export interface IFCMNotification {
-  notification: {
-    title: string;
-    body: string;
-  };
-}
-
 export interface IObserver {
   hasNext: boolean;
   loadMore: (() => Promise<InfiniteQueryObserverResult>) | (() => Promise<void>);

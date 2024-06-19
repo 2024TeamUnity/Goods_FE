@@ -27,18 +27,25 @@ export default function GoodsInfo({
 
   return (
     <div className='flex items-center justify-between px-4 my-5'>
-      <Link to={`/posts/${info.id}`} className='flex flex-1 gap-x-4'>
-        <img className='w-14 h-14 rounded-xl' src={info.image} alt='goods' />
-        <div className='flex flex-col items-start justify-center font-bold gap-y-2'>
-          <span className='font-normal'>{info.title}</span>
-          <span className='text-lg'>{addComma(String(info.price))}원</span>
-        </div>
-      </Link>
-      {info.memberType === 'BUYER' && (
-        <Link to='/payment' state={combinedInfo}>
-          <button className='btn btn-active btn-primary btn-md'>거래 요청</button>
+      <div className='flex flex-col items-center w-full min-w-0 xs:flex-row gap-y-4 xs:gap-y-0 xs:gap-x-4'>
+        <Link to={`/posts/${info.id}`} className='flex flex-1 w-full min-w-0 gap-x-4'>
+          <img className='flex-shrink-0 w-14 h-14 rounded-xl' src={info.image} alt='goods' />
+          <div className='flex flex-col items-start justify-center flex-1 w-full font-bold gap-y-2'>
+            <span className='font-normal line-clamp-1'>{info.title}</span>
+            <span className='line-clamp-1'>{addComma(String(info.price))}원</span>
+          </div>
         </Link>
-      )}
+        {info.memberType === 'BUYER' &&
+          (data!.status !== '거래완료' ? (
+            <Link to='/payment' state={combinedInfo} className='w-full xs:max-w-24'>
+              <button className='w-full max-w-sm btn btn-primary xs:max-w-24'>거래 요청</button>
+            </Link>
+          ) : (
+            <button className='w-full max-w-sm btn btn-primary' disabled>
+              거래 요청
+            </button>
+          ))}
+      </div>
     </div>
   );
 }

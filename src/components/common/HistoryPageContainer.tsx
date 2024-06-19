@@ -11,8 +11,8 @@ export default function HistoryPageContainer({
   isEmpty: boolean;
 }) {
   return (
-    <div className='max-w-md px-5 mx-auto md:max-w-5xl'>
-      <ul className='flex flex-col items-center justify-center w-full mx-auto md:max-w-xl gap-y-3'>
+    <div className='max-w-md min-h-screen px-5 mx-auto overflow-x-auto md:max-w-5xl'>
+      <ul className='flex flex-col items-center justify-center w-full mx-auto min-w-72 md:max-w-xl gap-y-3'>
         <h1 className='my-12 text-2xl font-bold text-center md:text-3xl'>{title}</h1>
         {isEmpty ? (
           <div className='flex flex-col items-center justify-center w-full h-96 gap-y-5'>

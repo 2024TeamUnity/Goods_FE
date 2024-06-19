@@ -18,12 +18,12 @@ export default function PointCalc({
 }: IPointCalc) {
   const { data, isLoading } = usePointQuery();
   const { mutate: withdraw } = useWithdrawMutation();
-  const { mutate: trade } = useTradePointMutation();
   const [point, setPoint] = useState('');
   const [isNegative, setIsNegative] = useState<boolean>(false);
   const [isValid, setIsValid] = useState<boolean>(false);
   const [newPoint, setNewPoint] = useState('');
   const [curPoint, setCurPoint] = useState(0);
+  const { mutate: trade } = useTradePointMutation();
 
   const typeDescription: { [key: string]: string } = {
     charge: '충전',

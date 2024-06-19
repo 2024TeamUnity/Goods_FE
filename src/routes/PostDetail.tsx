@@ -32,7 +32,8 @@ export default function PostDetail() {
     try {
       const res = (await client.post(`api/chat/room/${goodsId}`)).data;
       if (res.room_id) {
-        navigate(`/room/${res.room_id}`, { state: { roomId: res.room_id, goodsId } });
+        navigate(`/room/${res.room_id}`, { state: { roomId: res.room_id } });
+        console.log(res.room_id);
       }
       return res;
     } catch (e) {
@@ -86,12 +87,12 @@ export default function PostDetail() {
             <div className='md:flex-1'>
               <div className='flex items-center font-extrabold md:text-3xl'>
                 {data!.status === '예약중' && (
-                  <div className='h-8 mr-2 text-white md:h-10 md:mr-4 badge badge-neutral-500 md:badge-lg bg-neutral-500'>
+                  <div className='h-8 mr-2 text-white break-keep md:h-10 md:mr-4 badge badge-neutral-500 md:badge-lg bg-neutral-500'>
                     {data!.status}
                   </div>
                 )}
                 {data!.status === '거래완료' && (
-                  <div className='h-8 mr-2 text-white md:h-10 md:mr-4 badge badge-neutral md:badge-lg bg-neutral'>
+                  <div className='h-8 mr-2 text-white break-keep md:h-10 md:mr-4 badge badge-neutral md:badge-lg bg-neutral'>
                     {data!.status}
                   </div>
                 )}
@@ -116,7 +117,7 @@ export default function PostDetail() {
               </div>
             </div>
           </div>
-          <div className='fixed bottom-0 left-0 z-40 flex items-center w-full h-20 px-3 py-3 bg-white border-t md:relative md:border-0 md:p-0'>
+          <div className='fixed bottom-0 left-0 z-30 flex items-center w-full h-20 px-3 py-3 bg-white border-t md:relative md:border-0 md:p-0'>
             <div className='flex items-center ml-2 mr-4 md:ml-0'>
               <AddWishListButton goodsId={Number(goodsId)} wish={data!.liked} />
             </div>
@@ -155,8 +156,8 @@ export default function PostDetail() {
       </h2>
       <div className='pt-4 border-t pb-28 md:pb-4 md:mb-12'>
         <div className='flex items-center mb-4'>
-          <h3 className='font-bold md:text-lg'>거래 희망 장소</h3>
-          <h4 className='ml-4'>{data!.address}</h4>
+          <h3 className='font-bold break-keep md:text-lg'>거래 희망 장소</h3>
+          <h4 className='ml-4 break-keep'>{data!.address}</h4>
         </div>
         <Map
           center={{

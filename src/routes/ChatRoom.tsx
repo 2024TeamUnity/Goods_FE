@@ -30,7 +30,7 @@ export default function ChatRoom() {
   const handleSendMsg = (message: string) => {
     if (stompClient.current && stompClient.current.connected) {
       stompClient.current.send(
-        `/pub/message/${roomId}`,
+        `/pub/chat.message.${roomId}`,
         {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
@@ -53,7 +53,7 @@ export default function ChatRoom() {
     stompClient.current.connect(
       { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
       () => {
-        stompClient.current?.subscribe(`/sub/message/${roomId}`, (msg) => {
+        stompClient.current?.subscribe(`/exchange/chat.exchange/room.${roomId}`, (msg) => {
           const messageData = JSON.parse(msg.body);
           setChatLog((prev) => [
             ...prev,
