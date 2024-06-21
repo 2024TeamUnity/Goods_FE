@@ -42,7 +42,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className='absolute left-0 right-0 flex items-center justify-center w-full px-2 m-auto bottom-2 gap-x-3'>
+    <div className='absolute left-0 right-0 flex items-center justify-center w-full px-2 m-auto bg-white bottom-2 gap-x-3'>
       {/* eslint-disable-next-line jsx-a11y/label-has-associated-control */}
       <label className='p-1 cursor-pointer text-white rounded-full md:p-2 bg-neutral hover:bg-[rgba(0,0,0,.6)]'>
         <svg

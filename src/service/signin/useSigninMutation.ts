@@ -25,7 +25,6 @@ export const useSigninMutation = () => {
           alert(res.message);
           break;
         default:
-          console.log('login');
           navigate('/');
       }
     },

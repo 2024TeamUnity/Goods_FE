@@ -7,7 +7,7 @@ import { useFindPasswordMutation } from '../service/signin/useFindPasswordMutati
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('!l8gY5f(vh');
+  const [password, setPassword] = useState('');
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const findPassword = useFindPasswordMutation(() => setIsOpen(false));
   const login = useSigninMutation();

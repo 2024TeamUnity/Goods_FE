@@ -6,6 +6,7 @@ import { useProfileQuery, useResignMutation } from '../service/mypage/useUserQue
 import { usePointQuery } from '../service/point/usePointQuery';
 import Modal from '../components/common/Modal';
 import { addComma } from '../util/addComma';
+import LoadingSpinner from '../components/common/LoadingSpinner';
 
 export default function MyPage() {
   const [password, setPassword] = useState<string>('');
@@ -32,6 +33,7 @@ export default function MyPage() {
     setPassword('');
   };
 
+  if (profileLoading || pointLoading) return <LoadingSpinner />;
   return (
     <>
       <div className='flex h-20 px-3 py-3 md:px-7'>
@@ -44,14 +46,12 @@ export default function MyPage() {
       <div className='w-full px-5 md:mx-auto md:max-w-5xl'>
         <h1 className='my-12 text-2xl font-bold text-center md:text-3xl'>마이페이지</h1>
         <div className='flex flex-col md:flex-row md:items-end'>
-          {!profileLoading && (
-            <Profile
-              nick_name={profile!.nick_name}
-              profile_image={profile!.profile_image}
-              star={profile!.star}
-              badge_list={profile!.badge_list}
-            />
-          )}
+          <Profile
+            nick_name={profile!.nick_name}
+            profile_image={profile!.profile_image}
+            star={profile!.star}
+            badge_list={profile!.badge_list}
+          />
           <Link
             to='/mypage/update'
             className='w-full max-w-md mx-auto btn btn-lg btn-neutral no-animation md:flex-none md:btn md:btn-neutral md:w-28 md:mr-0'
@@ -61,12 +61,10 @@ export default function MyPage() {
         </div>
         <div className='w-full max-w-md mx-auto mt-8 border-t-2 md:max-w-5xl md:flex md:flex-row-reverse'>
           <div className='flex flex-col h-40 px-10 py-5 my-8 border rounded-xl border-neutral md:max-w-80 md:mr-0'>
-            {!pointLoading && (
-              <div className='flex items-center justify-between flex-auto mb-10'>
-                <p className='text-xl font-bold'>포인트</p>
-                <p className='text-xl font-bold'>{`${addComma(point.price)}P`}</p>
-              </div>
-            )}
+            <div className='flex items-center justify-between flex-auto mb-10'>
+              <p className='text-xl font-bold'>포인트</p>
+              <p className='text-xl font-bold'>{`${addComma(point.price)}P`}</p>
+            </div>
             <div className='flex justify-between flex-none'>
               <Link
                 to='/mypage/charge'

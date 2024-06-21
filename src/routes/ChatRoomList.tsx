@@ -1,9 +1,8 @@
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import { getTime } from '../util/getTime';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useChatRoomListHistory } from '../service/chat/useChatRoomListQuery';
-import React, { useEffect, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { notReadState } from '../store/atom';
-import LoadingSpinner from '../components/common/LoadingSpinner';
+import React, { useState } from 'react';
 import { useMemoHistory } from '../util/useMemoHistory';
 import Observer from '../components/common/Observer';
 import { useDeleteChatRoomMutation } from '../service/chat/useDeleteChatRoomMutation';
@@ -18,13 +17,21 @@ export default function ChatRoomList() {
   const { data, isLoading, hasNextPage, fetchNextPage } = useChatRoomListHistory();
   const deleteChatRoom = useDeleteChatRoomMutation();
   const chatroomList = useMemoHistory(data!);
-  const setNotRead = useSetRecoilState(notReadState);
+  // const setNotRead = useSetRecoilState(notReadState);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   const roomId = searchParams.get('roomId');
 
   const handleNavigate = () => navigate(-1);
+
+  const handleTime = (timeString: string) => {
+    const localTime = new Date(`${timeString}Z`);
+    const timestamp = localTime.getTime();
+    const now = new Date();
+    const nowTimestamp = now.getTime();
+    return getTime((nowTimestamp - timestamp) / 1000);
+  };
 
   /** 채팅방 리스트아이템에 삭제 버튼(휴지통)이 보이도록 */
   const handleShowButton = () =>
@@ -55,11 +62,11 @@ export default function ChatRoomList() {
     handleCloseModal();
   };
 
-  useEffect(() => {
-    // eslint-disable-next-line no-return-assign, no-param-reassign
-    const totalNotRead = chatroomList?.reduce((acc, cur) => (acc += cur.not_read), 0);
-    setNotRead(totalNotRead!);
-  }, [chatroomList, setNotRead]);
+  // useEffect(() => {
+  //   // eslint-disable-next-line no-return-assign, no-param-reassign
+  //   const totalNotRead = chatroomList?.reduce((acc, cur) => (acc += cur.not_read), 0);
+  //   setNotRead(totalNotRead!);
+  // }, [chatroomList, setNotRead]);
   return (
     <div className='w-full px-5 md:mx-auto md:max-w-5xl'>
       <ul className='flex flex-col items-center justify-center w-full mx-auto mb-20 md:max-w-xl'>
@@ -106,6 +113,7 @@ export default function ChatRoomList() {
               {...item}
               deleteState={deleteState}
               handleShowModal={handleShowModal}
+              handleTime={handleTime}
             />
           ))
         )}

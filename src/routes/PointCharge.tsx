@@ -1,8 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PointCalc from '../components/common/PointCalc';
 import logo from '../assets/logo.webp';
+import { useEffect } from 'react';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import { useProfileQuery } from '../service/mypage/useUserQueries';
 
 export default function PointCharge() {
+  const { data, isLoading } = useProfileQuery();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!data) return;
+
+    if (data.phone_number === '') {
+      // eslint-disable-next-line no-alert
+      alert(
+        '전화번호를 먼저 설정해주세요. 전화번호 설정을 위해 회원 정보 변경 페이지로 이동합니다.',
+      );
+      navigate('/mypage/update');
+    }
+  }, [data, navigate]);
+
+  if (isLoading) return <LoadingSpinner />;
   return (
     <>
       <div className='flex h-20 px-3 py-3 md:px-7'>
