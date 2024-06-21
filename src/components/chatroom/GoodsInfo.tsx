@@ -41,7 +41,7 @@ export default function GoodsInfo({
               <button className='w-full max-w-sm btn btn-primary xs:max-w-24'>거래 요청</button>
             </Link>
           ) : (
-            <button className='w-full max-w-sm btn btn-primary' disabled>
+            <button className='w-full max-w-sm btn btn-primary xs:max-w-24' disabled>
               거래 요청
             </button>
           ))}

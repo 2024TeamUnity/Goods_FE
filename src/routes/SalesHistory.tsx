@@ -33,12 +33,18 @@ export default function SalesHistory({ userId, loading }: { userId: string; load
               alt='img'
             />
             <div className='relative flex flex-col flex-1 py-2'>
-              <p className='text-lg font-bold'>{item.goods_name}</p>
+              <p className='text-lg font-bold line-clamp-1'>{item.goods_name}</p>
               <p className='flex-1 mt-2 mb-4 text-sm text-neutral-500'>
                 {getTime(item.uploaded_before!)}
               </p>
               <div className='flex items-center justify-start text-base gap-x-2'>
-                <div className='flex items-center justify-center w-16 p-1 text-sm text-white bg-secondary rounded-xl'>
+                <div
+                  className={`break-keep flex items-center justify-center w-16 p-1 text-sm text-white rounded-xl ${
+                    item.goods_status === '판매중' && 'bg-secondary'
+                  } ${item.goods_status === '예약중' && 'bg-neutral-500'} ${
+                    item.goods_status === '거래완료' && 'bg-neutral'
+                  }`}
+                >
                   {item.goods_status}
                 </div>
                 <span className='font-bold line-clamp-1'>{addComma(String(item.price))}원</span>

@@ -7,6 +7,7 @@ export const useChatHistoryQuery = (roomId: string) => {
     queryKey: ['chatHistory', `${roomId}`],
     queryFn: async () => (await client.get(`/api/chat/room/${roomId}`)).data,
   });
+
   return { data, isLoading };
 };
 

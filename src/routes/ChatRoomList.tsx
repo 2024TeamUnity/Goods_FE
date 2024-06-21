@@ -1,10 +1,29 @@
-import { Link } from 'react-router-dom';
-import { useChatRoomListQuery } from '../service/chat/useChatRoomListQuery';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import { getTime } from '../util/getTime';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useChatRoomListHistory } from '../service/chat/useChatRoomListQuery';
+import React, { useState } from 'react';
+import { useMemoHistory } from '../util/useMemoHistory';
+import Observer from '../components/common/Observer';
+import { useDeleteChatRoomMutation } from '../service/chat/useDeleteChatRoomMutation';
+import Modal from '../components/common/Modal';
+import ChatRoomListItem from '../components/chatroomList/ChatRoomListItem';
 
 export default function ChatRoomList() {
-  const { data, isLoading } = useChatRoomListQuery();
+  const [deleteState, setDeleteState] = useState({
+    showButton: false,
+    showModal: false,
+  });
+  const { data, isLoading, hasNextPage, fetchNextPage } = useChatRoomListHistory();
+  const deleteChatRoom = useDeleteChatRoomMutation();
+  const chatroomList = useMemoHistory(data!);
+  // const setNotRead = useSetRecoilState(notReadState);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const roomId = searchParams.get('roomId');
+
+  const handleNavigate = () => navigate(-1);
 
   const handleTime = (timeString: string) => {
     const localTime = new Date(`${timeString}Z`);
@@ -14,44 +33,103 @@ export default function ChatRoomList() {
     return getTime((nowTimestamp - timestamp) / 1000);
   };
 
+  /** 채팅방 리스트아이템에 삭제 버튼(휴지통)이 보이도록 */
+  const handleShowButton = () =>
+    setDeleteState((prev) => ({
+      ...prev,
+      showButton: !prev.showButton,
+    }));
+
+  /** 채팅방 리스트아이템의 삭제 버튼을 누르면 모달이 보이도록 */
+  const handleShowModal = (e: React.MouseEvent<HTMLButtonElement>, roomId: number) => {
+    e.preventDefault();
+    setDeleteState((prev) => ({
+      ...prev,
+      showModal: true,
+    }));
+    navigate(`/roomList?roomId=${roomId}`);
+  };
+
+  /** 모달 닫기 */
+  const handleCloseModal = () => {
+    setDeleteState({ showButton: true, showModal: false });
+    navigate('/roomList');
+  };
+
+  /** 모달의 나가기 버튼을 눌러서 채팅방 삭제 */
+  const handleDeleteChatroom = () => {
+    deleteChatRoom(Number(roomId));
+    handleCloseModal();
+  };
+
+  // useEffect(() => {
+  //   // eslint-disable-next-line no-return-assign, no-param-reassign
+  //   const totalNotRead = chatroomList?.reduce((acc, cur) => (acc += cur.not_read), 0);
+  //   setNotRead(totalNotRead!);
+  // }, [chatroomList, setNotRead]);
   return (
     <div className='w-full px-5 md:mx-auto md:max-w-5xl'>
-      <h2 className='my-12 text-2xl font-bold text-center md:text-3xl'>채팅 목록</h2>
       <ul className='flex flex-col items-center justify-center w-full mx-auto mb-20 md:max-w-xl'>
+        <div className='relative flex items-center w-full py-10'>
+          <button className='absolute' onClick={handleNavigate}>
+            <svg
+              xmlns='http://www.w3.org/2000/svg'
+              fill='none'
+              viewBox='0 0 24 24'
+              strokeWidth={1.5}
+              stroke='currentColor'
+              className=' size-6 md:size-8'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                d='M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18'
+              />
+            </svg>
+          </button>
+          <h2 className='m-auto text-2xl md:text-3xl'>채팅 목록</h2>
+        </div>
+
+        {chatroomList?.length !== 0 && (
+          <button
+            onClick={handleShowButton}
+            className={`ml-auto btn btn-outline btn-sm ${
+              deleteState.showButton ? 'btn-success ' : 'btn-error'
+            }`}
+          >
+            {deleteState.showButton ? '완료' : '채팅방 삭제'}
+          </button>
+        )}
         {/* eslint-disable-next-line no-nested-ternary */}
         {isLoading ? (
           <LoadingSpinner />
-        ) : data!.length === 0 ? (
+        ) : chatroomList!.length === 0 ? (
           <h3 className='text-lg'>결과가 없습니다.</h3>
         ) : (
-          Array.isArray(data) &&
-          data!.map((item) => {
-            return (
-              <li key={item.room_id} className='w-full border-b h-36'>
-                <Link
-                  to={`/room/${item.room_id}`}
-                  className='flex items-center justify-start h-full p-4 gap-x-8'
-                  state={{ roomId: item.room_id }}
-                >
-                  <img
-                    className='object-cover w-20 h-20 grow-0 rounded-xl md:w-28 md:h-28'
-                    src={item.goods_image}
-                    alt='thumbnail'
-                  />
-                  <div className='flex flex-col justify-around flex-1 w-full h-full min-w-0 py-2'>
-                    <p className='text-lg font-bold truncate'>{item.partner}</p>
-                    <p className='truncate'>{item.last_message}</p>
-                    <p className='text-sm truncate text-stone-400'>{handleTime(item.updated_at)}</p>
-                  </div>
-                  {item.not_read > 0 && (
-                    <div className='btn btn-circle btn-secondary btn-sm'>{item.not_read}</div>
-                  )}
-                </Link>
-              </li>
-            );
-          })
+          Array.isArray(chatroomList) &&
+          chatroomList!.map((item) => (
+            <ChatRoomListItem
+              key={item.room_id}
+              {...item}
+              deleteState={deleteState}
+              handleShowModal={handleShowModal}
+              handleTime={handleTime}
+            />
+          ))
         )}
       </ul>
+      {deleteState.showButton && deleteState.showModal && (
+        <Modal
+          isOpen={deleteState.showModal}
+          title='채팅방 나가기'
+          handleSubmit={handleDeleteChatroom}
+          handleCloseModal={handleCloseModal}
+          confirmBtnMsg='나가기'
+        >
+          <p className='py-4 text-lg font-normal text-center'>채팅방을 나가시겠습니까?</p>
+        </Modal>
+      )}
+      <Observer hasNext={hasNextPage} loadMore={fetchNextPage} />
     </div>
   );
 }

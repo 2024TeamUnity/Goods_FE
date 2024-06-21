@@ -50,6 +50,7 @@ export interface ISalesHistoryData {
 export interface IPurchaseHistoryData extends ISalesHistoryData {
   seller_name: string;
   member_id: number;
+  review_exist: boolean;
 }
 
 export interface IWishHistoryData extends ISalesHistoryData {
@@ -232,4 +233,10 @@ export interface IObserver {
 
 export interface IBottomSheet extends IObserver {
   products: IGoodsList[];
+}
+
+export interface IChatRoomListItem extends IChatRoomListData {
+  deleteState: { showButton: boolean; showModal: boolean };
+  handleShowModal: (e: React.MouseEvent<HTMLButtonElement>, roomId: number) => void;
+  handleTime: (timeString: string) => string;
 }

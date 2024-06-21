@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useMatch } from 'react-router-dom';
 
 export default function HistoryPageContainer({
   children,
@@ -10,10 +10,12 @@ export default function HistoryPageContainer({
   title: string;
   isEmpty: boolean;
 }) {
+  const shop = useMatch('/shop/:id');
+
   return (
-    <div className='max-w-md min-h-screen px-5 mx-auto overflow-x-auto md:max-w-5xl'>
+    <div className='max-w-md min-h-screen mx-auto overflow-x-auto md:px-5 md:max-w-5xl'>
       <ul className='flex flex-col items-center justify-center w-full mx-auto min-w-72 md:max-w-xl gap-y-3'>
-        <h1 className='my-12 text-2xl font-bold text-center md:text-3xl'>{title}</h1>
+        {!shop && <h1 className='my-12 text-2xl font-bold text-center md:text-3xl'>{title}</h1>}
         {isEmpty ? (
           <div className='flex flex-col items-center justify-center w-full h-96 gap-y-5'>
             <svg

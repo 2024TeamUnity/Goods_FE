@@ -66,7 +66,7 @@ export default function ChatHistory({
   };
 
   return (
-    <ul className='relative w-full py-3 overflow-y-auto h-3/4' ref={ulRef}>
+    <ul className='relative w-full py-3 overflow-y-auto xs:h-3/4 h-2/3' ref={ulRef}>
       {isMounted && <Observer loadMore={handleScroll} hasNext={hasNextPage} />}
       {chatList &&
         chatList.map((item, index) => (

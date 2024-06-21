@@ -47,7 +47,7 @@ export default function HomeAddr() {
       <select
         value={siValue}
         onChange={(e) => handleSiValue(e.target.value)}
-        className='w-full max-w-xs select select-bordered'
+        className='w-full max-w-xs pl-2 pr-8 md:pr-10 select select-bordered md:pl-4'
       >
         <option value=''>시 선택</option>
         {sido.map((item) => (
@@ -60,7 +60,7 @@ export default function HomeAddr() {
       <select
         value={guValue}
         onChange={(e) => handleGuValue(e.target.value)}
-        className='w-full max-w-xs select select-bordered'
+        className='w-full max-w-xs pl-2 pr-8 select select-bordered md:pr-10 md:pl-4'
       >
         <option value=''>구 선택</option>
         {sigugun
@@ -75,7 +75,7 @@ export default function HomeAddr() {
       <select
         value={dongValue}
         onChange={(e) => setDongValue(e.target.value)}
-        className='w-full max-w-xs select select-bordered'
+        className='w-full max-w-xs pl-2 pr-8 select select-bordered md:pr-10 md:pl-4'
       >
         <option value=''>동 선택</option>
         {dong
