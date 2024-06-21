@@ -1,12 +1,17 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import ChatHistory from '../components/chatroom/ChatHistory';
 import GoodsInfo from '../components/chatroom/GoodsInfo';
-import { useChatHistoryQuery } from '../service/chat/useChatHistoryQuery';
+import {
+  useChatHistoryQuery,
+  usePaginatedChatHistoryQuery,
+} from '../service/chat/useChatHistoryQuery';
 import ChatInput from '../components/chatroom/ChatInput';
 import { useEffect, useRef, useState } from 'react';
 import { CompatClient, Stomp } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { IChatLog } from '../types/interface';
+import LoadingSpinner from '../components/common/LoadingSpinner';
+import { useMemoHistoryReverse } from '../util/useMemoHistory';
 
 export default function ChatRoom() {
   const navigate = useNavigate();
@@ -14,7 +19,9 @@ export default function ChatRoom() {
   const {
     state: { roomId },
   } = useLocation();
-  const { data, isLoading } = useChatHistoryQuery(roomId);
+  const { data: chatInfo, isLoading: chatInfoLoading } = useChatHistoryQuery(roomId);
+  const { data, isLoading, fetchNextPage, hasNextPage } = usePaginatedChatHistoryQuery(roomId);
+  const chatList = useMemoHistoryReverse<IChatLog>(data!);
   const [chatLog, setChatLog] = useState<IChatLog[]>([]);
   const [msg, setMsg] = useState('');
 
@@ -23,7 +30,7 @@ export default function ChatRoom() {
   const handleSendMsg = (message: string) => {
     if (stompClient.current && stompClient.current.connected) {
       stompClient.current.send(
-        `/pub/message/${roomId}`,
+        `/pub/chat.message.${roomId}`,
         {
           Authorization: `Bearer ${localStorage.getItem('access_token')}`,
         },
@@ -33,10 +40,10 @@ export default function ChatRoom() {
   };
 
   useEffect(() => {
-    if (data) {
-      setChatLog(data.chat_logs);
+    if (chatList) {
+      setChatLog(chatList);
     }
-  }, [data]);
+  }, [chatList]);
 
   useEffect(() => {
     const socket = new SockJS(import.meta.env.VITE_CHAT_SERVER);
@@ -46,13 +53,13 @@ export default function ChatRoom() {
     stompClient.current.connect(
       { Authorization: `Bearer ${localStorage.getItem('access_token')}` },
       () => {
-        stompClient.current?.subscribe(`/sub/message/${roomId}`, (msg) => {
+        stompClient.current?.subscribe(`/exchange/chat.exchange/room.${roomId}`, (msg) => {
           const messageData = JSON.parse(msg.body);
           setChatLog((prev) => [
             ...prev,
             {
               message: messageData.message,
-              created_at: new Date().toISOString(),
+              created_at: new Date().toISOString().split('Z')[0],
               sender_id: messageData.sender_id,
               receiver_id: '',
             },
@@ -64,9 +71,9 @@ export default function ChatRoom() {
     return () => {
       stompClient.current?.disconnect();
     };
-  }, [roomId, data]);
+  }, [roomId, chatLog]);
 
-  if (isLoading) return <h1>loading...</h1>;
+  if (chatInfoLoading || isLoading) return <LoadingSpinner />;
   return (
     <div className='absolute top-0 left-0 flex items-center justify-center w-full h-screen overflow-y-hidden bg-slate-900 '>
       <div className='relative w-full h-full md:rounded-3xl md:h-[95%] md:w-[450px] p-3 md:p-5 bg-white md:border-4'>
@@ -87,20 +94,24 @@ export default function ChatRoom() {
               />
             </svg>
           </button>
-          <h1 className='text-2xl font-bold text-center'>{data?.partner}</h1>
+          <h1 className='text-2xl font-bold text-center'>{chatInfo?.partner}</h1>
         </div>
         <GoodsInfo
           info={{
-            id: data!.goods_id,
-            image: data!.goods_image,
-            name: data!.goods_seller,
-            title: data!.goods_name,
-            price: data!.goods_price,
-            memberType: data!.member_type,
+            id: chatInfo!.goods_id,
+            image: chatInfo!.goods_image,
+            title: chatInfo!.goods_name,
+            price: chatInfo!.goods_price,
+            memberType: chatInfo!.member_type,
           }}
         />
         <div className='h-0 mb-0 divider' />
-        <ChatHistory chatLog={chatLog} myId={data!.member_id} />
+        <ChatHistory
+          myId={chatInfo!.member_id}
+          chatList={chatLog}
+          fetchNextPage={fetchNextPage}
+          hasNextPage={hasNextPage}
+        />
         <ChatInput msg={msg} setMsg={setMsg} onSubmitMsg={handleSendMsg} />
       </div>
     </div>

@@ -19,7 +19,7 @@ export default function PostDeleteBtn({
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className='mr-2 btn btn-neutral'>
+      <button onClick={() => setIsOpen(true)} className='btn btn-neutral'>
         삭제
         <svg
           xmlns='http://www.w3.org/2000/svg'

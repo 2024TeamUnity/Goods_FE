@@ -32,7 +32,7 @@ export default function PostDetail() {
     try {
       const res = (await client.post(`api/chat/room/${goodsId}`)).data;
       if (res.room_id) {
-        navigate(`/room/${res.room_id}`, { state: { roomId: res.room_id, goodsId } });
+        navigate(`/room/${res.room_id}`, { state: { roomId: res.room_id } });
       }
       return res;
     } catch (e) {
@@ -48,7 +48,7 @@ export default function PostDetail() {
       <div className='md:flex'>
         <Carousel images={data!.goods_images} />
         <div className='mt-5 md:mt-0 md:flex md:flex-col md:justify-between md:flex-1'>
-          <div className='md:flex md:flex-col-reverse md:flex-1 md:pb-4 md:mb-4 md:border-b'>
+          <div className='md:flex md:flex-col-reverse md:flex-1 md:pb-8 md:mb-4 md:border-b'>
             <Link
               to={`/shop/${data!.seller_id}`}
               className='h-full pb-4 card card-side md:pb-0 md:h-20'
@@ -86,44 +86,47 @@ export default function PostDetail() {
             <div className='md:flex-1'>
               <div className='flex items-center font-extrabold md:text-3xl'>
                 {data!.status === '예약중' && (
-                  <div className='h-8 mr-2 text-white md:h-10 md:mr-4 badge badge-neutral-500 md:badge-lg bg-neutral-500'>
+                  <div className='h-8 mr-2 text-white break-keep md:h-10 md:mr-4 badge badge-neutral-500 md:badge-lg bg-neutral-500'>
                     {data!.status}
                   </div>
                 )}
                 {data!.status === '거래완료' && (
-                  <div className='h-8 mr-2 text-white md:h-10 md:mr-4 badge badge-neutral md:badge-lg bg-neutral'>
+                  <div className='h-8 mr-2 text-white break-keep md:h-10 md:mr-4 badge badge-neutral md:badge-lg bg-neutral'>
                     {data!.status}
                   </div>
                 )}
                 <h1 className='my-4 text-2xl md:my-8 md:text-3xl'>{data!.goods_name}</h1>
               </div>
-              <div className='flex items-center justify-between md:flex-1'>
-                <h2 className='text-sm text-stone-400 md:text-base'>
-                  {getTime(data!.uploaded_before)}
-                </h2>
-                {isAutor && (
-                  <select
-                    name='goods-state'
-                    defaultValue={data!.status}
-                    onChange={(e) => handleState(e.target.value)}
-                    className='w-32 md:w-40 select select-bordered'
-                  >
-                    <option value='판매중'>판매중</option>
-                    <option value='예약중'>예약중</option>
-                    <option value='거래완료'>거래완료</option>
-                  </select>
-                )}
-              </div>
+              <h2 className='mb-4 text-sm text-stone-400 md:text-base'>
+                {getTime(data!.uploaded_before)}
+              </h2>
             </div>
           </div>
-          <div className='fixed bottom-0 left-0 z-40 flex items-center w-full h-20 px-3 py-3 bg-white border-t md:relative md:border-0 md:p-0'>
-            <div className='flex items-center ml-2 mr-4 md:ml-0'>
+          <div className='fixed bottom-0 left-0 z-30 flex items-center w-full h-20 p-3 bg-white border-t md:relative md:border-0 md:p-0 gap-x-2'>
+            <div className='flex items-center'>
               <AddWishListButton goodsId={Number(goodsId)} wish={data!.liked} />
             </div>
             <h3 className='flex-1 text-xl font-bold'>{addComma(String(data!.price))}원</h3>
-            {isAutor ? (
-              <>
-                <Link to={`/posts/edit/${goodsId}`} className='mr-2 btn-primary btn'>
+            {!isAutor && (
+              <button onClick={handleToChat} className='btn btn-primary'>
+                채팅하기
+              </button>
+            )}
+          </div>
+          {isAutor && (
+            <div className='flex items-center justify-between md:flex-1 gap-x-2'>
+              <select
+                name='goods-state'
+                defaultValue={data!.status}
+                onChange={(e) => handleState(e.target.value)}
+                className='w-24 md:w-32 select select-bordered'
+              >
+                <option value='판매중'>판매중</option>
+                <option value='예약중'>예약중</option>
+                <option value='거래완료'>거래완료</option>
+              </select>
+              <div className='flex gap-x-2'>
+                <Link to={`/posts/edit/${goodsId}`} className='btn-primary btn'>
                   수정
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
@@ -141,22 +144,18 @@ export default function PostDetail() {
                   </svg>
                 </Link>
                 <PostDeleteBtn goodsId={goodsId!} memberId={profile!.member_id} />
-              </>
-            ) : (
-              <button onClick={handleToChat} className='mr-2 btn btn-primary'>
-                채팅하기
-              </button>
-            )}
-          </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
       <h2 className='py-4 mt-6 whitespace-pre-wrap border-t min-h-44 md:mt-8 md:pt-8 md:min-h-60'>
         {data!.description}
       </h2>
       <div className='pt-4 border-t pb-28 md:pb-4 md:mb-12'>
-        <div className='flex items-center mb-4'>
-          <h3 className='font-bold md:text-lg'>거래 희망 장소</h3>
-          <h4 className='ml-4'>{data!.address}</h4>
+        <div className='flex flex-col items-start mb-4 md:items-center md:flex-row md:gap-x-4'>
+          <h3 className='font-bold text-left break-keep md:text-lg'>거래 희망 장소</h3>
+          <h4 className='break-keep'>{data!.address}</h4>
         </div>
         <Map
           center={{

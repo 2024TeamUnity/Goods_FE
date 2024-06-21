@@ -12,7 +12,7 @@ export default function BottomSheet({ products, hasNext, loadMore }: IBottomShee
     // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
     <div
       className={`block md:hidden ${
-        isOpen && 'bg-[rgba(0,0,0,.7)] z-[100] absolute top-0 left-0 w-full h-screen'
+        isOpen && 'bg-[rgba(0,0,0,.7)] z-40 absolute top-0 left-0 w-full h-screen'
       }`}
       onClick={() => isOpen && setIsOpen(false)}
     >

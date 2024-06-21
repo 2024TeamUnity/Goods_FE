@@ -124,14 +124,12 @@ export interface IChatLog {
   created_at: string;
 }
 
-export interface IChatHistoryData {
+export interface IChatRoomData {
   room_id: number;
   goods_id: number;
-  goods_seller: string;
   goods_name: string;
   goods_image: string;
   goods_price: number;
-  chat_logs: IChatLog[];
   member_id: number;
   partner: string;
   member_type: string;
@@ -230,7 +228,7 @@ export interface IModal {
 
 export interface IObserver {
   hasNext: boolean;
-  loadMore: () => Promise<InfiniteQueryObserverResult>;
+  loadMore: (() => Promise<InfiniteQueryObserverResult>) | (() => Promise<void>);
 }
 
 export interface IBottomSheet extends IObserver {
@@ -240,4 +238,5 @@ export interface IBottomSheet extends IObserver {
 export interface IChatRoomListItem extends IChatRoomListData {
   deleteState: { showButton: boolean; showModal: boolean };
   handleShowModal: (e: React.MouseEvent<HTMLButtonElement>, roomId: number) => void;
+  handleTime: (timeString: string) => string;
 }

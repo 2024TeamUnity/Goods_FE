@@ -38,7 +38,7 @@ export default function ChatRoomListItem(props: IChatRoomListItem) {
         <div className='flex flex-col justify-around flex-1 w-full h-full min-w-0 py-2'>
           <p className='text-lg font-bold truncate'>{props.partner}</p>
           <p className='truncate'>{props.last_message}</p>
-          <p className='text-sm truncate text-stone-400'>{props.updated_at}</p>
+          <p className='text-sm truncate text-stone-400'>{props.handleTime(props.updated_at)}</p>
         </div>
         {props.not_read > 0 && (
           <div className='btn btn-circle btn-secondary btn-sm'>{props.not_read}</div>

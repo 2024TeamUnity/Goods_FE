@@ -106,11 +106,7 @@ export default function HomeMap({
       </button>
       {isAuth && (
         <Link to='/posts/new'>
-          <button
-            className={`absolute p-3 text-white transition-colors duration-200 bg-black rounded-full bottom-5 right-5 md:p-4 md:bottom-8 md:right-8 hover:bg-neutral-700 ${
-              isOpen ? 'z-[101]' : 'z-30'
-            }`}
-          >
+          <button className='absolute z-[45] p-3 text-white transition-colors duration-200 bg-black rounded-full bottom-5 right-5 md:p-4 md:bottom-8 md:right-8 hover:bg-neutral-700'>
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'
