@@ -10,7 +10,7 @@ export default function Carousel({ images }: { images: string[] }) {
   };
 
   const handleImgNext = () => {
-    if (curIndex < images.length - 1) {
+    if (Array.isArray(images) && curIndex < images.length - 1) {
       setCurIndex(curIndex + 1);
     }
   };
@@ -38,7 +38,7 @@ export default function Carousel({ images }: { images: string[] }) {
             </svg>
           </button>
         )}
-        {curIndex < images.length - 1 && (
+        {Array.isArray(images) && curIndex < images.length - 1 && (
           <button
             onClick={handleImgNext}
             className='absolute top-0 right-0 opacity-70 btn btn-circle'

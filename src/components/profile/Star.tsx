@@ -1,7 +1,8 @@
 import { Children } from 'react';
 
 export default function Star({ star }: { star: number }) {
-  const half = Boolean(star - Math.floor(star));
+  const validStar = Math.max(0, Math.min(star, 5));
+  const half = validStar % 1 !== 0;
 
   return (
     <div className='rating rating-sm'>
