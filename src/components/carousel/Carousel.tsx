@@ -15,6 +15,14 @@ export default function Carousel({ images }: { images: string[] }) {
     }
   };
 
+  if (!Array.isArray(images) || images.length === 0) {
+    return (
+      <div className='flex items-center justify-center w-full text-gray-500 h-52 md:w-96 md:h-96'>
+        No images available
+      </div>
+    );
+  }
+
   return (
     <div className='relative w-full mb-4 h-52 md:w-96 md:h-96 md:mb-0 md:mr-8 md:max-w-5xl'>
       <div className='absolute h-12 -translate-y-1/2 left-5 right-5 top-1/2'>
@@ -38,7 +46,7 @@ export default function Carousel({ images }: { images: string[] }) {
             </svg>
           </button>
         )}
-        {Array.isArray(images) && curIndex < images.length - 1 && (
+        {curIndex < images.length - 1 && (
           <button
             onClick={handleImgNext}
             className='absolute top-0 right-0 opacity-70 btn btn-circle'
