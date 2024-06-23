@@ -74,10 +74,10 @@ export default function PostDetail() {
               <div className='flex flex-col items-start justify-center w-full'>
                 <p className='mb-2 card-title'>{data!.seller_name}</p>
                 <div className='justify-end card-actions'>
-                  {data!.badge_list.includes('판매왕') && (
+                  {Array.isArray(data!.badge_list) && data!.badge_list.includes('판매왕') && (
                     <div className='badge badge-secondary badge-outline md:badge-lg'>판매왕</div>
                   )}
-                  {data!.badge_list.includes('매너왕') && (
+                  {Array.isArray(data!.badge_list) && data!.badge_list.includes('매너왕') && (
                     <div className='badge badge-primary badge-outline md:badge-lg'>매너왕</div>
                   )}
                 </div>

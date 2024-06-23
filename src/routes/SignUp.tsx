@@ -69,7 +69,7 @@ export default function SignUp() {
             <div className='relative flex flex-col gap-y-3'>
               {preview ? (
                 <img
-                  className='w-24 h-2w-24 rounded-xl md:w-36 md:h-36'
+                  className='w-24 h-24 rounded-xl md:w-36 md:h-36'
                   src={preview}
                   alt='preview img'
                 />

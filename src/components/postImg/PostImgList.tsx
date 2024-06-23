@@ -40,7 +40,7 @@ export default function PostImgList({ prevThumbnails }: { prevThumbnails: string
   };
 
   const handleRemove = (idx: number) => {
-    if (prevThumbnails.includes(imgUrls[idx])) {
+    if (Array.isArray(prevThumbnails) && prevThumbnails.includes(imgUrls[idx])) {
       /* 기존 사진 삭제하는 경우 */
       const imageToDelete = imgUrls[idx];
       setImgUrlsToDelete([...imgUrlsToDelete, imageToDelete]);
