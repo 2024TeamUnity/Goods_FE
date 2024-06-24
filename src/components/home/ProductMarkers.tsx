@@ -3,11 +3,24 @@ import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { homeListState, searchResultState } from '../../store/atom';
 import { IGoodsList } from '../../types/interface';
 import useBottomSheet from '../../util/useBottomSheet';
+import { useEffect, useState } from 'react';
+import { useClusterInfoQuery } from '../../service/map/useClusterInfoQuery';
 
 export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] }) {
   const setListState = useSetRecoilState(homeListState);
   const searchList = useRecoilValue(searchResultState);
   const { setIsOpen } = useBottomSheet();
+  const [payload, setPayload] = useState({
+    base_lat: 0,
+    base_lng: 0,
+    ne_lat: 0,
+    ne_lng: 0,
+    sw_lat: 0,
+    sw_lng: 0,
+    quantity: 0,
+  });
+
+  const refetch = useClusterInfoQuery(payload);
 
   const handleClusterClick = async (_: kakao.maps.MarkerClusterer, cluster: kakao.maps.Cluster) => {
     const bounds = cluster.getBounds();
@@ -15,18 +28,28 @@ export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] 
     const northEast = bounds.getNorthEast();
     const southWest = bounds.getSouthWest();
 
-    const payload = {
+    const newPayload = {
       base_lat: center.getLat(),
       base_lng: center.getLng(),
       ne_lat: northEast.getLat(),
       ne_lng: northEast.getLng(),
       sw_lat: southWest.getLat(),
       sw_lng: southWest.getLng(),
+      quantity: cluster.getSize(),
     };
+    setPayload(newPayload);
     setIsOpen(true);
-
-    console.log(payload); // 백엔드에서 api 추가되면 전송
   };
+
+  useEffect(() => {
+    (async () => {
+      if (Object.values(payload).every((item) => item !== 0)) {
+        const res = (await refetch()).data;
+        const clusterInfo = res?.pages.reduce((acc, cur) => [...acc, ...cur], []);
+        setListState(clusterInfo!);
+      }
+    })();
+  }, [payload, refetch, setListState]);
 
   const handleMarkerClick = (pos: IGoodsList) => {
     setListState([pos]);
@@ -35,6 +58,7 @@ export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] 
     console.log({ lat, lng });
   };
 
+  // if (isLoading) return <h1>loading...</h1>;
   return (
     <MarkerClusterer
       averageCenter
