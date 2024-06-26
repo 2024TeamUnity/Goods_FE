@@ -2,10 +2,25 @@ import { MapMarker, MarkerClusterer } from 'react-kakao-maps-sdk';
 import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { homeListState, searchResultState } from '../../store/atom';
 import { IGoodsList } from '../../types/interface';
+import useBottomSheet from '../../util/useBottomSheet';
+import { useEffect, useState } from 'react';
+import { useClusterInfoQuery } from '../../service/map/useClusterInfoQuery';
 
 export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] }) {
   const setListState = useSetRecoilState(homeListState);
   const searchList = useRecoilValue(searchResultState);
+  const { setIsOpen } = useBottomSheet();
+  const [payload, setPayload] = useState({
+    base_lat: 0,
+    base_lng: 0,
+    ne_lat: 0,
+    ne_lng: 0,
+    sw_lat: 0,
+    sw_lng: 0,
+    quantity: 0,
+  });
+
+  const { refetch, hasNextPage, fetchNextPage } = useClusterInfoQuery(payload);
 
   const handleClusterClick = async (_: kakao.maps.MarkerClusterer, cluster: kakao.maps.Cluster) => {
     const bounds = cluster.getBounds();
@@ -13,16 +28,35 @@ export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] 
     const northEast = bounds.getNorthEast();
     const southWest = bounds.getSouthWest();
 
-    const payload = {
-      northEast: { lat: northEast.getLat(), lng: northEast.getLng() },
-      southWest: { lat: southWest.getLat(), lng: southWest.getLng() },
-      center: { lat: center.getLat(), lng: center.getLng() },
+    const newPayload = {
+      base_lat: center.getLat(),
+      base_lng: center.getLng(),
+      ne_lat: northEast.getLat(),
+      ne_lng: northEast.getLng(),
+      sw_lat: southWest.getLat(),
+      sw_lng: southWest.getLng(),
+      quantity: cluster.getSize(),
     };
-    console.log(payload); // 백엔드에서 api 추가되면 전송
+    setPayload(newPayload);
+    setIsOpen(true);
   };
 
+  useEffect(() => {
+    (async () => {
+      if (Object.values(payload).every((item) => item !== 0)) {
+        const res = (await refetch()).data;
+        const clusterInfo = res?.pages.reduce((acc, cur) => [...acc, ...cur], []);
+        setListState({
+          data: clusterInfo!,
+          hasNext: hasNextPage,
+          loadMore: fetchNextPage,
+        });
+      }
+    })();
+  }, [payload, refetch, setListState, fetchNextPage, hasNextPage]);
+
   const handleMarkerClick = (pos: IGoodsList) => {
-    setListState([pos]);
+    // setListState([pos]);
 
     const { lat, lng } = pos;
     console.log({ lat, lng });
