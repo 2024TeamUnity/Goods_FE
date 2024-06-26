@@ -20,7 +20,7 @@ export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] 
     quantity: 0,
   });
 
-  const refetch = useClusterInfoQuery(payload);
+  const { refetch, hasNextPage, fetchNextPage } = useClusterInfoQuery(payload);
 
   const handleClusterClick = async (_: kakao.maps.MarkerClusterer, cluster: kakao.maps.Cluster) => {
     const bounds = cluster.getBounds();
@@ -46,19 +46,22 @@ export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] 
       if (Object.values(payload).every((item) => item !== 0)) {
         const res = (await refetch()).data;
         const clusterInfo = res?.pages.reduce((acc, cur) => [...acc, ...cur], []);
-        setListState(clusterInfo!);
+        setListState({
+          data: clusterInfo!,
+          hasNext: hasNextPage,
+          loadMore: fetchNextPage,
+        });
       }
     })();
-  }, [payload, refetch, setListState]);
+  }, [payload, refetch, setListState, fetchNextPage, hasNextPage]);
 
   const handleMarkerClick = (pos: IGoodsList) => {
-    setListState([pos]);
+    // setListState([pos]);
 
     const { lat, lng } = pos;
     console.log({ lat, lng });
   };
 
-  // if (isLoading) return <h1>loading...</h1>;
   return (
     <MarkerClusterer
       averageCenter
