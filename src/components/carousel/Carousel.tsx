@@ -10,10 +10,18 @@ export default function Carousel({ images }: { images: string[] }) {
   };
 
   const handleImgNext = () => {
-    if (curIndex < images.length - 1) {
+    if (Array.isArray(images) && curIndex < images.length - 1) {
       setCurIndex(curIndex + 1);
     }
   };
+
+  if (!Array.isArray(images) || images.length === 0) {
+    return (
+      <div className='flex items-center justify-center w-full text-gray-500 h-52 md:w-96 md:h-96'>
+        No images available
+      </div>
+    );
+  }
 
   return (
     <div className='relative w-full mb-4 h-52 md:w-96 md:h-96 md:mb-0 md:mr-8 md:max-w-5xl'>

@@ -45,7 +45,7 @@ export default function ChatHistory({
 
   /* 첫 렌더링 할 때 스크롤 최하단으로 */
   useEffect(() => {
-    if (ulRef.current && chatList.length > 0 && !isMounted) {
+    if (ulRef.current && Array.isArray(chatList) && chatList.length > 0 && !isMounted) {
       ulRef.current.scrollTop = ulRef.current.scrollHeight;
       setIsMounted(true);
     }
@@ -68,7 +68,7 @@ export default function ChatHistory({
   return (
     <ul className='relative w-full py-3 overflow-y-auto xs:h-3/4 h-2/3' ref={ulRef}>
       {isMounted && <Observer loadMore={handleScroll} hasNext={hasNextPage} />}
-      {chatList &&
+      {Array.isArray(chatList) &&
         chatList.map((item, index) => (
           // eslint-disable-next-line react/no-array-index-key
           <React.Fragment key={`${item.created_at}_${index}`}>
