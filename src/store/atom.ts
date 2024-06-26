@@ -1,5 +1,5 @@
 import { atom } from 'recoil';
-import { IGoodsList } from '../types/interface';
+import { IGoodsList, IHomeList } from '../types/interface';
 
 export const isAuthState = atom({
   // 임시 로그인 상태
@@ -7,9 +7,13 @@ export const isAuthState = atom({
   default: false,
 });
 
-export const homeListState = atom<IGoodsList[]>({
+export const homeListState = atom<IHomeList>({
   key: 'homeList',
-  default: [],
+  default: {
+    data: [],
+    hasNext: false,
+    loadMore: () => Promise.resolve(),
+  },
 });
 
 export const imgFilesState = atom<File[]>({
@@ -53,4 +57,14 @@ export const clickedLocationState = atom({
 export const goodsListState = atom<IGoodsList[]>({
   key: 'goodsList',
   default: [],
+});
+
+export const notReadState = atom({
+  key: 'notReadMsg',
+  default: 0,
+});
+
+export const isOpenBottomSheetState = atom({
+  key: 'isOpenBottomSheet',
+  default: false,
 });

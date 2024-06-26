@@ -1,9 +1,11 @@
 import { useAnimation } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import usePreviousValue from './usePreviousValue';
+import { useRecoilState } from 'recoil';
+import { isOpenBottomSheetState } from '../store/atom';
 
 const useBottomSheet = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useRecoilState(isOpenBottomSheetState);
   const controls = useAnimation();
   const prevIsOpen = usePreviousValue(isOpen);
 

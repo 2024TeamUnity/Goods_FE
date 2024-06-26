@@ -1,9 +1,9 @@
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Map, ZoomControl } from 'react-kakao-maps-sdk';
 import MyLocationMarker from './MyLocationMarker';
-import { IGoodsList, IMyLocation } from '../../types/interface';
+import { IMyLocation } from '../../types/interface';
 import ProductMarkers from './ProductMarkers';
-import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
 import {
   goodsListState,
   homeListState,
@@ -14,30 +14,57 @@ import {
 import { Link } from 'react-router-dom';
 import { debounce } from 'lodash';
 import axios from 'axios';
+import useBottomSheet from '../../util/useBottomSheet';
+import LoadingSpinner from '../common/LoadingSpinner';
+import { useNearbyGoodsList, useNearbyGoodsPage } from '../../service/map/useNearbyGoods';
+import { useMemoHistory } from '../../util/useMemoHistory';
 
-export default function HomeMap({
-  state,
-  setState,
-  pageData,
-  listData,
-}: {
-  state: IMyLocation;
-  setState: Dispatch<SetStateAction<IMyLocation>>;
-  pageData: IGoodsList[];
-  listData: IGoodsList[];
-}) {
+export default function HomeMap() {
+  const [state, setState] = useState<IMyLocation>({
+    center: {
+      lat: 0,
+      lng: 0,
+    },
+    errMsg: null,
+    isLoading: true,
+  });
   const setSearchList = useSetRecoilState(searchResultState);
   const setHomeList = useSetRecoilState(homeListState);
+  const resetHomeList = useResetRecoilState(homeListState);
   const [goodsList, setGoodsList] = useRecoilState(goodsListState);
   const isAuth = useRecoilValue(isAuthState);
   const keyword = useRecoilValue(searchAddrState);
+  const { isOpen } = useBottomSheet();
+
+  const [currentPos, setCurrentPos] = useState({
+    lat: 0,
+    lng: 0,
+  });
+  const {
+    refetch,
+    hasNextPage: dragHasNext,
+    fetchNextPage: dragFetchNext,
+  } = useNearbyGoodsPage(
+    {
+      lat: currentPos.lat,
+      lng: currentPos.lng,
+    },
+    false,
+  );
+  const { page, hasNextPage, fetchNextPage } = useNearbyGoodsPage(state.center, true);
+  const { listData, isLoading } = useNearbyGoodsList(state.center);
+  const pageData = useMemoHistory(page!);
 
   useEffect(() => {
     if (pageData) {
-      setHomeList(pageData!);
+      setHomeList({
+        data: pageData!,
+        hasNext: hasNextPage,
+        loadMore: fetchNextPage,
+      });
       setGoodsList(listData!);
     }
-  }, [pageData, setHomeList, setGoodsList, listData]);
+  }, [pageData, setHomeList, setGoodsList, listData, fetchNextPage, hasNextPage]);
 
   useEffect(() => {
     const geocoder = new kakao.maps.services.Geocoder();
@@ -60,8 +87,22 @@ export default function HomeMap({
 
   const handleResetSearch = async () => {
     setSearchList([]);
-    setHomeList(pageData!);
+    resetHomeList();
   };
+
+  useEffect(() => {
+    (async () => {
+      if (Object.values(currentPos).every((item) => item !== 0)) {
+        const res = (await refetch()).data;
+        const currentPostData = res?.pages.reduce((acc, cur) => [...acc, ...cur], []);
+        setHomeList({
+          data: currentPostData!,
+          hasNext: dragHasNext,
+          loadMore: dragFetchNext,
+        });
+      }
+    })();
+  }, [currentPos, refetch, setHomeList, dragFetchNext, dragHasNext]);
 
   const handleMapDrag = async (map: kakao.maps.Map) => {
     const latlng = map.getCenter();
@@ -71,17 +112,16 @@ export default function HomeMap({
         params: { lat: latlng.getLat(), lng: latlng.getLng(), responseType: 'list' },
       })
     ).data;
-    const newPageData = (
-      await axios.get('/api/api/goods', {
-        params: { lat: latlng.getLat(), lng: latlng.getLng(), responseType: 'page' },
-      })
-    ).data.content;
-
-    setHomeList(newPageData);
+    setCurrentPos({
+      lat: latlng.getLat(),
+      lng: latlng.getLng(),
+    });
     setGoodsList(newListData);
   };
 
   const debounceHandleMapDrag = debounce(handleMapDrag, 300);
+
+  if (isLoading) return <LoadingSpinner />;
   return (
     <>
       <Map // 지도를 표시할 Container
@@ -104,7 +144,11 @@ export default function HomeMap({
       </button>
       {isAuth && (
         <Link to='/posts/new'>
-          <button className='absolute z-[45] p-3 text-white transition-colors duration-200 bg-black rounded-full bottom-5 right-5 md:p-4 md:bottom-8 md:right-8 hover:bg-neutral-700'>
+          <button
+            className={`absolute p-3 text-white transition-colors duration-200 bg-black rounded-full bottom-5 right-5 md:p-4 md:bottom-8 md:right-8 hover:bg-neutral-700 ${
+              isOpen ? 'z-[101]' : 'z-30'
+            }`}
+          >
             <svg
               xmlns='http://www.w3.org/2000/svg'
               fill='none'

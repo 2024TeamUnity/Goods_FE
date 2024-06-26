@@ -240,3 +240,17 @@ export interface IChatRoomListItem extends IChatRoomListData {
   handleShowModal: (e: React.MouseEvent<HTMLButtonElement>, roomId: number) => void;
   handleTime: (timeString: string) => string;
 }
+
+export interface IHomeList extends IObserver {
+  data: IGoodsList[];
+}
+
+export interface IClusterPayload {
+  base_lat: number;
+  base_lng: number;
+  ne_lat: number;
+  ne_lng: number;
+  sw_lat: number;
+  sw_lng: number;
+  quantity: number;
+}
