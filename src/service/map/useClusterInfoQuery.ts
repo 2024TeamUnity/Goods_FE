@@ -3,7 +3,7 @@ import { IClusterPayload, IGoodsList } from '../../types/interface';
 import axios from 'axios';
 
 export const useClusterInfoQuery = (payload: IClusterPayload) => {
-  const { refetch } = useInfiniteQuery({
+  const { refetch, hasNextPage, fetchNextPage } = useInfiniteQuery({
     queryKey: [JSON.stringify(payload)],
     queryFn: async ({ pageParam, queryKey }: { pageParam: number; queryKey: string[] }) => {
       const [payload] = queryKey;
@@ -16,5 +16,5 @@ export const useClusterInfoQuery = (payload: IClusterPayload) => {
       lastPage.length ? lastPageParam + 1 : undefined,
     enabled: false,
   });
-  return refetch;
+  return { refetch, hasNextPage, fetchNextPage };
 };
