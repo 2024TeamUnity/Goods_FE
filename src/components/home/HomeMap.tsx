@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Map, ZoomControl } from 'react-kakao-maps-sdk';
 import MyLocationMarker from './MyLocationMarker';
 import { IMyLocation } from '../../types/interface';
 import ProductMarkers from './ProductMarkers';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   goodsListState,
   homeListState,
@@ -30,11 +30,11 @@ export default function HomeMap() {
   });
   const setSearchList = useSetRecoilState(searchResultState);
   const setHomeList = useSetRecoilState(homeListState);
-  const resetHomeList = useResetRecoilState(homeListState);
   const [goodsList, setGoodsList] = useRecoilState(goodsListState);
   const isAuth = useRecoilValue(isAuthState);
   const keyword = useRecoilValue(searchAddrState);
   const { isOpen } = useBottomSheet();
+  const mapRef = useRef<kakao.maps.Map>(null);
 
   const [currentPos, setCurrentPos] = useState({
     lat: 0,
@@ -87,7 +87,13 @@ export default function HomeMap() {
 
   const handleResetSearch = async () => {
     setSearchList([]);
-    resetHomeList();
+    if (mapRef.current) {
+      const latlng = mapRef.current.getCenter();
+      setCurrentPos({
+        lat: latlng.getLat(),
+        lng: latlng.getLng(),
+      });
+    }
   };
 
   useEffect(() => {
@@ -129,6 +135,7 @@ export default function HomeMap() {
         className='relative w-full h-full'
         level={3} // 지도의 확대 레벨
         onDrag={debounceHandleMapDrag}
+        ref={mapRef}
       >
         {/* 현재 내 위치  */}
         <MyLocationMarker state={state} setState={setState} />
