@@ -25,7 +25,7 @@ export const useNearbyGoodsPage = (payload: { lat: number; lng: number }, enable
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage, _, lastPageParams) => {
-      if (lastPage && lastPage.length > 0) {
+      if (Array.isArray(lastPage) && lastPage.length > 0) {
         return lastPageParams + 1;
       }
       return undefined;

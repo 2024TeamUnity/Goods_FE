@@ -22,7 +22,7 @@ export default function ChargeBtn({ point, isValid }: { point: string; isValid: 
         email: 'test@portone.io',
       },
       appScheme: 'portone://',
-      redirectUrl: `http://localhost:5173/payment/redirect?point=${point}`,
+      redirectUrl: `https://goods-trade.vercel.app/payment/redirect?point=${point}`,
     });
 
     if (response!.code != null) {

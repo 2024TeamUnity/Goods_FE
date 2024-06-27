@@ -16,7 +16,7 @@ export default function PostDetail() {
   const { data, isLoading } = useReadPostQuery(goodsId!);
   const { data: profile } = useProfileQuery();
 
-  const isAutor = profile?.member_id === data?.seller_id;
+  const isAutor = profile?.member_id && profile.member_id === data?.seller_id;
 
   const mutate = useUpdateStateMutation();
 
