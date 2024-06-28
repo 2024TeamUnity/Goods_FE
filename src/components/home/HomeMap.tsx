@@ -15,7 +15,6 @@ import { Link } from 'react-router-dom';
 import { debounce } from 'lodash';
 import axios from 'axios';
 import useBottomSheet from '../../util/useBottomSheet';
-import LoadingSpinner from '../common/LoadingSpinner';
 import { useNearbyGoodsList, useNearbyGoodsPage } from '../../service/map/useNearbyGoods';
 import { useMemoHistory } from '../../util/useMemoHistory';
 
@@ -52,7 +51,7 @@ export default function HomeMap() {
     false,
   );
   const { page, hasNextPage, fetchNextPage } = useNearbyGoodsPage(state.center, true);
-  const { listData, isLoading } = useNearbyGoodsList(state.center);
+  const { listData, isLoading, refetchList } = useNearbyGoodsList(state.center);
   const pageData = useMemoHistory(page!);
 
   useEffect(() => {
@@ -94,6 +93,8 @@ export default function HomeMap() {
         lng: latlng.getLng(),
       });
     }
+    const res = (await refetchList()).data;
+    setGoodsList(res!);
   };
 
   useEffect(() => {
@@ -127,7 +128,6 @@ export default function HomeMap() {
 
   const debounceHandleMapDrag = debounce(handleMapDrag, 300);
 
-  if (isLoading) return <LoadingSpinner />;
   return (
     <>
       <Map // 지도를 표시할 Container
@@ -140,7 +140,7 @@ export default function HomeMap() {
         {/* 현재 내 위치  */}
         <MyLocationMarker state={state} setState={setState} />
         {/* 모든 상품 위치 */}
-        <ProductMarkers goodsList={goodsList} />
+        <ProductMarkers goodsList={goodsList} isLoading={isLoading} />
         <ZoomControl position='RIGHT' />
       </Map>
       <button
