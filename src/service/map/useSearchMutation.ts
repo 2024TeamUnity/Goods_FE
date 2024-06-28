@@ -1,23 +1,20 @@
 import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { useSetRecoilState } from 'recoil';
-import { homeListState, searchResultState } from '../../store/atom';
 import { Dispatch, SetStateAction } from 'react';
 import { IGoodsList } from '../../types/interface';
 
-export const useSearchAddrMutation = () => {
-  const setHomeList = useSetRecoilState(homeListState);
-  const setSearchList = useSetRecoilState(searchResultState);
-  const { mutate } = useMutation({
-    mutationFn: async (word: string) =>
-      (await axios.post('/api/api/goods/search', { keyword: word })).data,
-    onSuccess: (data: IGoodsList[]) => {
-      setHomeList(data);
-      setSearchList(data);
-      console.log(data);
-    },
+export const useSearchAddressQuery = (keyword: string) => {
+  const { refetch, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: ['address', keyword],
+    queryFn: async ({ pageParam }: { pageParam: number }) =>
+      (await axios.post('/api/api/goods/search', { keyword }, { params: { page: pageParam } })).data
+        .content as IGoodsList[],
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _, lastPageParam) =>
+      lastPage.length ? lastPageParam + 1 : undefined,
+    enabled: false,
   });
-  return mutate;
+  return { refetch, hasNextPage, fetchNextPage };
 };
 
 export const useSearchQuery = (keyword: string, callback: Dispatch<SetStateAction<string>>) => {
