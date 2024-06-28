@@ -5,8 +5,15 @@ import { IGoodsList } from '../../types/interface';
 import useBottomSheet from '../../util/useBottomSheet';
 import { useEffect, useState } from 'react';
 import { useClusterInfoQuery } from '../../service/map/useClusterInfoQuery';
+import LoadingSpinner from '../common/LoadingSpinner';
 
-export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] }) {
+export default function ProductMarkers({
+  goodsList,
+  isLoading,
+}: {
+  goodsList: IGoodsList[];
+  isLoading: boolean;
+}) {
   const setListState = useSetRecoilState(homeListState);
   const searchList = useRecoilValue(searchResultState);
   const { setIsOpen } = useBottomSheet();
@@ -62,6 +69,7 @@ export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] 
     console.log({ lat, lng });
   };
 
+  if (isLoading) return <LoadingSpinner />;
   return (
     <MarkerClusterer
       averageCenter
@@ -83,7 +91,7 @@ export default function ProductMarkers({ goodsList }: { goodsList: IGoodsList[] 
               onClick={() => handleMarkerClick(item)}
             />
           ))
-        : goodsList.map((pos) => (
+        : goodsList?.map((pos) => (
             <MapMarker
               key={`${pos.goods_id}_${pos.thumbnail_url}_${pos.trade_spot}`}
               position={{
