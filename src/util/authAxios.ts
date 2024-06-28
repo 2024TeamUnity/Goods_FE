@@ -19,7 +19,7 @@ client.interceptors.request.use(
 client.interceptors.response.use(
   (res) => {
     if (res.status === 404) {
-      window.location.href = 'http://localhost:5173/notFound'; // 배포 후 => 배포주소/notFound
+      window.location.href = 'https://goods-trade.vercel.app/notFound'; // 배포 후 => 배포주소/notFound
     }
     return res;
   },
