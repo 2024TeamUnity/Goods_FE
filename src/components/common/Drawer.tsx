@@ -1,22 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useMyInfoQuery } from '../../service/signin/useMyInfoQuery';
 import { useSignoutMutation } from '../../service/signin/useSignoutMutation';
-// import { useChatRoomListQuery } from '../../service/chat/useChatRoomListQuery';
-// import { useEffect, useState } from 'react';
 
 export default function Drawer() {
-  // const [totalNotRead, setTotalNotRead] = useState(0);
   const { info, isLoading: infoLoading } = useMyInfoQuery();
   const logout = useSignoutMutation();
-  // const { data, isLoading: notReadLoading } = useChatRoomListQuery();
-
-  // useEffect(() => {
-  //   if (data) {
-  //     // eslint-disable-next-line no-return-assign, no-param-reassign
-  //     const notRead = data.reduce((acc, cur) => (acc += cur.not_read), 0);
-  //     setTotalNotRead(notRead!);
-  //   }
-  // }, [data]);
 
   const handleLogout = () => logout();
 
@@ -75,11 +63,6 @@ export default function Drawer() {
             <li>
               <Link className='relative' to='/roomList'>
                 채팅 목록
-                {/* {totalNotRead !== 0 && (
-                  <div className='absolute left-[75px] top-0 flex items-center justify-center w-5 h-5 p-2 text-white bg-black border rounded-full'>
-                    {totalNotRead}
-                  </div>
-                )} */}
               </Link>
             </li>
             <li>

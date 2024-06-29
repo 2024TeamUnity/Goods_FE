@@ -12,8 +12,12 @@ export const useClusterInfoQuery = (payload: IClusterPayload) => {
       ).data.content as IGoodsList[];
     },
     initialPageParam: 0,
-    getNextPageParam: (lastPage, _, lastPageParam) =>
-      lastPage.length ? lastPageParam + 1 : undefined,
+    getNextPageParam: (lastPage, _, lastPageParams) => {
+      if (Array.isArray(lastPage) && lastPage.length > 0) {
+        return lastPageParams + 1;
+      }
+      return undefined;
+    },
     enabled: false,
   });
   return { refetch, hasNextPage, fetchNextPage };

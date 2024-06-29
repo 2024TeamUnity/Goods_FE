@@ -79,7 +79,7 @@ export default function ProductMarkers({
       onClusterclick={handleClusterClick}
       gridSize={100}
     >
-      {searchList.length > 0 && Array.isArray(goodsList)
+      {searchList.length > 0
         ? searchList.map((item) => (
             <MapMarker
               // eslint-disable-next-line react/no-array-index-key
@@ -91,7 +91,8 @@ export default function ProductMarkers({
               onClick={() => handleMarkerClick(item)}
             />
           ))
-        : goodsList?.map((pos) => (
+        : Array.isArray(goodsList) &&
+          goodsList.map((pos) => (
             <MapMarker
               key={`${pos.goods_id}_${pos.thumbnail_url}_${pos.trade_spot}`}
               position={{

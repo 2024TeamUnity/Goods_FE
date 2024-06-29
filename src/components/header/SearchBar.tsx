@@ -87,9 +87,9 @@ export default function SearchBar() {
           />
         </svg>
       </label>
-      {keyword && autocomplete!.length > 0 && (
+      {keyword && autocomplete.length > 0 && (
         <ul className='absolute left-0 w-full p-3 bg-neutral-50 rounded-xl '>
-          {autocomplete?.map((item, index) => (
+          {autocomplete.map((item, index) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-noninteractive-element-interactions
             <li
               onClick={handleSearch}

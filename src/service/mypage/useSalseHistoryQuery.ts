@@ -22,7 +22,10 @@ export const usePaginatedSalesHistoryQuery = (memberId: string) => {
       ).data.content as ISalesHistoryData[],
     initialPageParam: 0,
     getNextPageParam: (lastPage, _, lastPageParams) => {
-      return lastPage.length ? lastPageParams + 1 : undefined;
+      if (Array.isArray(lastPage) && lastPage.length > 0) {
+        return lastPageParams + 1;
+      }
+      return undefined;
     },
   });
   return { data, isLoading, hasNextPage, fetchNextPage };
