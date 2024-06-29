@@ -1,6 +1,7 @@
 {
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "https://goods-trade.shop/api/$1" },
-    { "source": "/chat/(.*)", "destination": "https://goods-trade.shop/api/chat/$1" }
+    { "source": "/api/:path*", "destination": "https://goods-trade.shop/:path*" },
+    { "source": "/chat/:path*", "destination": "https://goods-trade.shop/api/chat/:path*" },
+    { "source": "/(.*)", "destination": "/" }
   ]
 }
