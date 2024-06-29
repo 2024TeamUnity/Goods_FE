@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Map, ZoomControl } from 'react-kakao-maps-sdk';
 import MyLocationMarker from './MyLocationMarker';
 import { IMyLocation } from '../../types/interface';
 import ProductMarkers from './ProductMarkers';
-import { useRecoilState, useRecoilValue, useResetRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import {
   goodsListState,
   homeListState,
@@ -15,7 +15,6 @@ import { Link } from 'react-router-dom';
 import { debounce } from 'lodash';
 import axios from 'axios';
 import useBottomSheet from '../../util/useBottomSheet';
-import LoadingSpinner from '../common/LoadingSpinner';
 import { useNearbyGoodsList, useNearbyGoodsPage } from '../../service/map/useNearbyGoods';
 import { useMemoHistory } from '../../util/useMemoHistory';
 
@@ -30,11 +29,11 @@ export default function HomeMap() {
   });
   const setSearchList = useSetRecoilState(searchResultState);
   const setHomeList = useSetRecoilState(homeListState);
-  const resetHomeList = useResetRecoilState(homeListState);
   const [goodsList, setGoodsList] = useRecoilState(goodsListState);
   const isAuth = useRecoilValue(isAuthState);
   const keyword = useRecoilValue(searchAddrState);
   const { isOpen } = useBottomSheet();
+  const mapRef = useRef<kakao.maps.Map>(null);
 
   const [currentPos, setCurrentPos] = useState({
     lat: 0,
@@ -52,7 +51,7 @@ export default function HomeMap() {
     false,
   );
   const { page, hasNextPage, fetchNextPage } = useNearbyGoodsPage(state.center, true);
-  const { listData, isLoading } = useNearbyGoodsList(state.center);
+  const { listData, isLoading, refetchList } = useNearbyGoodsList(state.center);
   const pageData = useMemoHistory(page!);
 
   useEffect(() => {
@@ -87,7 +86,15 @@ export default function HomeMap() {
 
   const handleResetSearch = async () => {
     setSearchList([]);
-    resetHomeList();
+    if (mapRef.current) {
+      const latlng = mapRef.current.getCenter();
+      setCurrentPos({
+        lat: latlng.getLat(),
+        lng: latlng.getLng(),
+      });
+    }
+    const res = (await refetchList()).data;
+    setGoodsList(res!);
   };
 
   useEffect(() => {
@@ -121,7 +128,6 @@ export default function HomeMap() {
 
   const debounceHandleMapDrag = debounce(handleMapDrag, 300);
 
-  if (isLoading) return <LoadingSpinner />;
   return (
     <>
       <Map // 지도를 표시할 Container
@@ -129,11 +135,12 @@ export default function HomeMap() {
         className='relative w-full h-full'
         level={3} // 지도의 확대 레벨
         onDrag={debounceHandleMapDrag}
+        ref={mapRef}
       >
         {/* 현재 내 위치  */}
         <MyLocationMarker state={state} setState={setState} />
         {/* 모든 상품 위치 */}
-        <ProductMarkers goodsList={goodsList} />
+        <ProductMarkers goodsList={goodsList} isLoading={isLoading} />
         <ZoomControl position='RIGHT' />
       </Map>
       <button

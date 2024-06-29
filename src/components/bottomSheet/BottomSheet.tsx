@@ -28,7 +28,7 @@ export default function BottomSheet({ products, hasNext, loadMore }: IBottomShee
         }}
         variants={{
           visible: { y: 100 },
-          hidden: { y: '50%' },
+          hidden: { y: '75%' },
         }}
         dragConstraints={{ top: 0 }}
         dragElastic={0.7}

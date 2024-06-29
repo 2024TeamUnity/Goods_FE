@@ -1,37 +1,39 @@
-import { useMutation } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
-import { useSetRecoilState } from 'recoil';
-import { searchResultState } from '../../store/atom';
 import { Dispatch, SetStateAction } from 'react';
 import { IGoodsList } from '../../types/interface';
 
-export const useSearchMutation = (callback: Dispatch<SetStateAction<string>>) => {
-  // const setHomeList = useSetRecoilState(homeListState);
-  const setSearchList = useSetRecoilState(searchResultState);
-  const { mutate } = useMutation({
-    mutationFn: async (keyword: string) =>
-      (await axios.post('api/api/goods/search', { keyword })).data.content,
-    onSuccess: (data: IGoodsList[]) => {
-      // setHomeList(data);
-      setSearchList(data);
-      callback('');
-    },
+export const useSearchAddressQuery = (keyword: string) => {
+  const { refetch, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: ['address', keyword],
+    queryFn: async ({ pageParam }: { pageParam: number }) =>
+      (await axios.post('/api/api/goods/search', { keyword }, { params: { page: pageParam } })).data
+        .content as IGoodsList[],
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _, lastPageParam) =>
+      lastPage.length ? lastPageParam + 1 : undefined,
+    enabled: false,
   });
-  return mutate;
+  return { refetch, hasNextPage, fetchNextPage };
 };
 
-export const useSearchAddrMutation = () => {
-  // const setHomeList = useSetRecoilState(homeListState);
-  const setSearchList = useSetRecoilState(searchResultState);
-  const { mutate } = useMutation({
-    mutationFn: async (word: string) =>
-      (await axios.post('/api/api/goods/search', { keyword: word })).data,
-    onSuccess: (data: IGoodsList[]) => {
-      // setHomeList(data);
-      setSearchList(data);
+export const useSearchQuery = (keyword: string, callback: Dispatch<SetStateAction<string>>) => {
+  // 배포 후 타입체크, 타입 방어?
+  const { refetch, hasNextPage, fetchNextPage } = useInfiniteQuery({
+    queryKey: ['search', keyword],
+    queryFn: async ({ pageParam }: { pageParam: number }) => {
+      const res = (
+        await axios.post('/api/api/goods/search', { keyword }, { params: { page: pageParam } })
+      ).data.content as IGoodsList[];
+      callback('');
+      return res;
     },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _, lastPageParam) =>
+      lastPage.length ? lastPageParam + 1 : undefined,
+    enabled: false,
   });
-  return mutate;
+  return { refetch, hasNextPage, fetchNextPage };
 };
 
 export const useUpdateSearchMutation = (

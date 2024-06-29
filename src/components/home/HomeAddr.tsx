@@ -1,17 +1,32 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { hangjungdong } from '../../constants';
-import { useSearchAddrMutation } from '../../service/map/useSearchMutation';
+import { useSearchAddressQuery } from '../../service/map/useSearchMutation';
 import { useSetRecoilState } from 'recoil';
-import { searchAddrState } from '../../store/atom';
+import { homeListState, searchAddrState } from '../../store/atom';
 
 export default function HomeAddr() {
   const [siValue, setSiValue] = useState<string>('');
   const [guValue, setGuValue] = useState<string>('');
   const [dongValue, setDongValue] = useState<string>('');
+  const [searchString, setSearchString] = useState('');
   const { sido, sigugun, dong } = hangjungdong;
   const setKeyword = useSetRecoilState(searchAddrState);
+  const { fetchNextPage, hasNextPage, refetch } = useSearchAddressQuery(searchString);
+  const setHomeList = useSetRecoilState(homeListState);
 
-  const search = useSearchAddrMutation();
+  useEffect(() => {
+    (async () => {
+      if (searchString) {
+        const res = (await refetch()).data;
+        const data = res?.pages.reduce((acc, cur) => [...acc, ...cur], []);
+        setHomeList({
+          data: data || [],
+          hasNext: hasNextPage,
+          loadMore: fetchNextPage,
+        });
+      }
+    })();
+  }, [fetchNextPage, hasNextPage, refetch, searchString, setHomeList]);
 
   const handleSiValue = (selectedSi: string) => {
     setSiValue(selectedSi);
@@ -33,10 +48,10 @@ export default function HomeAddr() {
         (item) => item.sido === siValue && item.sigugun === guValue && item.dong === dongValue,
       )[0]?.codeNm;
       if (siName === guName) {
-        search(`${siName} ${dongName}`);
+        setSearchString(`${siName} ${dongName}`);
         setKeyword(`${siName} ${dongName}`);
       } else {
-        search(`${siName} ${guName} ${dongName}`);
+        setSearchString(`${siName} ${guName} ${dongName}`);
         setKeyword(`${siName} ${guName} ${dongName}`);
       }
     }
