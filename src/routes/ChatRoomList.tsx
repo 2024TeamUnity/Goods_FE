@@ -17,7 +17,6 @@ export default function ChatRoomList() {
   const { data, isLoading, hasNextPage, fetchNextPage } = useChatRoomListHistory();
   const deleteChatRoom = useDeleteChatRoomMutation();
   const chatroomList = useMemoHistory(data!);
-  // const setNotRead = useSetRecoilState(notReadState);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -62,11 +61,6 @@ export default function ChatRoomList() {
     handleCloseModal();
   };
 
-  // useEffect(() => {
-  //   // eslint-disable-next-line no-return-assign, no-param-reassign
-  //   const totalNotRead = chatroomList?.reduce((acc, cur) => (acc += cur.not_read), 0);
-  //   setNotRead(totalNotRead!);
-  // }, [chatroomList, setNotRead]);
   return (
     <div className='w-full px-5 md:mx-auto md:max-w-5xl'>
       <ul className='flex flex-col items-center justify-center w-full mx-auto mb-20 md:max-w-xl'>
@@ -90,7 +84,7 @@ export default function ChatRoomList() {
           <h2 className='m-auto text-2xl md:text-3xl'>채팅 목록</h2>
         </div>
 
-        {chatroomList?.length !== 0 && (
+        {Array.isArray(chatroomList) && chatroomList.length !== 0 && (
           <button
             onClick={handleShowButton}
             className={`ml-auto btn btn-outline btn-sm ${
@@ -103,18 +97,20 @@ export default function ChatRoomList() {
         {/* eslint-disable-next-line no-nested-ternary */}
         {isLoading ? (
           <LoadingSpinner />
-        ) : chatroomList!.length === 0 ? (
-          <h3 className='text-lg'>결과가 없습니다.</h3>
         ) : (
           Array.isArray(chatroomList) &&
-          chatroomList!.map((item) => (
-            <ChatRoomListItem
-              key={item.room_id}
-              {...item}
-              deleteState={deleteState}
-              handleShowModal={handleShowModal}
-              handleTime={handleTime}
-            />
+          (chatroomList.length === 0 ? (
+            <h3 className='text-lg'>결과가 없습니다.</h3>
+          ) : (
+            chatroomList.map((item) => (
+              <ChatRoomListItem
+                key={item.room_id}
+                {...item}
+                deleteState={deleteState}
+                handleShowModal={handleShowModal}
+                handleTime={handleTime}
+              />
+            ))
           ))
         )}
       </ul>

@@ -10,8 +10,12 @@ export const useSearchAddressQuery = (keyword: string) => {
       (await axios.post('/api/api/goods/search', { keyword }, { params: { page: pageParam } })).data
         .content as IGoodsList[],
     initialPageParam: 0,
-    getNextPageParam: (lastPage, _, lastPageParam) =>
-      lastPage.length ? lastPageParam + 1 : undefined,
+    getNextPageParam: (lastPage, _, lastPageParams) => {
+      if (Array.isArray(lastPage) && lastPage.length > 0) {
+        return lastPageParams + 1;
+      }
+      return undefined;
+    },
     enabled: false,
   });
   return { refetch, hasNextPage, fetchNextPage };
@@ -29,8 +33,12 @@ export const useSearchQuery = (keyword: string, callback: Dispatch<SetStateActio
       return res;
     },
     initialPageParam: 0,
-    getNextPageParam: (lastPage, _, lastPageParam) =>
-      lastPage.length ? lastPageParam + 1 : undefined,
+    getNextPageParam: (lastPage, _, lastPageParams) => {
+      if (Array.isArray(lastPage) && lastPage.length > 0) {
+        return lastPageParams + 1;
+      }
+      return undefined;
+    },
     enabled: false,
   });
   return { refetch, hasNextPage, fetchNextPage };

@@ -84,13 +84,14 @@ export default function PostImgList({ prevThumbnails }: { prevThumbnails: string
             </div>
           </div>
         ))}
-        {Children.toArray(
-          [...Array(MAXFILECOUNT - imgUrls.length)].map(() => (
-            <div className='mr-4 avatar'>
-              <div className='w-24 h-24 border-2 rounded-xl md:w-36 md:h-36' />
-            </div>
-          )),
-        )}
+        {MAXFILECOUNT >= imgUrls.length &&
+          Children.toArray(
+            [...Array(MAXFILECOUNT - imgUrls.length)].map(() => (
+              <div className='mr-4 avatar'>
+                <div className='w-24 h-24 border-2 rounded-xl md:w-36 md:h-36' />
+              </div>
+            )),
+          )}
       </div>
       <input
         type='file'

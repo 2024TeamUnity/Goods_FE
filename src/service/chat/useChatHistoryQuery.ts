@@ -21,8 +21,12 @@ export const usePaginatedChatHistoryQuery = (roomId: string) => {
       return messages;
     },
     initialPageParam: 0,
-    getNextPageParam: (lastPage, _, lastPageParams) =>
-      lastPage.length > 0 ? lastPageParams + 1 : undefined,
+    getNextPageParam: (lastPage, _, lastPageParams) => {
+      if (Array.isArray(lastPage) && lastPage.length > 0) {
+        return lastPageParams + 1;
+      }
+      return undefined;
+    },
   });
   return { data, isLoading, fetchNextPage, hasNextPage };
 };
