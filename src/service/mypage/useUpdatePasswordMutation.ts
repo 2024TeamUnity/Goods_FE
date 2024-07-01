@@ -21,6 +21,8 @@ export const useUpdatePasswordMutation = (setIsOpen: () => void) => {
         // eslint-disable-next-line no-alert
         alert(res.message);
       } else {
+        // eslint-disable-next-line no-alert
+        alert('비밀번호가 변경되었습니다.');
         setIsOpen();
       }
     },
@@ -49,6 +51,8 @@ export const useUpdateTradePasswordMutation = (setIsOpen: () => void) => {
         // eslint-disable-next-line no-alert
         alert(res.message);
       } else {
+        // eslint-disable-next-line no-alert
+        alert('간편결제 비밀번호가 변경되었습니다.');
         setIsOpen();
       }
     },
