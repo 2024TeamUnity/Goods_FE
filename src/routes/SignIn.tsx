@@ -42,7 +42,7 @@ export default function SignIn() {
       <div className='flex flex-col items-center w-full'>
         <h1 className='my-10 text-3xl md:text-4xl'>로그인</h1>
 
-        <div className='flex flex-col p-2 md:w-96'>
+        <div className='flex flex-col w-full p-2 min-[500px]:w-96'>
           <KakaoLoginButton />
           <div className='my-8 divider'>또는</div>
           <form

@@ -61,7 +61,7 @@ export default function SignUp() {
       <div className='flex flex-col items-center w-full'>
         <h1 className='my-3 text-3xl md:text-4xl'>회원가입</h1>
 
-        <div className='flex flex-col p-2 md:w-96'>
+        <div className='flex flex-col w-full p-2 min-[500px]:w-96'>
           <form
             onSubmit={onSubmit}
             className='flex flex-col items-center justify-center mb-5 gap-y-3'
