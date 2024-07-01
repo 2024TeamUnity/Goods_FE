@@ -6,6 +6,7 @@ import useBottomSheet from '../../util/useBottomSheet';
 import { useEffect, useState } from 'react';
 import { useClusterInfoQuery } from '../../service/map/useClusterInfoQuery';
 import LoadingSpinner from '../common/LoadingSpinner';
+import axios from 'axios';
 
 export default function ProductMarkers({
   goodsList,
@@ -62,11 +63,11 @@ export default function ProductMarkers({
     })();
   }, [payload, refetch, setListState, fetchNextPage, hasNextPage]);
 
-  const handleMarkerClick = (pos: IGoodsList) => {
-    // setListState([pos]);
-
+  const handleMarkerClick = async (pos: IGoodsList) => {
     const { lat, lng } = pos;
-    console.log({ lat, lng });
+
+    const res = (await axios.get('/api/api/goods/point', { params: { lat, lng } })).data;
+    setListState({ data: [res], hasNext: false, loadMore: () => Promise.resolve() });
   };
 
   if (isLoading) return <LoadingSpinner />;
