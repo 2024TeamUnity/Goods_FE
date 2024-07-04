@@ -1,6 +1,7 @@
 export const getTime = (time: number) => {
   if (time < 60) {
-    return `${time}초 전`;
+    const convertedTime = Math.floor(time);
+    return `${convertedTime}초 전`;
   }
   if (time / 60 < 60) {
     const convertedTime = Math.floor(time / 60);
